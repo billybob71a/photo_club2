@@ -1,0 +1,2308 @@
+[13-Sep-2018 17:53:06 UTC] PHP Parse error:  syntax error, unexpected 'error_log' (T_STRING) in /var/www/html/www.visorsourcing.com/wp-content/plugins/user-submitted-posts/library/shortcode-misc.php on line 169
+[13-Sep-2018 17:55:07 UTC] PHP Parse error:  syntax error, unexpected 'error_log' (T_STRING) in /var/www/html/www.visorsourcing.com/wp-content/plugins/user-submitted-posts/library/shortcode-misc.php on line 169
+[13-Sep-2018 19:03:07 UTC] PHP Parse error:  syntax error, unexpected '$field' (T_VARIABLE), expecting ',' or ')' in /var/www/html/www.visorsourcing.com/wp-content/plugins/user-submitted-posts/library/shortcode-misc.php on line 169
+[13-Sep-2018 22:35:06 UTC] PHP Parse error:  syntax error, unexpected ';', expecting ',' or ')' in /var/www/html/www.visorsourcing.com/wp-content/plugins/user-submitted-posts/library/shortcode-misc.php on line 180
+[13-Sep-2018 23:13:06 UTC] PHP Parse error:  syntax error, unexpected ')' in /var/www/html/www.visorsourcing.com/wp-content/plugins/user-submitted-posts/library/shortcode-misc.php on line 186
+[14-Sep-2018 05:11:46 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /var/www/html/www.visorsourcing.com/wp-content/plugins/cimy-user-extra-fields/cimy_uef_admin.php on line 403
+[14-Sep-2018 06:14:55 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /var/www/html/www.visorsourcing.com/wp-content/plugins/cimy-user-extra-fields/cimy_uef_admin.php on line 403
+[14-Sep-2018 06:15:16 UTC] PHP Warning:  Invalid argument supplied for foreach() in /var/www/html/www.visorsourcing.com/wp-content/plugins/cimy-user-extra-fields/cimy_uef_admin.php on line 111
+[14-Sep-2018 15:10:33 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /var/www/html/www.visorsourcing.com/wp-content/plugins/cimy-user-extra-fields/cimy_uef_admin.php on line 403
+[14-Sep-2018 15:12:37 UTC] PHP Warning:  Invalid argument supplied for foreach() in /var/www/html/www.visorsourcing.com/wp-content/plugins/cimy-user-extra-fields/cimy_uef_admin.php on line 111
+[14-Sep-2018 15:13:06 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /var/www/html/www.visorsourcing.com/wp-content/plugins/cimy-user-extra-fields/cimy_uef_admin.php on line 403
+[14-Sep-2018 15:15:20 UTC] PHP Warning:  Invalid argument supplied for foreach() in /var/www/html/www.visorsourcing.com/wp-content/plugins/cimy-user-extra-fields/cimy_uef_admin.php on line 111
+[14-Sep-2018 15:16:07 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /var/www/html/www.visorsourcing.com/wp-content/plugins/cimy-user-extra-fields/cimy_uef_admin.php on line 403
+[14-Sep-2018 15:17:16 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /var/www/html/www.visorsourcing.com/wp-content/plugins/cimy-user-extra-fields/cimy_uef_admin.php on line 403
+[14-Sep-2018 15:57:05 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /var/www/html/www.visorsourcing.com/wp-content/plugins/cimy-user-extra-fields/cimy_uef_admin.php on line 403
+[14-Sep-2018 16:48:12 UTC] PHP Parse error:  syntax error, unexpected ';', expecting ',' or ')' in /var/www/html/www.visorsourcing.com/wp-content/plugins/user-submitted-posts/library/shortcode-misc.php on line 169
+[14-Sep-2018 20:01:53 UTC] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function add_filter(), 1 passed in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6095 and at least 2 expected in /var/www/html/www.visorsourcing.com/wp-includes/plugin.php:106
+Stack trace:
+#0 /var/www/html/www.visorsourcing.com/wp-includes/functions.php(6095): add_filter('user_contactmet...')
+#1 /var/www/html/www.visorsourcing.com/wp-settings.php(98): require('/var/www/html/w...')
+#2 /var/www/html/www.visorsourcing.com/wp-config.php(89): require_once('/var/www/html/w...')
+#3 /var/www/html/www.visorsourcing.com/wp-load.php(37): require_once('/var/www/html/w...')
+#4 /var/www/html/www.visorsourcing.com/wp-admin/admin.php(31): require_once('/var/www/html/w...')
+#5 /var/www/html/www.visorsourcing.com/wp-admin/user-edit.php(10): require_once('/var/www/html/w...')
+#6 /var/www/html/www.visorsourcing.com/wp-admin/profile.php(18): require_once('/var/www/html/w...')
+#7 {main}
+  thrown in /var/www/html/www.visorsourcing.com/wp-includes/plugin.php on line 106
+[14-Sep-2018 20:02:39 UTC] PHP Warning:  Invalid argument supplied for foreach() in /var/www/html/www.visorsourcing.com/wp-admin/user-edit.php on line 490
+[14-Sep-2018 20:08:57 UTC] PHP Fatal error:  Uncaught Error: Cannot use object of type WP_User as array in /var/www/html/www.visorsourcing.com/wp-includes/functions.php:6090
+Stack trace:
+#0 /var/www/html/www.visorsourcing.com/wp-includes/class-wp-hook.php(286): add_contact_fields(Object(WP_User))
+#1 /var/www/html/www.visorsourcing.com/wp-includes/class-wp-hook.php(310): WP_Hook->apply_filters('', Array)
+#2 /var/www/html/www.visorsourcing.com/wp-includes/plugin.php(453): WP_Hook->do_action(Array)
+#3 /var/www/html/www.visorsourcing.com/wp-admin/user-edit.php(362): do_action('profile_persona...', Object(WP_User))
+#4 /var/www/html/www.visorsourcing.com/wp-admin/profile.php(18): require_once('/var/www/html/w...')
+#5 {main}
+  thrown in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6090
+[14-Sep-2018 20:17:53 UTC] PHP Fatal error:  Uncaught Error: Cannot use object of type WP_User as array in /var/www/html/www.visorsourcing.com/wp-includes/functions.php:6090
+Stack trace:
+#0 /var/www/html/www.visorsourcing.com/wp-includes/class-wp-hook.php(286): add_contact_fields(Object(WP_User))
+#1 /var/www/html/www.visorsourcing.com/wp-includes/class-wp-hook.php(310): WP_Hook->apply_filters('', Array)
+#2 /var/www/html/www.visorsourcing.com/wp-includes/plugin.php(453): WP_Hook->do_action(Array)
+#3 /var/www/html/www.visorsourcing.com/wp-admin/user-edit.php(362): do_action('profile_persona...', Object(WP_User))
+#4 /var/www/html/www.visorsourcing.com/wp-admin/profile.php(18): require_once('/var/www/html/w...')
+#5 {main}
+  thrown in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6090
+[15-Sep-2018 00:08:18 UTC] PHP Warning:  Invalid argument supplied for foreach() in /var/www/html/www.visorsourcing.com/wp-admin/user-edit.php on line 490
+[15-Sep-2018 01:41:59 UTC] PHP Warning:  call_user_func_array() expects parameter 1 to be a valid callback, function 'custom_user_profile_fields' not found or invalid function name in /var/www/html/www.visorsourcing.com/wp-includes/class-wp-hook.php on line 286
+[16-Sep-2018 05:09:10 UTC] PHP Parse error:  syntax error, unexpected '$user_id' (T_VARIABLE), expecting ',' or ')' in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[16-Sep-2018 05:11:10 UTC] PHP Parse error:  syntax error, unexpected '$user_id' (T_VARIABLE), expecting ',' or ')' in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[16-Sep-2018 05:19:00 UTC] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function update_usermeta(), 2 passed in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6109 and exactly 3 expected in /var/www/html/www.visorsourcing.com/wp-includes/deprecated.php:2318
+Stack trace:
+#0 /var/www/html/www.visorsourcing.com/wp-includes/functions.php(6109): update_usermeta(50, 'Junior')
+#1 /var/www/html/www.visorsourcing.com/wp-includes/class-wp-hook.php(286): save_extra_profile_fields(50)
+#2 /var/www/html/www.visorsourcing.com/wp-includes/class-wp-hook.php(310): WP_Hook->apply_filters('', Array)
+#3 /var/www/html/www.visorsourcing.com/wp-includes/plugin.php(453): WP_Hook->do_action(Array)
+#4 /var/www/html/www.visorsourcing.com/wp-admin/user-edit.php(132): do_action('personal_option...', 50)
+#5 /var/www/html/www.visorsourcing.com/wp-admin/profile.php(18): require_once('/var/www/html/w...')
+#6 {main}
+  thrown in /var/www/html/www.visorsourcing.com/wp-includes/deprecated.php on line 2318
+[16-Sep-2018 05:32:24 UTC] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function update_usermeta(), 2 passed in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6109 and exactly 3 expected in /var/www/html/www.visorsourcing.com/wp-includes/deprecated.php:2318
+Stack trace:
+#0 /var/www/html/www.visorsourcing.com/wp-includes/functions.php(6109): update_usermeta(NULL, 'Junior')
+#1 /var/www/html/www.visorsourcing.com/wp-includes/class-wp-hook.php(286): save_extra_profile_fields(50)
+#2 /var/www/html/www.visorsourcing.com/wp-includes/class-wp-hook.php(310): WP_Hook->apply_filters('', Array)
+#3 /var/www/html/www.visorsourcing.com/wp-includes/plugin.php(453): WP_Hook->do_action(Array)
+#4 /var/www/html/www.visorsourcing.com/wp-admin/user-edit.php(132): do_action('personal_option...', 50)
+#5 /var/www/html/www.visorsourcing.com/wp-admin/profile.php(18): require_once('/var/www/html/w...')
+#6 {main}
+  thrown in /var/www/html/www.visorsourcing.com/wp-includes/deprecated.php on line 2318
+[16-Sep-2018 06:02:22 UTC] PHP Parse error:  syntax error, unexpected '%' in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6114
+[16-Sep-2018 06:02:23 UTC] PHP Parse error:  syntax error, unexpected '%' in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6114
+[16-Sep-2018 06:02:25 UTC] PHP Parse error:  syntax error, unexpected '%' in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6114
+[16-Sep-2018 06:02:35 UTC] PHP Parse error:  syntax error, unexpected '%' in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6114
+[16-Sep-2018 06:02:36 UTC] PHP Parse error:  syntax error, unexpected '%' in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6114
+[16-Sep-2018 06:02:56 UTC] PHP Parse error:  syntax error, unexpected '%' in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6114
+[16-Sep-2018 06:03:10 UTC] PHP Parse error:  syntax error, unexpected '%' in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6114
+[16-Sep-2018 06:04:12 UTC] PHP Parse error:  syntax error, unexpected '%' in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6114
+[16-Sep-2018 06:05:02 UTC] PHP Fatal error:  Cannot redeclare save_extra_profile_fields() (previously declared in /var/www/html/www.visorsourcing.com/wp-includes/functions.php:6104) in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6131
+[16-Sep-2018 06:05:04 UTC] PHP Fatal error:  Cannot redeclare save_extra_profile_fields() (previously declared in /var/www/html/www.visorsourcing.com/wp-includes/functions.php:6104) in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6131
+[16-Sep-2018 06:05:10 UTC] PHP Fatal error:  Cannot redeclare save_extra_profile_fields() (previously declared in /var/www/html/www.visorsourcing.com/wp-includes/functions.php:6104) in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6131
+[17-Sep-2018 16:44:55 UTC] PHP Warning:  call_user_func_array() expects parameter 1 to be a valid callback, function 'custom_user_profile_fields' not found or invalid function name in /var/www/html/www.visorsourcing.com/wp-includes/class-wp-hook.php on line 286
+[17-Sep-2018 18:30:44 UTC] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function update_user_meta(), 2 passed in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6109 and at least 3 expected in /var/www/html/www.visorsourcing.com/wp-includes/user.php:824
+Stack trace:
+#0 /var/www/html/www.visorsourcing.com/wp-includes/functions.php(6109): update_user_meta(50, 'Junior')
+#1 /var/www/html/www.visorsourcing.com/wp-includes/class-wp-hook.php(286): save_extra_profile_fields(50)
+#2 /var/www/html/www.visorsourcing.com/wp-includes/class-wp-hook.php(310): WP_Hook->apply_filters('', Array)
+#3 /var/www/html/www.visorsourcing.com/wp-includes/plugin.php(453): WP_Hook->do_action(Array)
+#4 /var/www/html/www.visorsourcing.com/wp-admin/user-edit.php(132): do_action('personal_option...', 50)
+#5 /var/www/html/www.visorsourcing.com/wp-admin/profile.php(18): require_once('/var/www/html/w...')
+#6 {main}
+  thrown in /var/www/html/www.visorsourcing.com/wp-includes/user.php on line 824
+[17-Sep-2018 18:31:43 UTC] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function update_user_meta(), 2 passed in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6109 and at least 3 expected in /var/www/html/www.visorsourcing.com/wp-includes/user.php:824
+Stack trace:
+#0 /var/www/html/www.visorsourcing.com/wp-includes/functions.php(6109): update_user_meta(50, 'Junior')
+#1 /var/www/html/www.visorsourcing.com/wp-includes/class-wp-hook.php(286): save_extra_profile_fields(50)
+#2 /var/www/html/www.visorsourcing.com/wp-includes/class-wp-hook.php(310): WP_Hook->apply_filters('', Array)
+#3 /var/www/html/www.visorsourcing.com/wp-includes/plugin.php(453): WP_Hook->do_action(Array)
+#4 /var/www/html/www.visorsourcing.com/wp-admin/user-edit.php(132): do_action('personal_option...', 50)
+#5 /var/www/html/www.visorsourcing.com/wp-admin/profile.php(18): require_once('/var/www/html/w...')
+#6 {main}
+  thrown in /var/www/html/www.visorsourcing.com/wp-includes/user.php on line 824
+[17-Sep-2018 18:34:04 UTC] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function update_user_meta(), 2 passed in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6110 and at least 3 expected in /var/www/html/www.visorsourcing.com/wp-includes/user.php:824
+Stack trace:
+#0 /var/www/html/www.visorsourcing.com/wp-includes/functions.php(6110): update_user_meta(50, 'Junior')
+#1 /var/www/html/www.visorsourcing.com/wp-includes/class-wp-hook.php(286): save_extra_profile_fields(50)
+#2 /var/www/html/www.visorsourcing.com/wp-includes/class-wp-hook.php(310): WP_Hook->apply_filters('', Array)
+#3 /var/www/html/www.visorsourcing.com/wp-includes/plugin.php(453): WP_Hook->do_action(Array)
+#4 /var/www/html/www.visorsourcing.com/wp-admin/user-edit.php(132): do_action('personal_option...', 50)
+#5 /var/www/html/www.visorsourcing.com/wp-admin/profile.php(18): require_once('/var/www/html/w...')
+#6 {main}
+  thrown in /var/www/html/www.visorsourcing.com/wp-includes/user.php on line 824
+[17-Sep-2018 18:34:46 UTC] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function update_user_meta(), 2 passed in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6109 and at least 3 expected in /var/www/html/www.visorsourcing.com/wp-includes/user.php:824
+Stack trace:
+#0 /var/www/html/www.visorsourcing.com/wp-includes/functions.php(6109): update_user_meta(50, 'Junior')
+#1 /var/www/html/www.visorsourcing.com/wp-includes/class-wp-hook.php(286): save_extra_profile_fields(50)
+#2 /var/www/html/www.visorsourcing.com/wp-includes/class-wp-hook.php(310): WP_Hook->apply_filters('', Array)
+#3 /var/www/html/www.visorsourcing.com/wp-includes/plugin.php(453): WP_Hook->do_action(Array)
+#4 /var/www/html/www.visorsourcing.com/wp-admin/user-edit.php(132): do_action('personal_option...', 50)
+#5 /var/www/html/www.visorsourcing.com/wp-admin/profile.php(18): require_once('/var/www/html/w...')
+#6 {main}
+  thrown in /var/www/html/www.visorsourcing.com/wp-includes/user.php on line 824
+[17-Sep-2018 19:28:42 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6096
+[17-Sep-2018 19:28:51 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6096
+[17-Sep-2018 19:39:56 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6096
+[17-Sep-2018 19:44:57 UTC] PHP Parse error:  syntax error, unexpected 'error_log' (T_STRING) in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6099
+[17-Sep-2018 19:50:36 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6096
+[17-Sep-2018 19:50:36 UTC] The user in profile page is 
+[17-Sep-2018 19:50:36 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6099
+[17-Sep-2018 19:50:36 UTC] NULL
+[18-Sep-2018 15:55:21 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6096
+[18-Sep-2018 15:55:21 UTC] The user in profile page is 
+[18-Sep-2018 15:55:21 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6099
+[18-Sep-2018 15:55:21 UTC] NULL
+[18-Sep-2018 15:55:30 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6096
+[18-Sep-2018 15:55:30 UTC] The user in profile page is 
+[18-Sep-2018 15:55:30 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6099
+[18-Sep-2018 15:55:30 UTC] NULL
+[18-Sep-2018 22:57:09 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[18-Sep-2018 22:57:09 UTC] The user in profile page is 
+[18-Sep-2018 22:57:09 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6103
+[18-Sep-2018 22:57:09 UTC] NULL
+[18-Sep-2018 22:59:54 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[18-Sep-2018 22:59:54 UTC] the division in the profile is
+[18-Sep-2018 22:59:54 UTC] Senior
+[18-Sep-2018 22:59:54 UTC] The user in profile page is 
+[18-Sep-2018 22:59:54 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[18-Sep-2018 22:59:54 UTC] NULL
+[18-Sep-2018 23:00:30 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[18-Sep-2018 23:00:30 UTC] the division in the profile is
+[18-Sep-2018 23:00:30 UTC] Senior
+[18-Sep-2018 23:00:30 UTC] The user in profile page is 
+[18-Sep-2018 23:00:30 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[18-Sep-2018 23:00:30 UTC] NULL
+[18-Sep-2018 23:01:55 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[18-Sep-2018 23:01:55 UTC] the division in the profile is
+[18-Sep-2018 23:01:55 UTC] Senior
+[18-Sep-2018 23:01:55 UTC] The user in profile page is 
+[18-Sep-2018 23:01:55 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[18-Sep-2018 23:01:55 UTC] NULL
+[18-Sep-2018 23:01:59 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[18-Sep-2018 23:01:59 UTC] the division in the profile is
+[18-Sep-2018 23:01:59 UTC] Senior
+[18-Sep-2018 23:01:59 UTC] The user in profile page is 
+[18-Sep-2018 23:01:59 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[18-Sep-2018 23:01:59 UTC] NULL
+[18-Sep-2018 23:02:55 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[18-Sep-2018 23:02:55 UTC] the division in the profile is
+[18-Sep-2018 23:02:55 UTC] Senior
+[18-Sep-2018 23:02:55 UTC] The user in profile page is 
+[18-Sep-2018 23:02:55 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[18-Sep-2018 23:02:55 UTC] NULL
+[19-Sep-2018 00:16:36 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 00:16:36 UTC] the division in the profile is
+[19-Sep-2018 00:16:36 UTC] Senior
+[19-Sep-2018 00:16:36 UTC] The user in profile page is 
+[19-Sep-2018 00:16:36 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 00:16:36 UTC] NULL
+[19-Sep-2018 00:18:46 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 00:18:46 UTC] the division in the profile is
+[19-Sep-2018 00:18:46 UTC] Senior
+[19-Sep-2018 00:18:46 UTC] The user in profile page is 
+[19-Sep-2018 00:18:46 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 00:18:46 UTC] NULL
+[19-Sep-2018 00:18:48 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 00:18:48 UTC] the division in the profile is
+[19-Sep-2018 00:18:48 UTC] Senior
+[19-Sep-2018 00:18:48 UTC] The user in profile page is 
+[19-Sep-2018 00:18:48 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 00:18:48 UTC] NULL
+[19-Sep-2018 00:18:56 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 00:18:56 UTC] the division in the profile is
+[19-Sep-2018 00:18:56 UTC] Senior
+[19-Sep-2018 00:18:56 UTC] The user in profile page is 
+[19-Sep-2018 00:18:56 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 00:18:56 UTC] NULL
+[19-Sep-2018 00:20:17 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 00:20:17 UTC] the division in the profile is
+[19-Sep-2018 00:20:17 UTC] Senior
+[19-Sep-2018 00:20:17 UTC] The user in profile page is 
+[19-Sep-2018 00:20:17 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 00:20:17 UTC] NULL
+[19-Sep-2018 00:21:07 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 00:21:07 UTC] the division in the profile is
+[19-Sep-2018 00:21:07 UTC] Senior
+[19-Sep-2018 00:21:07 UTC] The user in profile page is 
+[19-Sep-2018 00:21:07 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 00:21:07 UTC] NULL
+[19-Sep-2018 00:21:31 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 00:21:31 UTC] the division in the profile is
+[19-Sep-2018 00:21:31 UTC] Senior
+[19-Sep-2018 00:21:31 UTC] The user in profile page is 
+[19-Sep-2018 00:21:31 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 00:21:31 UTC] NULL
+[19-Sep-2018 04:33:15 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 04:33:15 UTC] the division in the profile is
+[19-Sep-2018 04:33:15 UTC] Senior
+[19-Sep-2018 04:33:15 UTC] The user in profile page is 
+[19-Sep-2018 04:33:15 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 04:33:15 UTC] NULL
+[19-Sep-2018 04:33:16 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 04:33:16 UTC] the division in the profile is
+[19-Sep-2018 04:33:16 UTC] Senior
+[19-Sep-2018 04:33:16 UTC] The user in profile page is 
+[19-Sep-2018 04:33:16 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 04:33:16 UTC] NULL
+[19-Sep-2018 04:45:12 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 04:45:12 UTC] the division in the profile is
+[19-Sep-2018 04:45:12 UTC] Senior
+[19-Sep-2018 04:45:12 UTC] The user in profile page is 
+[19-Sep-2018 04:45:12 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 04:45:12 UTC] NULL
+[19-Sep-2018 04:45:12 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 04:45:12 UTC] the division in the profile is
+[19-Sep-2018 04:45:12 UTC] Senior
+[19-Sep-2018 04:45:12 UTC] The user in profile page is 
+[19-Sep-2018 04:45:12 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 04:45:12 UTC] NULL
+[19-Sep-2018 04:45:20 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 04:45:20 UTC] the division in the profile is
+[19-Sep-2018 04:45:20 UTC] Senior
+[19-Sep-2018 04:45:20 UTC] The user in profile page is 
+[19-Sep-2018 04:45:20 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 04:45:20 UTC] NULL
+[19-Sep-2018 04:48:39 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 04:48:39 UTC] the division in the profile is
+[19-Sep-2018 04:48:39 UTC] Senior
+[19-Sep-2018 04:48:39 UTC] The user in profile page is 
+[19-Sep-2018 04:48:39 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 04:48:39 UTC] NULL
+[19-Sep-2018 04:52:27 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 04:52:27 UTC] the division in the profile is
+[19-Sep-2018 04:52:27 UTC] Senior
+[19-Sep-2018 04:52:27 UTC] The user in profile page is 
+[19-Sep-2018 04:52:27 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 04:52:27 UTC] NULL
+[19-Sep-2018 04:52:27 UTC] I am in the if statements
+[19-Sep-2018 04:53:05 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 04:53:05 UTC] the division in the profile is
+[19-Sep-2018 04:53:05 UTC] Senior
+[19-Sep-2018 04:53:05 UTC] The user in profile page is 
+[19-Sep-2018 04:53:05 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 04:53:05 UTC] NULL
+[19-Sep-2018 04:53:05 UTC] I am in the if statements
+[19-Sep-2018 04:53:17 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 04:53:17 UTC] the division in the profile is
+[19-Sep-2018 04:53:17 UTC] Senior
+[19-Sep-2018 04:53:17 UTC] The user in profile page is 
+[19-Sep-2018 04:53:17 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 04:53:17 UTC] NULL
+[19-Sep-2018 04:53:17 UTC] I am in the if statements
+[19-Sep-2018 04:53:21 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 04:53:21 UTC] the division in the profile is
+[19-Sep-2018 04:53:21 UTC] Senior
+[19-Sep-2018 04:53:21 UTC] The user in profile page is 
+[19-Sep-2018 04:53:21 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 04:53:21 UTC] NULL
+[19-Sep-2018 04:53:21 UTC] I am in the if statements
+[19-Sep-2018 05:08:07 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 05:08:07 UTC] the division in the profile is
+[19-Sep-2018 05:08:07 UTC] Senior
+[19-Sep-2018 05:08:07 UTC] The user in profile page is 
+[19-Sep-2018 05:08:07 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 05:08:07 UTC] NULL
+[19-Sep-2018 05:08:29 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 05:08:29 UTC] the division in the profile is
+[19-Sep-2018 05:08:29 UTC] Senior
+[19-Sep-2018 05:08:29 UTC] The user in profile page is 
+[19-Sep-2018 05:08:29 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 05:08:29 UTC] NULL
+[19-Sep-2018 05:08:46 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 05:08:46 UTC] the division in the profile is
+[19-Sep-2018 05:08:46 UTC] Junior
+[19-Sep-2018 05:08:46 UTC] The user in profile page is 
+[19-Sep-2018 05:08:46 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 05:08:46 UTC] NULL
+[19-Sep-2018 05:09:26 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 05:09:26 UTC] the division in the profile is
+[19-Sep-2018 05:09:26 UTC] Junior
+[19-Sep-2018 05:09:26 UTC] The user in profile page is 
+[19-Sep-2018 05:09:26 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 05:09:26 UTC] NULL
+[19-Sep-2018 05:23:00 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 05:23:00 UTC] the division in the profile is
+[19-Sep-2018 05:23:00 UTC] Junior
+[19-Sep-2018 05:23:00 UTC] The user in profile page is 
+[19-Sep-2018 05:23:00 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 05:23:00 UTC] NULL
+[19-Sep-2018 05:23:08 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 05:23:08 UTC] the division in the profile is
+[19-Sep-2018 05:23:08 UTC] Junior
+[19-Sep-2018 05:23:08 UTC] The user in profile page is 
+[19-Sep-2018 05:23:08 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 05:23:08 UTC] NULL
+[19-Sep-2018 05:24:54 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 05:24:54 UTC] the division in the profile is
+[19-Sep-2018 05:24:54 UTC] Junior
+[19-Sep-2018 05:24:54 UTC] The user in profile page is 
+[19-Sep-2018 05:24:54 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 05:24:54 UTC] NULL
+[19-Sep-2018 05:28:22 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 05:28:22 UTC] the division in the profile is
+[19-Sep-2018 05:28:22 UTC] Junior
+[19-Sep-2018 05:28:22 UTC] The user in profile page is 
+[19-Sep-2018 05:28:22 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 05:28:22 UTC] NULL
+[19-Sep-2018 05:28:25 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 05:28:25 UTC] the division in the profile is
+[19-Sep-2018 05:28:25 UTC] Junior
+[19-Sep-2018 05:28:25 UTC] The user in profile page is 
+[19-Sep-2018 05:28:25 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 05:28:25 UTC] NULL
+[19-Sep-2018 05:30:09 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 05:30:09 UTC] the division in the profile is
+[19-Sep-2018 05:30:09 UTC] Junior
+[19-Sep-2018 05:30:09 UTC] The user in profile page is 
+[19-Sep-2018 05:30:09 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 05:30:09 UTC] NULL
+[19-Sep-2018 05:30:23 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 05:30:23 UTC] the division in the profile is
+[19-Sep-2018 05:30:23 UTC] Senior
+[19-Sep-2018 05:30:23 UTC] The user in profile page is 
+[19-Sep-2018 05:30:23 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 05:30:23 UTC] NULL
+[19-Sep-2018 05:30:35 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 05:30:35 UTC] the division in the profile is
+[19-Sep-2018 05:30:35 UTC] Senior
+[19-Sep-2018 05:30:35 UTC] The user in profile page is 
+[19-Sep-2018 05:30:35 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 05:30:35 UTC] NULL
+[19-Sep-2018 15:09:24 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 15:09:24 UTC] the division in the profile is
+[19-Sep-2018 15:09:24 UTC] Senior
+[19-Sep-2018 15:09:24 UTC] The user in profile page is 
+[19-Sep-2018 15:09:24 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 15:09:24 UTC] NULL
+[19-Sep-2018 15:09:43 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 15:09:43 UTC] the division in the profile is
+[19-Sep-2018 15:09:43 UTC] Senior
+[19-Sep-2018 15:09:43 UTC] The user in profile page is 
+[19-Sep-2018 15:09:43 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 15:09:43 UTC] NULL
+[19-Sep-2018 15:09:45 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 15:09:45 UTC] the division in the profile is
+[19-Sep-2018 15:09:45 UTC] Senior
+[19-Sep-2018 15:09:45 UTC] The user in profile page is 
+[19-Sep-2018 15:09:45 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 15:09:45 UTC] NULL
+[19-Sep-2018 15:09:47 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 15:09:47 UTC] the division in the profile is
+[19-Sep-2018 15:09:47 UTC] Senior
+[19-Sep-2018 15:09:47 UTC] The user in profile page is 
+[19-Sep-2018 15:09:47 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 15:09:47 UTC] NULL
+[19-Sep-2018 15:30:23 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 15:30:23 UTC] the division in the profile is
+[19-Sep-2018 15:30:23 UTC] Senior
+[19-Sep-2018 15:30:23 UTC] The user in profile page is 
+[19-Sep-2018 15:30:23 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 15:30:23 UTC] NULL
+[19-Sep-2018 15:30:23 UTC] in senior
+[19-Sep-2018 15:30:28 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 15:30:28 UTC] the division in the profile is
+[19-Sep-2018 15:30:28 UTC] Senior
+[19-Sep-2018 15:30:28 UTC] The user in profile page is 
+[19-Sep-2018 15:30:28 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 15:30:28 UTC] NULL
+[19-Sep-2018 15:30:28 UTC] in senior
+[19-Sep-2018 15:30:42 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 15:30:42 UTC] the division in the profile is
+[19-Sep-2018 15:30:42 UTC] Senior
+[19-Sep-2018 15:30:42 UTC] The user in profile page is 
+[19-Sep-2018 15:30:42 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 15:30:42 UTC] NULL
+[19-Sep-2018 15:30:42 UTC] in senior
+[19-Sep-2018 15:33:43 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 15:33:43 UTC] the division in the profile is
+[19-Sep-2018 15:33:43 UTC] Senior
+[19-Sep-2018 15:33:43 UTC] The user in profile page is 
+[19-Sep-2018 15:33:43 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 15:33:43 UTC] NULL
+[19-Sep-2018 15:33:43 UTC] in senior
+[19-Sep-2018 15:38:10 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 15:38:10 UTC] the division in the profile is
+[19-Sep-2018 15:38:10 UTC] Senior
+[19-Sep-2018 15:38:10 UTC] The user in profile page is 
+[19-Sep-2018 15:38:10 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 15:38:10 UTC] NULL
+[19-Sep-2018 15:38:10 UTC] in senior
+[19-Sep-2018 15:38:15 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 15:38:15 UTC] the division in the profile is
+[19-Sep-2018 15:38:15 UTC] Senior
+[19-Sep-2018 15:38:15 UTC] The user in profile page is 
+[19-Sep-2018 15:38:15 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 15:38:15 UTC] NULL
+[19-Sep-2018 15:38:15 UTC] in senior
+[19-Sep-2018 15:38:19 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 15:38:19 UTC] the division in the profile is
+[19-Sep-2018 15:38:19 UTC] Senior
+[19-Sep-2018 15:38:19 UTC] The user in profile page is 
+[19-Sep-2018 15:38:19 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 15:38:19 UTC] NULL
+[19-Sep-2018 15:38:19 UTC] in senior
+[19-Sep-2018 15:38:58 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 15:38:58 UTC] the division in the profile is
+[19-Sep-2018 15:38:58 UTC] Senior
+[19-Sep-2018 15:38:58 UTC] The user in profile page is 
+[19-Sep-2018 15:38:58 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 15:38:58 UTC] NULL
+[19-Sep-2018 15:38:58 UTC] in senior
+[19-Sep-2018 15:39:09 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 15:39:09 UTC] the division in the profile is
+[19-Sep-2018 15:39:09 UTC] Senior
+[19-Sep-2018 15:39:09 UTC] The user in profile page is 
+[19-Sep-2018 15:39:09 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 15:39:09 UTC] NULL
+[19-Sep-2018 15:39:09 UTC] in senior
+[19-Sep-2018 15:45:49 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 15:45:49 UTC] the division in the profile is
+[19-Sep-2018 15:45:49 UTC] Senior
+[19-Sep-2018 15:45:49 UTC] The user in profile page is 
+[19-Sep-2018 15:45:49 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 15:45:49 UTC] NULL
+[19-Sep-2018 15:45:49 UTC] in senior
+[19-Sep-2018 15:45:52 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 15:45:52 UTC] the division in the profile is
+[19-Sep-2018 15:45:52 UTC] Senior
+[19-Sep-2018 15:45:52 UTC] The user in profile page is 
+[19-Sep-2018 15:45:52 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 15:45:52 UTC] NULL
+[19-Sep-2018 15:45:52 UTC] in senior
+[19-Sep-2018 15:46:18 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 15:46:18 UTC] the division in the profile is
+[19-Sep-2018 15:46:18 UTC] Senior
+[19-Sep-2018 15:46:18 UTC] The user in profile page is 
+[19-Sep-2018 15:46:18 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 15:46:18 UTC] NULL
+[19-Sep-2018 15:46:18 UTC] in senior
+[19-Sep-2018 15:46:23 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 15:46:23 UTC] the division in the profile is
+[19-Sep-2018 15:46:23 UTC] Senior
+[19-Sep-2018 15:46:23 UTC] The user in profile page is 
+[19-Sep-2018 15:46:23 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 15:46:23 UTC] NULL
+[19-Sep-2018 15:46:23 UTC] in senior
+[19-Sep-2018 15:46:31 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 15:46:31 UTC] the division in the profile is
+[19-Sep-2018 15:46:31 UTC] Senior
+[19-Sep-2018 15:46:31 UTC] The user in profile page is 
+[19-Sep-2018 15:46:31 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 15:46:31 UTC] NULL
+[19-Sep-2018 15:46:31 UTC] in senior
+[19-Sep-2018 15:47:26 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 15:47:26 UTC] the division in the profile is
+[19-Sep-2018 15:47:26 UTC] Junior
+[19-Sep-2018 15:47:26 UTC] The user in profile page is 
+[19-Sep-2018 15:47:26 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 15:47:26 UTC] NULL
+[19-Sep-2018 15:47:26 UTC] in junior
+[19-Sep-2018 15:47:30 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 15:47:30 UTC] the division in the profile is
+[19-Sep-2018 15:47:30 UTC] Junior
+[19-Sep-2018 15:47:30 UTC] The user in profile page is 
+[19-Sep-2018 15:47:30 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 15:47:30 UTC] NULL
+[19-Sep-2018 15:47:30 UTC] in junior
+[19-Sep-2018 15:47:39 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 15:47:39 UTC] the division in the profile is
+[19-Sep-2018 15:47:39 UTC] Senior
+[19-Sep-2018 15:47:39 UTC] The user in profile page is 
+[19-Sep-2018 15:47:39 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 15:47:39 UTC] NULL
+[19-Sep-2018 15:47:39 UTC] in senior
+[19-Sep-2018 15:47:43 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 15:47:43 UTC] the division in the profile is
+[19-Sep-2018 15:47:43 UTC] Senior
+[19-Sep-2018 15:47:43 UTC] The user in profile page is 
+[19-Sep-2018 15:47:43 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 15:47:43 UTC] NULL
+[19-Sep-2018 15:47:43 UTC] in senior
+[19-Sep-2018 22:24:53 UTC] PHP Parse error:  syntax error, unexpected '{' in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6154
+[19-Sep-2018 22:35:15 UTC] PHP Parse error:  syntax error, unexpected '{' in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6154
+[19-Sep-2018 22:36:45 UTC] PHP Parse error:  syntax error, unexpected '{' in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6154
+[19-Sep-2018 22:36:46 UTC] PHP Parse error:  syntax error, unexpected '{' in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6154
+[19-Sep-2018 22:38:01 UTC] PHP Parse error:  syntax error, unexpected '{' in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6154
+[19-Sep-2018 22:38:02 UTC] PHP Parse error:  syntax error, unexpected '{' in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6154
+[19-Sep-2018 22:40:37 UTC] PHP Parse error:  syntax error, unexpected '{' in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6154
+[19-Sep-2018 22:40:38 UTC] PHP Parse error:  syntax error, unexpected '{' in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6154
+[19-Sep-2018 22:45:49 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6158
+[19-Sep-2018 22:45:53 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6158
+[19-Sep-2018 22:47:11 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[19-Sep-2018 22:47:11 UTC] the division in the profile is
+[19-Sep-2018 22:47:11 UTC] Senior
+[19-Sep-2018 22:47:11 UTC] The user in profile page is 
+[19-Sep-2018 22:47:11 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[19-Sep-2018 22:47:11 UTC] NULL
+[19-Sep-2018 22:47:11 UTC] in senior
+[20-Sep-2018 15:34:44 UTC] PHP Parse error:  syntax error, unexpected ')' in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6161
+[20-Sep-2018 15:34:45 UTC] PHP Parse error:  syntax error, unexpected ')' in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6161
+[20-Sep-2018 15:37:58 UTC] PHP Fatal error:  Cannot redeclare save_extra_profile_fields() (previously declared in /var/www/html/www.visorsourcing.com/wp-includes/functions.php:6146) in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6163
+[20-Sep-2018 15:38:46 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[20-Sep-2018 15:38:46 UTC] the division in the profile is
+[20-Sep-2018 15:38:46 UTC] Senior
+[20-Sep-2018 15:38:46 UTC] The user in profile page is 
+[20-Sep-2018 15:38:46 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[20-Sep-2018 15:38:46 UTC] NULL
+[20-Sep-2018 15:38:46 UTC] in senior
+[20-Sep-2018 15:38:57 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[20-Sep-2018 15:38:57 UTC] the division in the profile is
+[20-Sep-2018 15:38:57 UTC] Senior
+[20-Sep-2018 15:38:57 UTC] The user in profile page is 
+[20-Sep-2018 15:38:57 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[20-Sep-2018 15:38:57 UTC] NULL
+[20-Sep-2018 15:38:57 UTC] in senior
+[20-Sep-2018 15:57:27 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[20-Sep-2018 15:57:27 UTC] Getting the current user id
+[20-Sep-2018 15:57:27 UTC] 50
+[20-Sep-2018 15:57:27 UTC] the division in the profile is
+[20-Sep-2018 15:57:27 UTC] Senior
+[20-Sep-2018 15:57:27 UTC] The user in profile page is 
+[20-Sep-2018 15:57:27 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6109
+[20-Sep-2018 15:57:27 UTC] NULL
+[20-Sep-2018 15:57:27 UTC] in senior
+[20-Sep-2018 15:59:15 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[20-Sep-2018 15:59:15 UTC] Getting the current user id
+[20-Sep-2018 15:59:15 UTC] 50
+[20-Sep-2018 15:59:15 UTC] the division in the profile is
+[20-Sep-2018 15:59:15 UTC] Senior
+[20-Sep-2018 15:59:15 UTC] The user in profile page is 
+[20-Sep-2018 15:59:15 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6109
+[20-Sep-2018 15:59:15 UTC] NULL
+[20-Sep-2018 15:59:15 UTC] in senior
+[20-Sep-2018 16:23:56 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[20-Sep-2018 16:23:56 UTC] Getting the current user id
+[20-Sep-2018 16:23:56 UTC] 50
+[20-Sep-2018 16:23:56 UTC] the division in the profile is
+[20-Sep-2018 16:23:56 UTC] Senior
+[20-Sep-2018 16:23:56 UTC] The user in profile page is 
+[20-Sep-2018 16:23:56 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6109
+[20-Sep-2018 16:23:56 UTC] NULL
+[20-Sep-2018 16:23:56 UTC] in senior
+[20-Sep-2018 16:24:24 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[20-Sep-2018 16:24:24 UTC] Getting the current user id
+[20-Sep-2018 16:24:24 UTC] 50
+[20-Sep-2018 16:24:24 UTC] the division in the profile is
+[20-Sep-2018 16:24:24 UTC] Senior
+[20-Sep-2018 16:24:24 UTC] The user in profile page is 
+[20-Sep-2018 16:24:24 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6109
+[20-Sep-2018 16:24:24 UTC] NULL
+[20-Sep-2018 16:24:24 UTC] in senior
+[20-Sep-2018 16:30:22 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6156
+[20-Sep-2018 16:30:25 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6156
+[20-Sep-2018 16:31:51 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[20-Sep-2018 16:31:51 UTC] Getting the current user id
+[20-Sep-2018 16:31:51 UTC] 50
+[20-Sep-2018 16:31:51 UTC] the division in the profile is
+[20-Sep-2018 16:31:51 UTC] Senior
+[20-Sep-2018 16:31:51 UTC] The user in profile page is 
+[20-Sep-2018 16:31:51 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6109
+[20-Sep-2018 16:31:51 UTC] NULL
+[20-Sep-2018 16:31:51 UTC] in senior
+[20-Sep-2018 16:34:28 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[20-Sep-2018 16:34:28 UTC] Getting the current user id
+[20-Sep-2018 16:34:28 UTC] 50
+[20-Sep-2018 16:34:28 UTC] the division in the profile is
+[20-Sep-2018 16:34:28 UTC] Senior
+[20-Sep-2018 16:34:28 UTC] The user in profile page is 
+[20-Sep-2018 16:34:28 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6109
+[20-Sep-2018 16:34:28 UTC] NULL
+[20-Sep-2018 16:34:28 UTC] in senior
+[20-Sep-2018 16:34:31 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[20-Sep-2018 16:34:31 UTC] Getting the current user id
+[20-Sep-2018 16:34:31 UTC] 50
+[20-Sep-2018 16:34:31 UTC] the division in the profile is
+[20-Sep-2018 16:34:31 UTC] Senior
+[20-Sep-2018 16:34:31 UTC] The user in profile page is 
+[20-Sep-2018 16:34:31 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6109
+[20-Sep-2018 16:34:31 UTC] NULL
+[20-Sep-2018 16:34:31 UTC] in senior
+[20-Sep-2018 16:34:40 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[20-Sep-2018 16:34:40 UTC] Getting the current user id
+[20-Sep-2018 16:34:40 UTC] 50
+[20-Sep-2018 16:34:40 UTC] the division in the profile is
+[20-Sep-2018 16:34:40 UTC] Senior
+[20-Sep-2018 16:34:40 UTC] The user in profile page is 
+[20-Sep-2018 16:34:40 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6109
+[20-Sep-2018 16:34:40 UTC] NULL
+[20-Sep-2018 16:34:40 UTC] in senior
+[20-Sep-2018 16:34:44 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[20-Sep-2018 16:34:44 UTC] Getting the current user id
+[20-Sep-2018 16:34:44 UTC] 50
+[20-Sep-2018 16:34:44 UTC] the division in the profile is
+[20-Sep-2018 16:34:44 UTC] Senior
+[20-Sep-2018 16:34:44 UTC] The user in profile page is 
+[20-Sep-2018 16:34:44 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6109
+[20-Sep-2018 16:34:44 UTC] NULL
+[20-Sep-2018 16:34:44 UTC] in senior
+[20-Sep-2018 16:35:55 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[20-Sep-2018 16:35:55 UTC] Getting the current user id
+[20-Sep-2018 16:35:55 UTC] 50
+[20-Sep-2018 16:35:55 UTC] the division in the profile is
+[20-Sep-2018 16:35:55 UTC] Senior
+[20-Sep-2018 16:35:55 UTC] The user in profile page is 
+[20-Sep-2018 16:35:55 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6109
+[20-Sep-2018 16:35:55 UTC] NULL
+[20-Sep-2018 16:35:55 UTC] in senior
+[20-Sep-2018 16:55:43 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6098
+[20-Sep-2018 16:55:43 UTC] Getting the current user id
+[20-Sep-2018 16:55:43 UTC] 50
+[20-Sep-2018 16:55:43 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6103
+[20-Sep-2018 16:55:43 UTC] the division in the profile is
+[20-Sep-2018 16:55:43 UTC] Senior
+[20-Sep-2018 16:55:43 UTC] The user in profile page is 
+[20-Sep-2018 16:55:43 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6111
+[20-Sep-2018 16:55:43 UTC] NULL
+[20-Sep-2018 16:55:43 UTC] in senior
+[20-Sep-2018 16:55:47 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6098
+[20-Sep-2018 16:55:47 UTC] Getting the current user id
+[20-Sep-2018 16:55:47 UTC] 50
+[20-Sep-2018 16:55:47 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6103
+[20-Sep-2018 16:55:47 UTC] the division in the profile is
+[20-Sep-2018 16:55:47 UTC] Senior
+[20-Sep-2018 16:55:47 UTC] The user in profile page is 
+[20-Sep-2018 16:55:47 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6111
+[20-Sep-2018 16:55:47 UTC] NULL
+[20-Sep-2018 16:55:47 UTC] in senior
+[20-Sep-2018 16:56:05 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6098
+[20-Sep-2018 16:56:05 UTC] Getting the current user id
+[20-Sep-2018 16:56:05 UTC] 50
+[20-Sep-2018 16:56:05 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6103
+[20-Sep-2018 16:56:05 UTC] the division in the profile is
+[20-Sep-2018 16:56:05 UTC] Senior
+[20-Sep-2018 16:56:05 UTC] The user in profile page is 
+[20-Sep-2018 16:56:05 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6111
+[20-Sep-2018 16:56:05 UTC] NULL
+[20-Sep-2018 16:56:05 UTC] in senior
+[20-Sep-2018 17:06:15 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6098
+[20-Sep-2018 17:06:15 UTC] Getting the current user id
+[20-Sep-2018 17:06:15 UTC] 50
+[20-Sep-2018 17:06:15 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6103
+[20-Sep-2018 17:06:15 UTC] the division in the profile is
+[20-Sep-2018 17:06:15 UTC] Senior
+[20-Sep-2018 17:06:15 UTC] The user in profile page is 
+[20-Sep-2018 17:06:15 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6111
+[20-Sep-2018 17:06:15 UTC] NULL
+[20-Sep-2018 17:06:15 UTC] in senior
+[20-Sep-2018 17:09:16 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6098
+[20-Sep-2018 17:09:16 UTC] Getting the current user id
+[20-Sep-2018 17:09:16 UTC] 50
+[20-Sep-2018 17:09:16 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6103
+[20-Sep-2018 17:09:16 UTC] the division in the profile is
+[20-Sep-2018 17:09:16 UTC] Senior
+[20-Sep-2018 17:09:16 UTC] The user in profile page is 
+[20-Sep-2018 17:09:16 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6111
+[20-Sep-2018 17:09:16 UTC] NULL
+[20-Sep-2018 17:09:16 UTC] in senior
+[20-Sep-2018 17:09:21 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6098
+[20-Sep-2018 17:09:21 UTC] Getting the current user id
+[20-Sep-2018 17:09:21 UTC] 50
+[20-Sep-2018 17:09:21 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6103
+[20-Sep-2018 17:09:21 UTC] the division in the profile is
+[20-Sep-2018 17:09:21 UTC] Senior
+[20-Sep-2018 17:09:21 UTC] The user in profile page is 
+[20-Sep-2018 17:09:21 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6111
+[20-Sep-2018 17:09:21 UTC] NULL
+[20-Sep-2018 17:09:21 UTC] in senior
+[20-Sep-2018 17:10:07 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6098
+[20-Sep-2018 17:10:07 UTC] Getting the current user id
+[20-Sep-2018 17:10:07 UTC] 50
+[20-Sep-2018 17:10:07 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6103
+[20-Sep-2018 17:10:07 UTC] the division in the profile is
+[20-Sep-2018 17:10:07 UTC] Senior
+[20-Sep-2018 17:10:07 UTC] The user in profile page is 
+[20-Sep-2018 17:10:07 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6111
+[20-Sep-2018 17:10:07 UTC] NULL
+[20-Sep-2018 17:10:07 UTC] in senior
+[20-Sep-2018 17:26:38 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6091
+[20-Sep-2018 17:26:38 UTC] Getting the current user id
+[20-Sep-2018 17:26:38 UTC] 50
+[20-Sep-2018 17:26:38 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6096
+[20-Sep-2018 17:26:38 UTC] the division in the profile is
+[20-Sep-2018 17:26:38 UTC] Senior
+[20-Sep-2018 17:26:38 UTC] The user in profile page is 
+[20-Sep-2018 17:26:38 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6104
+[20-Sep-2018 17:26:38 UTC] NULL
+[20-Sep-2018 17:26:38 UTC] in senior
+[20-Sep-2018 17:37:00 UTC] 50
+[20-Sep-2018 17:37:00 UTC] Getting the current user id
+[20-Sep-2018 17:37:00 UTC] 50
+[20-Sep-2018 17:37:00 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6096
+[20-Sep-2018 17:37:00 UTC] the division in the profile is
+[20-Sep-2018 17:37:00 UTC] Senior
+[20-Sep-2018 17:37:00 UTC] The user in profile page is 
+[20-Sep-2018 17:37:00 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6104
+[20-Sep-2018 17:37:00 UTC] NULL
+[20-Sep-2018 17:37:00 UTC] in senior
+[20-Sep-2018 17:37:00 UTC] 50
+[20-Sep-2018 17:37:00 UTC] Getting the current user id
+[20-Sep-2018 17:37:00 UTC] 50
+[20-Sep-2018 17:37:00 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6096
+[20-Sep-2018 17:37:00 UTC] the division in the profile is
+[20-Sep-2018 17:37:00 UTC] Senior
+[20-Sep-2018 17:37:00 UTC] The user in profile page is 
+[20-Sep-2018 17:37:00 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6104
+[20-Sep-2018 17:37:00 UTC] NULL
+[20-Sep-2018 17:37:00 UTC] in senior
+[20-Sep-2018 17:37:06 UTC] 50
+[20-Sep-2018 17:37:06 UTC] Getting the current user id
+[20-Sep-2018 17:37:06 UTC] 50
+[20-Sep-2018 17:37:06 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6096
+[20-Sep-2018 17:37:06 UTC] the division in the profile is
+[20-Sep-2018 17:37:06 UTC] Senior
+[20-Sep-2018 17:37:06 UTC] The user in profile page is 
+[20-Sep-2018 17:37:06 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6104
+[20-Sep-2018 17:37:06 UTC] NULL
+[20-Sep-2018 17:37:06 UTC] in senior
+[20-Sep-2018 17:37:09 UTC] 50
+[20-Sep-2018 17:37:09 UTC] Getting the current user id
+[20-Sep-2018 17:37:09 UTC] 50
+[20-Sep-2018 17:37:09 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6096
+[20-Sep-2018 17:37:09 UTC] the division in the profile is
+[20-Sep-2018 17:37:09 UTC] Senior
+[20-Sep-2018 17:37:09 UTC] The user in profile page is 
+[20-Sep-2018 17:37:09 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6104
+[20-Sep-2018 17:37:09 UTC] NULL
+[20-Sep-2018 17:37:09 UTC] in senior
+[20-Sep-2018 17:41:26 UTC] 
+[20-Sep-2018 17:41:26 UTC] Getting the current user id
+[20-Sep-2018 17:41:26 UTC] 50
+[20-Sep-2018 17:41:26 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[20-Sep-2018 17:41:26 UTC] the division in the profile is
+[20-Sep-2018 17:41:26 UTC] Senior
+[20-Sep-2018 17:41:26 UTC] The user in profile page is 
+[20-Sep-2018 17:41:26 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[20-Sep-2018 17:41:26 UTC] NULL
+[20-Sep-2018 17:41:26 UTC] in senior
+[20-Sep-2018 17:41:33 UTC] 
+[20-Sep-2018 17:41:33 UTC] Getting the current user id
+[20-Sep-2018 17:41:33 UTC] 50
+[20-Sep-2018 17:41:33 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[20-Sep-2018 17:41:33 UTC] the division in the profile is
+[20-Sep-2018 17:41:33 UTC] Senior
+[20-Sep-2018 17:41:33 UTC] The user in profile page is 
+[20-Sep-2018 17:41:33 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[20-Sep-2018 17:41:33 UTC] NULL
+[20-Sep-2018 17:41:33 UTC] in senior
+[20-Sep-2018 17:42:23 UTC] 
+[20-Sep-2018 17:42:23 UTC] Getting the current user id
+[20-Sep-2018 17:42:23 UTC] 50
+[20-Sep-2018 17:42:23 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[20-Sep-2018 17:42:23 UTC] the division in the profile is
+[20-Sep-2018 17:42:23 UTC] Senior
+[20-Sep-2018 17:42:23 UTC] The user in profile page is 
+[20-Sep-2018 17:42:23 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[20-Sep-2018 17:42:23 UTC] NULL
+[20-Sep-2018 17:42:23 UTC] in senior
+[20-Sep-2018 17:45:35 UTC] 
+[20-Sep-2018 17:45:35 UTC] Getting the current user id
+[20-Sep-2018 17:45:35 UTC] 50
+[20-Sep-2018 17:45:35 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6097
+[20-Sep-2018 17:45:35 UTC] the division in the profile is
+[20-Sep-2018 17:45:35 UTC] Senior
+[20-Sep-2018 17:45:35 UTC] The user in profile page is 
+[20-Sep-2018 17:45:35 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[20-Sep-2018 17:45:35 UTC] NULL
+[20-Sep-2018 17:45:35 UTC] in senior
+[20-Sep-2018 17:50:10 UTC] PHP Recoverable fatal error:  Object of class WP_User could not be converted to string in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6092
+[20-Sep-2018 17:50:13 UTC] PHP Recoverable fatal error:  Object of class WP_User could not be converted to string in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6092
+[20-Sep-2018 17:51:17 UTC] PHP Recoverable fatal error:  Object of class WP_User could not be converted to string in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6092
+[20-Sep-2018 20:46:38 UTC] integer
+[20-Sep-2018 20:46:38 UTC] PHP Recoverable fatal error:  Object of class WP_User could not be converted to string in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6094
+[20-Sep-2018 20:50:15 UTC] the division in the profile is
+[20-Sep-2018 20:50:15 UTC] Senior
+[20-Sep-2018 20:50:15 UTC] The user in profile page is 
+[20-Sep-2018 20:50:15 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6110
+[20-Sep-2018 20:50:15 UTC] NULL
+[20-Sep-2018 20:50:15 UTC] in senior
+[20-Sep-2018 20:52:05 UTC] PHP Parse error:  syntax error, unexpected ';', expecting ',' or ')' in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6104
+[20-Sep-2018 20:53:34 UTC] the division in the profile is
+[20-Sep-2018 20:53:34 UTC] Senior
+[20-Sep-2018 20:53:34 UTC] The user in profile page is 
+[20-Sep-2018 20:53:34 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6112
+[20-Sep-2018 20:53:34 UTC] NULL
+[20-Sep-2018 20:53:34 UTC] in senior
+[20-Sep-2018 20:56:52 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function errorr_log() in /var/www/html/www.visorsourcing.com/wp-includes/functions.php:6105
+Stack trace:
+#0 /var/www/html/www.visorsourcing.com/wp-includes/class-wp-hook.php(286): extra_profile_fields(Object(WP_User))
+#1 /var/www/html/www.visorsourcing.com/wp-includes/class-wp-hook.php(310): WP_Hook->apply_filters('', Array)
+#2 /var/www/html/www.visorsourcing.com/wp-includes/plugin.php(453): WP_Hook->do_action(Array)
+#3 /var/www/html/www.visorsourcing.com/wp-admin/user-edit.php(362): do_action('profile_persona...', Object(WP_User))
+#4 /var/www/html/www.visorsourcing.com/wp-admin/profile.php(18): require_once('/var/www/html/w...')
+#5 {main}
+  thrown in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[20-Sep-2018 21:41:05 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function errorr_log() in /var/www/html/www.visorsourcing.com/wp-includes/functions.php:6105
+Stack trace:
+#0 /var/www/html/www.visorsourcing.com/wp-includes/class-wp-hook.php(286): extra_profile_fields(Object(WP_User))
+#1 /var/www/html/www.visorsourcing.com/wp-includes/class-wp-hook.php(310): WP_Hook->apply_filters('', Array)
+#2 /var/www/html/www.visorsourcing.com/wp-includes/plugin.php(453): WP_Hook->do_action(Array)
+#3 /var/www/html/www.visorsourcing.com/wp-admin/user-edit.php(362): do_action('profile_persona...', Object(WP_User))
+#4 /var/www/html/www.visorsourcing.com/wp-admin/profile.php(18): require_once('/var/www/html/w...')
+#5 {main}
+  thrown in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6105
+[20-Sep-2018 21:44:47 UTC] The current_user_id_type is integer
+[20-Sep-2018 21:44:47 UTC] the division in the profile is
+[20-Sep-2018 21:44:47 UTC] Senior
+[20-Sep-2018 21:44:47 UTC] The user in profile page is 
+[20-Sep-2018 21:44:47 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6113
+[20-Sep-2018 21:44:47 UTC] NULL
+[20-Sep-2018 21:44:47 UTC] in senior
+[20-Sep-2018 21:47:49 UTC] The current_user_id_type is integer
+[20-Sep-2018 21:47:49 UTC] the division in the profile is
+[20-Sep-2018 21:47:49 UTC] Senior
+[20-Sep-2018 21:47:49 UTC] The user in profile page is 
+[20-Sep-2018 21:47:49 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6113
+[20-Sep-2018 21:47:49 UTC] NULL
+[20-Sep-2018 21:47:49 UTC] in senior
+[20-Sep-2018 21:49:16 UTC] The current_user_id_type is integer
+[20-Sep-2018 21:49:16 UTC] the division in the profile is
+[20-Sep-2018 21:49:16 UTC] Senior
+[20-Sep-2018 21:49:16 UTC] The user in profile page is 
+[20-Sep-2018 21:49:16 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6113
+[20-Sep-2018 21:49:16 UTC] NULL
+[20-Sep-2018 21:49:16 UTC] in senior
+[20-Sep-2018 21:53:02 UTC] The current_user_id_type is integer
+[20-Sep-2018 21:53:02 UTC] The current_user_id is 50 
+[20-Sep-2018 21:53:02 UTC] the division in the profile is
+[20-Sep-2018 21:53:02 UTC] Senior
+[20-Sep-2018 21:53:02 UTC] The user in profile page is 
+[20-Sep-2018 21:53:02 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6114
+[20-Sep-2018 21:53:02 UTC] NULL
+[20-Sep-2018 21:53:02 UTC] in senior
+[20-Sep-2018 21:54:03 UTC] The current_user_id_type is integer
+[20-Sep-2018 21:54:03 UTC] The current_user_id is 50 
+[20-Sep-2018 21:54:03 UTC] the division in the profile is
+[20-Sep-2018 21:54:03 UTC] Senior
+[20-Sep-2018 21:54:03 UTC] The user in profile page is 
+[20-Sep-2018 21:54:03 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-includes/functions.php on line 6114
+[20-Sep-2018 21:54:03 UTC] NULL
+[20-Sep-2018 21:54:03 UTC] in senior
+[20-Sep-2018 22:10:25 UTC] The current_user_id_type is integer
+[20-Sep-2018 22:10:25 UTC] The current_user_id is 50 
+[20-Sep-2018 22:10:25 UTC] the division in the profile is
+[20-Sep-2018 22:10:25 UTC] Senior
+[20-Sep-2018 22:10:25 UTC] The user in profile page is 
+[20-Sep-2018 22:10:25 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 181
+[20-Sep-2018 22:10:25 UTC] NULL
+[20-Sep-2018 22:10:25 UTC] in senior
+[20-Sep-2018 22:13:28 UTC] The current_user_id_type is integer
+[20-Sep-2018 22:13:28 UTC] The current_user_id is 50 
+[20-Sep-2018 22:13:28 UTC] the division in the profile is
+[20-Sep-2018 22:13:28 UTC] Senior
+[20-Sep-2018 22:13:28 UTC] The user in profile page is 
+[20-Sep-2018 22:13:28 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 181
+[20-Sep-2018 22:13:28 UTC] NULL
+[20-Sep-2018 22:13:28 UTC] in senior
+[20-Sep-2018 22:16:08 UTC] The current_user_id_type is integer
+[20-Sep-2018 22:16:08 UTC] The current_user_id is 50 
+[20-Sep-2018 22:16:08 UTC] the division in the profile is
+[20-Sep-2018 22:16:08 UTC] Senior
+[20-Sep-2018 22:16:08 UTC] The user in profile page is 
+[20-Sep-2018 22:16:08 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 181
+[20-Sep-2018 22:16:08 UTC] NULL
+[20-Sep-2018 22:16:08 UTC] in senior
+[20-Sep-2018 22:40:03 UTC] The current user is object 
+[20-Sep-2018 22:40:03 UTC] The current_user_id_type is NULL
+[20-Sep-2018 22:40:03 UTC] The current_user_id is  
+[20-Sep-2018 22:40:03 UTC] the division in the profile is
+[20-Sep-2018 22:40:03 UTC] Senior
+[20-Sep-2018 22:40:03 UTC] The user in profile page is 
+[20-Sep-2018 22:40:03 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 182
+[20-Sep-2018 22:40:03 UTC] NULL
+[20-Sep-2018 22:40:03 UTC] in senior
+[20-Sep-2018 22:45:25 UTC] The current user is object 
+[20-Sep-2018 22:45:25 UTC] The first name of this user is  
+[20-Sep-2018 22:45:25 UTC] The current_user_id_type is NULL
+[20-Sep-2018 22:45:25 UTC] The current_user_id is  
+[20-Sep-2018 22:45:25 UTC] the division in the profile is
+[20-Sep-2018 22:45:25 UTC] Senior
+[20-Sep-2018 22:45:25 UTC] The user in profile page is 
+[20-Sep-2018 22:45:25 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 184
+[20-Sep-2018 22:45:25 UTC] NULL
+[20-Sep-2018 22:45:25 UTC] in senior
+[20-Sep-2018 22:45:43 UTC] The current user is object 
+[20-Sep-2018 22:45:43 UTC] The first name of this user is  
+[20-Sep-2018 22:45:43 UTC] The current_user_id_type is NULL
+[20-Sep-2018 22:45:43 UTC] The current_user_id is  
+[20-Sep-2018 22:45:43 UTC] the division in the profile is
+[20-Sep-2018 22:45:43 UTC] Senior
+[20-Sep-2018 22:45:43 UTC] The user in profile page is 
+[20-Sep-2018 22:45:43 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 184
+[20-Sep-2018 22:45:43 UTC] NULL
+[20-Sep-2018 22:45:43 UTC] in senior
+[20-Sep-2018 22:46:28 UTC] The current user is object 
+[20-Sep-2018 22:46:28 UTC] The first name of this user is  
+[20-Sep-2018 22:46:28 UTC] The current_user_id_type is NULL
+[20-Sep-2018 22:46:28 UTC] The current_user_id is  
+[20-Sep-2018 22:46:28 UTC] the division in the profile is
+[20-Sep-2018 22:46:28 UTC] Senior
+[20-Sep-2018 22:46:28 UTC] The user in profile page is 
+[20-Sep-2018 22:46:28 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 184
+[20-Sep-2018 22:46:28 UTC] NULL
+[20-Sep-2018 22:46:28 UTC] in senior
+[20-Sep-2018 22:52:42 UTC] The current user is object 
+[20-Sep-2018 22:52:42 UTC] The first name of this user is  
+[20-Sep-2018 22:52:42 UTC] The current_user_id_type is NULL
+[20-Sep-2018 22:52:42 UTC] The current_user_id is  
+[20-Sep-2018 22:52:42 UTC] the division in the profile is
+[20-Sep-2018 22:52:42 UTC] Senior
+[20-Sep-2018 22:52:42 UTC] The user in profile page is 
+[20-Sep-2018 22:52:42 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 184
+[20-Sep-2018 22:52:42 UTC] NULL
+[20-Sep-2018 22:52:42 UTC] in senior
+[20-Sep-2018 22:55:14 UTC] The current user is object 
+[20-Sep-2018 22:55:14 UTC] The first name of this user is  
+[20-Sep-2018 22:55:14 UTC] The current_user_id_type is NULL
+[20-Sep-2018 22:55:14 UTC] The current_user_id is  
+[20-Sep-2018 22:55:14 UTC] the division in the profile is
+[20-Sep-2018 22:55:14 UTC] Senior
+[20-Sep-2018 22:55:14 UTC] The user in profile page is 
+[20-Sep-2018 22:55:14 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 184
+[20-Sep-2018 22:55:14 UTC] NULL
+[20-Sep-2018 22:55:14 UTC] in senior
+[20-Sep-2018 22:58:09 UTC] The current user is object 
+[20-Sep-2018 22:58:09 UTC] The first name of this user is  
+[20-Sep-2018 22:58:09 UTC] The current_user_id_type is NULL
+[20-Sep-2018 22:58:09 UTC] The current_user_id is  
+[20-Sep-2018 22:58:09 UTC] the division in the profile is
+[20-Sep-2018 22:58:09 UTC] Senior
+[20-Sep-2018 22:58:09 UTC] The user in profile page is 
+[20-Sep-2018 22:58:09 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 184
+[20-Sep-2018 22:58:09 UTC] NULL
+[20-Sep-2018 22:58:09 UTC] in senior
+[20-Sep-2018 22:59:55 UTC] The current user is object 
+[20-Sep-2018 22:59:55 UTC] The first name of this user is Peter 
+[20-Sep-2018 22:59:55 UTC] The current_user_id_type is NULL
+[20-Sep-2018 22:59:55 UTC] The current_user_id is  
+[20-Sep-2018 22:59:55 UTC] the division in the profile is
+[20-Sep-2018 22:59:55 UTC] Senior
+[20-Sep-2018 22:59:55 UTC] The user in profile page is 
+[20-Sep-2018 22:59:55 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 184
+[20-Sep-2018 22:59:55 UTC] NULL
+[20-Sep-2018 22:59:55 UTC] in senior
+[20-Sep-2018 23:00:55 UTC] The current user is object 
+[20-Sep-2018 23:00:55 UTC] The first name of this user is Peter 
+[20-Sep-2018 23:00:55 UTC] The current_user_id_type is NULL
+[20-Sep-2018 23:00:55 UTC] The current_user_id is  
+[20-Sep-2018 23:00:55 UTC] the division in the profile is
+[20-Sep-2018 23:00:55 UTC] Senior
+[20-Sep-2018 23:00:55 UTC] The user in profile page is 
+[20-Sep-2018 23:00:55 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 184
+[20-Sep-2018 23:00:55 UTC] NULL
+[20-Sep-2018 23:00:55 UTC] in senior
+[20-Sep-2018 23:05:40 UTC] The current user is object 
+[20-Sep-2018 23:05:40 UTC] The first name of this user is Peter 
+[20-Sep-2018 23:05:40 UTC] The current_user_id_type is NULL
+[20-Sep-2018 23:05:40 UTC] The current_user_id is  
+[20-Sep-2018 23:05:40 UTC] the division in the profile is
+[20-Sep-2018 23:05:40 UTC] Senior
+[20-Sep-2018 23:05:40 UTC] The user in profile page is 
+[20-Sep-2018 23:05:40 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 185
+[20-Sep-2018 23:05:40 UTC] NULL
+[20-Sep-2018 23:05:40 UTC] in senior
+[20-Sep-2018 23:05:49 UTC] The current user is object 
+[20-Sep-2018 23:05:49 UTC] The first name of this user is Peter 
+[20-Sep-2018 23:05:49 UTC] The current_user_id_type is NULL
+[20-Sep-2018 23:05:49 UTC] The current_user_id is  
+[20-Sep-2018 23:05:49 UTC] the division in the profile is
+[20-Sep-2018 23:05:49 UTC] Senior
+[20-Sep-2018 23:05:49 UTC] The user in profile page is 
+[20-Sep-2018 23:05:49 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 185
+[20-Sep-2018 23:05:49 UTC] NULL
+[20-Sep-2018 23:05:49 UTC] in senior
+[20-Sep-2018 23:06:29 UTC] The current user is object 
+[20-Sep-2018 23:06:29 UTC] The first name of this user is Peter 
+[20-Sep-2018 23:06:29 UTC] The current_user_id_type is NULL
+[20-Sep-2018 23:06:29 UTC] The current_user_id is  
+[20-Sep-2018 23:06:29 UTC] the division in the profile is
+[20-Sep-2018 23:06:29 UTC] Senior
+[20-Sep-2018 23:06:29 UTC] The user in profile page is 
+[20-Sep-2018 23:06:29 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 185
+[20-Sep-2018 23:06:29 UTC] NULL
+[20-Sep-2018 23:06:29 UTC] in senior
+[20-Sep-2018 23:06:32 UTC] The current user is object 
+[20-Sep-2018 23:06:32 UTC] The first name of this user is Peter 
+[20-Sep-2018 23:06:32 UTC] The current_user_id_type is NULL
+[20-Sep-2018 23:06:32 UTC] The current_user_id is  
+[20-Sep-2018 23:06:32 UTC] the division in the profile is
+[20-Sep-2018 23:06:32 UTC] Senior
+[20-Sep-2018 23:06:32 UTC] The user in profile page is 
+[20-Sep-2018 23:06:32 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 185
+[20-Sep-2018 23:06:32 UTC] NULL
+[20-Sep-2018 23:06:32 UTC] in senior
+[20-Sep-2018 23:09:21 UTC] The current user is object 
+[20-Sep-2018 23:09:21 UTC] The first name of this user is Peter 
+[20-Sep-2018 23:09:21 UTC] The current_user_id_type is NULL
+[20-Sep-2018 23:09:21 UTC] The current_user_id is  
+[20-Sep-2018 23:09:21 UTC] the division in the profile is
+[20-Sep-2018 23:09:21 UTC] Senior
+[20-Sep-2018 23:09:21 UTC] The user in profile page is 
+[20-Sep-2018 23:09:21 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 185
+[20-Sep-2018 23:09:21 UTC] NULL
+[20-Sep-2018 23:09:21 UTC] in senior
+[21-Sep-2018 04:34:06 UTC] The current user is object 
+[21-Sep-2018 04:34:06 UTC] The first name of this user is Peter 
+[21-Sep-2018 04:34:06 UTC] The current_user_id_type is NULL
+[21-Sep-2018 04:34:06 UTC] The current_user_id is  
+[21-Sep-2018 04:34:06 UTC] the division in the profile is
+[21-Sep-2018 04:34:06 UTC] Senior
+[21-Sep-2018 04:34:06 UTC] The user in profile page is 
+[21-Sep-2018 04:34:06 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 185
+[21-Sep-2018 04:34:06 UTC] NULL
+[21-Sep-2018 04:34:06 UTC] in senior
+[21-Sep-2018 04:34:26 UTC] The current user is object 
+[21-Sep-2018 04:34:26 UTC] The first name of this user is Peter 
+[21-Sep-2018 04:34:26 UTC] The current_user_id_type is NULL
+[21-Sep-2018 04:34:26 UTC] The current_user_id is  
+[21-Sep-2018 04:34:26 UTC] the division in the profile is
+[21-Sep-2018 04:34:26 UTC] Senior
+[21-Sep-2018 04:34:26 UTC] The user in profile page is 
+[21-Sep-2018 04:34:26 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 185
+[21-Sep-2018 04:34:26 UTC] NULL
+[21-Sep-2018 04:34:26 UTC] in senior
+[21-Sep-2018 04:34:51 UTC] The current user is object 
+[21-Sep-2018 04:34:51 UTC] The first name of this user is Peter 
+[21-Sep-2018 04:34:51 UTC] The current_user_id_type is NULL
+[21-Sep-2018 04:34:51 UTC] The current_user_id is  
+[21-Sep-2018 04:34:51 UTC] the division in the profile is
+[21-Sep-2018 04:34:51 UTC] Senior
+[21-Sep-2018 04:34:51 UTC] The user in profile page is 
+[21-Sep-2018 04:34:51 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 185
+[21-Sep-2018 04:34:51 UTC] NULL
+[21-Sep-2018 04:34:51 UTC] in senior
+[21-Sep-2018 04:35:22 UTC] The current user is object 
+[21-Sep-2018 04:35:22 UTC] The first name of this user is Peter 
+[21-Sep-2018 04:35:22 UTC] The current_user_id_type is NULL
+[21-Sep-2018 04:35:22 UTC] The current_user_id is  
+[21-Sep-2018 04:35:22 UTC] the division in the profile is
+[21-Sep-2018 04:35:22 UTC] Senior
+[21-Sep-2018 04:35:22 UTC] The user in profile page is 
+[21-Sep-2018 04:35:22 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 185
+[21-Sep-2018 04:35:22 UTC] NULL
+[21-Sep-2018 04:35:22 UTC] in senior
+[21-Sep-2018 04:35:28 UTC] The current user is object 
+[21-Sep-2018 04:35:28 UTC] The first name of this user is Peter 
+[21-Sep-2018 04:35:28 UTC] The current_user_id_type is NULL
+[21-Sep-2018 04:35:28 UTC] The current_user_id is  
+[21-Sep-2018 04:35:28 UTC] the division in the profile is
+[21-Sep-2018 04:35:28 UTC] Senior
+[21-Sep-2018 04:35:28 UTC] The user in profile page is 
+[21-Sep-2018 04:35:28 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 185
+[21-Sep-2018 04:35:28 UTC] NULL
+[21-Sep-2018 04:35:28 UTC] in senior
+[21-Sep-2018 04:47:04 UTC] the meta_value is 
+[21-Sep-2018 04:47:04 UTC] The current user is object 
+[21-Sep-2018 04:47:04 UTC] The first name of this user is Peter 
+[21-Sep-2018 04:47:04 UTC] The current_user_id_type is NULL
+[21-Sep-2018 04:47:04 UTC] The current_user_id is  
+[21-Sep-2018 04:47:04 UTC] the division in the profile is
+[21-Sep-2018 04:47:04 UTC] Senior
+[21-Sep-2018 04:47:04 UTC] The user in profile page is 
+[21-Sep-2018 04:47:04 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 185
+[21-Sep-2018 04:47:04 UTC] NULL
+[21-Sep-2018 04:47:04 UTC] in senior
+[21-Sep-2018 04:53:04 UTC] PHP Warning:  call_user_func_array() expects parameter 1 to be a valid callback, function 'extra_profile_fields( $user )' not found or invalid function name in /var/www/html/www.visorsourcing.com/wp-includes/class-wp-hook.php on line 286
+[21-Sep-2018 04:54:07 UTC] the meta_value is 
+[21-Sep-2018 04:54:07 UTC] The current user is object 
+[21-Sep-2018 04:54:07 UTC] The first name of this user is Peter 
+[21-Sep-2018 04:54:07 UTC] The current_user_id_type is NULL
+[21-Sep-2018 04:54:07 UTC] The current_user_id is  
+[21-Sep-2018 04:54:07 UTC] the division in the profile is
+[21-Sep-2018 04:54:07 UTC] Senior
+[21-Sep-2018 04:54:07 UTC] The user in profile page is 
+[21-Sep-2018 04:54:07 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 185
+[21-Sep-2018 04:54:07 UTC] NULL
+[21-Sep-2018 04:54:07 UTC] in senior
+[21-Sep-2018 04:54:33 UTC] the meta_value is 
+[21-Sep-2018 04:54:33 UTC] The current user is object 
+[21-Sep-2018 04:54:33 UTC] The first name of this user is Peter 
+[21-Sep-2018 04:54:33 UTC] The current_user_id_type is NULL
+[21-Sep-2018 04:54:33 UTC] The current_user_id is  
+[21-Sep-2018 04:54:33 UTC] the division in the profile is
+[21-Sep-2018 04:54:33 UTC] Senior
+[21-Sep-2018 04:54:33 UTC] The user in profile page is 
+[21-Sep-2018 04:54:33 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 185
+[21-Sep-2018 04:54:33 UTC] NULL
+[21-Sep-2018 04:54:33 UTC] in senior
+[21-Sep-2018 04:54:45 UTC] the meta_value is 
+[21-Sep-2018 04:54:45 UTC] The current user is object 
+[21-Sep-2018 04:54:45 UTC] The first name of this user is Peter 
+[21-Sep-2018 04:54:45 UTC] The current_user_id_type is NULL
+[21-Sep-2018 04:54:45 UTC] The current_user_id is  
+[21-Sep-2018 04:54:45 UTC] the division in the profile is
+[21-Sep-2018 04:54:45 UTC] Senior
+[21-Sep-2018 04:54:45 UTC] The user in profile page is 
+[21-Sep-2018 04:54:45 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 185
+[21-Sep-2018 04:54:45 UTC] NULL
+[21-Sep-2018 04:54:45 UTC] in senior
+[21-Sep-2018 04:55:07 UTC] the meta_value is 
+[21-Sep-2018 04:55:07 UTC] The current user is object 
+[21-Sep-2018 04:55:07 UTC] The first name of this user is Peter 
+[21-Sep-2018 04:55:07 UTC] The current_user_id_type is NULL
+[21-Sep-2018 04:55:07 UTC] The current_user_id is  
+[21-Sep-2018 04:55:07 UTC] the division in the profile is
+[21-Sep-2018 04:55:07 UTC] Senior
+[21-Sep-2018 04:55:07 UTC] The user in profile page is 
+[21-Sep-2018 04:55:07 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 185
+[21-Sep-2018 04:55:07 UTC] NULL
+[21-Sep-2018 04:55:07 UTC] in senior
+[21-Sep-2018 04:56:10 UTC] the meta_value is 
+[21-Sep-2018 04:56:10 UTC] The current user is object 
+[21-Sep-2018 04:56:10 UTC] The first name of this user is Peter 
+[21-Sep-2018 04:56:10 UTC] The current_user_id_type is NULL
+[21-Sep-2018 04:56:10 UTC] The current_user_id is  
+[21-Sep-2018 04:56:10 UTC] the division in the profile is
+[21-Sep-2018 04:56:10 UTC] Senior
+[21-Sep-2018 04:56:10 UTC] The user in profile page is 
+[21-Sep-2018 04:56:10 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 185
+[21-Sep-2018 04:56:10 UTC] NULL
+[21-Sep-2018 04:56:10 UTC] in senior
+[21-Sep-2018 05:05:14 UTC] the type of data is object
+[21-Sep-2018 05:05:14 UTC] the meta_value is 
+[21-Sep-2018 05:05:14 UTC] The current user is object 
+[21-Sep-2018 05:05:14 UTC] The first name of this user is Peter 
+[21-Sep-2018 05:05:14 UTC] The current_user_id_type is NULL
+[21-Sep-2018 05:05:14 UTC] The current_user_id is  
+[21-Sep-2018 05:05:14 UTC] the division in the profile is
+[21-Sep-2018 05:05:14 UTC] Senior
+[21-Sep-2018 05:05:14 UTC] The user in profile page is 
+[21-Sep-2018 05:05:14 UTC] 
+[21-Sep-2018 05:05:14 UTC] NULL
+[21-Sep-2018 05:05:14 UTC] in senior
+[21-Sep-2018 05:06:37 UTC] the type of data is object
+[21-Sep-2018 05:06:37 UTC] the meta_value is 
+[21-Sep-2018 05:06:37 UTC] The current user is object 
+[21-Sep-2018 05:06:37 UTC] The first name of this user is Peter 
+[21-Sep-2018 05:06:37 UTC] The current_user_id_type is NULL
+[21-Sep-2018 05:06:37 UTC] The current_user_id is  
+[21-Sep-2018 05:06:37 UTC] the division in the profile is
+[21-Sep-2018 05:06:37 UTC] Senior
+[21-Sep-2018 05:06:37 UTC] The user in profile page is 
+[21-Sep-2018 05:06:37 UTC] 
+[21-Sep-2018 05:06:37 UTC] NULL
+[21-Sep-2018 05:06:37 UTC] in senior
+[21-Sep-2018 05:08:31 UTC] PHP Parse error:  syntax error, unexpected 'the' (T_STRING), expecting ',' or ')' in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 165
+[21-Sep-2018 05:08:38 UTC] PHP Parse error:  syntax error, unexpected 'the' (T_STRING), expecting ',' or ')' in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 165
+[21-Sep-2018 05:09:32 UTC] the type of data is object
+[21-Sep-2018 05:09:32 UTC] PHP Recoverable fatal error:  Object of class WP_User could not be converted to string in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 163
+[21-Sep-2018 05:09:52 UTC] the type of data is object
+[21-Sep-2018 05:09:52 UTC] PHP Recoverable fatal error:  Object of class WP_User could not be converted to string in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 163
+[21-Sep-2018 05:10:42 UTC] the type of data is object
+[21-Sep-2018 05:10:42 UTC] the meta_value is 
+[21-Sep-2018 05:10:42 UTC] The current user is object 
+[21-Sep-2018 05:10:42 UTC] The first name of this user is Peter 
+[21-Sep-2018 05:10:42 UTC] The current_user_id_type is NULL
+[21-Sep-2018 05:10:42 UTC] The current_user_id is  
+[21-Sep-2018 05:10:42 UTC] the division in the profile is
+[21-Sep-2018 05:10:42 UTC] Senior
+[21-Sep-2018 05:10:42 UTC] The user in profile page is 
+[21-Sep-2018 05:10:42 UTC] 
+[21-Sep-2018 05:10:42 UTC] NULL
+[21-Sep-2018 05:10:42 UTC] in senior
+[21-Sep-2018 05:11:25 UTC] the type of data is object
+[21-Sep-2018 05:11:25 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 163
+[21-Sep-2018 05:11:25 UTC] the meta_value is 
+[21-Sep-2018 05:11:25 UTC] The current user is object 
+[21-Sep-2018 05:11:25 UTC] The first name of this user is Peter 
+[21-Sep-2018 05:11:25 UTC] The current_user_id_type is NULL
+[21-Sep-2018 05:11:25 UTC] The current_user_id is  
+[21-Sep-2018 05:11:25 UTC] the division in the profile is
+[21-Sep-2018 05:11:25 UTC] Senior
+[21-Sep-2018 05:11:25 UTC] The user in profile page is 
+[21-Sep-2018 05:11:25 UTC] 
+[21-Sep-2018 05:11:25 UTC] NULL
+[21-Sep-2018 05:11:25 UTC] in senior
+[21-Sep-2018 05:12:08 UTC] the type of data is object
+[21-Sep-2018 05:12:08 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 163
+[21-Sep-2018 05:12:08 UTC] the meta_value is 
+[21-Sep-2018 05:12:08 UTC] The current user is object 
+[21-Sep-2018 05:12:08 UTC] The first name of this user is Peter 
+[21-Sep-2018 05:12:08 UTC] The current_user_id_type is NULL
+[21-Sep-2018 05:12:08 UTC] The current_user_id is  
+[21-Sep-2018 05:12:08 UTC] the division in the profile is
+[21-Sep-2018 05:12:08 UTC] Senior
+[21-Sep-2018 05:12:08 UTC] The user in profile page is 
+[21-Sep-2018 05:12:08 UTC] 
+[21-Sep-2018 05:12:08 UTC] NULL
+[21-Sep-2018 05:12:08 UTC] in senior
+[21-Sep-2018 05:13:40 UTC] the type of data is object
+[21-Sep-2018 05:13:40 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 163
+[21-Sep-2018 05:13:40 UTC] the meta_value is 
+[21-Sep-2018 05:13:40 UTC] The current user is object 
+[21-Sep-2018 05:13:40 UTC] The first name of this user is Peter 
+[21-Sep-2018 05:13:40 UTC] The current_user_id_type is NULL
+[21-Sep-2018 05:13:40 UTC] The current_user_id is  
+[21-Sep-2018 05:13:40 UTC] the division in the profile is
+[21-Sep-2018 05:13:40 UTC] Senior
+[21-Sep-2018 05:13:40 UTC] The user in profile page is 
+[21-Sep-2018 05:13:40 UTC] 
+[21-Sep-2018 05:13:40 UTC] NULL
+[21-Sep-2018 05:13:40 UTC] in senior
+[21-Sep-2018 05:15:58 UTC] the type of data is object
+[21-Sep-2018 05:15:58 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 163
+[21-Sep-2018 05:15:58 UTC] the meta_value is 
+[21-Sep-2018 05:15:58 UTC] The current user is object 
+[21-Sep-2018 05:15:58 UTC] The first name of this user is Peter 
+[21-Sep-2018 05:15:58 UTC] The current_user_id_type is NULL
+[21-Sep-2018 05:15:58 UTC] The current_user_id is  
+[21-Sep-2018 05:15:58 UTC] the division in the profile is
+[21-Sep-2018 05:15:58 UTC] Senior
+[21-Sep-2018 05:15:58 UTC] The user in profile page is 
+[21-Sep-2018 05:15:58 UTC] 
+[21-Sep-2018 05:15:58 UTC] NULL
+[21-Sep-2018 05:15:58 UTC] in senior
+[21-Sep-2018 05:25:31 UTC] the type of data is object
+[21-Sep-2018 05:25:31 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 163
+[21-Sep-2018 05:25:31 UTC] the meta_value is 
+[21-Sep-2018 05:25:31 UTC] The current user is object 
+[21-Sep-2018 05:25:31 UTC] The first name of this user is Peter 
+[21-Sep-2018 05:25:31 UTC] The current_user_id_type is NULL
+[21-Sep-2018 05:25:31 UTC] The current_user_id is  
+[21-Sep-2018 05:25:31 UTC] the division in the profile is
+[21-Sep-2018 05:25:31 UTC] Senior
+[21-Sep-2018 05:25:31 UTC] The user in profile page is 
+[21-Sep-2018 05:25:31 UTC] 
+[21-Sep-2018 05:25:31 UTC] NULL
+[21-Sep-2018 05:25:31 UTC] in senior
+[21-Sep-2018 05:35:10 UTC] hello sugar
+[21-Sep-2018 05:35:10 UTC] the type of data is object
+[21-Sep-2018 05:35:10 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 163
+[21-Sep-2018 05:35:10 UTC] the meta_value is 
+[21-Sep-2018 05:35:10 UTC] The current user is object 
+[21-Sep-2018 05:35:10 UTC] The first name of this user is Peter 
+[21-Sep-2018 05:35:10 UTC] The current_user_id_type is NULL
+[21-Sep-2018 05:35:10 UTC] The current_user_id is  
+[21-Sep-2018 05:35:10 UTC] the division in the profile is
+[21-Sep-2018 05:35:10 UTC] Senior
+[21-Sep-2018 05:35:10 UTC] The user in profile page is 
+[21-Sep-2018 05:35:10 UTC] 
+[21-Sep-2018 05:35:10 UTC] NULL
+[21-Sep-2018 05:35:10 UTC] in senior
+[21-Sep-2018 05:36:03 UTC] hello sugar
+[21-Sep-2018 05:36:03 UTC] the type of data is object
+[21-Sep-2018 05:36:03 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 163
+[21-Sep-2018 05:36:03 UTC] the meta_value is 
+[21-Sep-2018 05:36:03 UTC] The current user is object 
+[21-Sep-2018 05:36:03 UTC] The first name of this user is Peter 
+[21-Sep-2018 05:36:03 UTC] The current_user_id_type is NULL
+[21-Sep-2018 05:36:03 UTC] The current_user_id is  
+[21-Sep-2018 05:36:03 UTC] the division in the profile is
+[21-Sep-2018 05:36:03 UTC] Senior
+[21-Sep-2018 05:36:03 UTC] The user in profile page is 
+[21-Sep-2018 05:36:03 UTC] 
+[21-Sep-2018 05:36:03 UTC] NULL
+[21-Sep-2018 05:36:03 UTC] in senior
+[21-Sep-2018 05:37:27 UTC] hello sugar
+[21-Sep-2018 05:37:27 UTC] the type of data is object
+[21-Sep-2018 05:37:27 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 163
+[21-Sep-2018 05:37:27 UTC] the meta_value is 
+[21-Sep-2018 05:37:27 UTC] The current user is object 
+[21-Sep-2018 05:37:27 UTC] The first name of this user is Peter 
+[21-Sep-2018 05:37:27 UTC] The current_user_id_type is NULL
+[21-Sep-2018 05:37:27 UTC] The current_user_id is  
+[21-Sep-2018 05:37:27 UTC] the division in the profile is
+[21-Sep-2018 05:37:27 UTC] Senior
+[21-Sep-2018 05:37:27 UTC] The user in profile page is 
+[21-Sep-2018 05:37:27 UTC] 
+[21-Sep-2018 05:37:27 UTC] NULL
+[21-Sep-2018 05:37:27 UTC] in senior
+[21-Sep-2018 16:02:34 UTC] hello sugar
+[21-Sep-2018 16:02:34 UTC] the gettype_val is object
+[21-Sep-2018 16:02:34 UTC] the type of data is object
+[21-Sep-2018 16:02:34 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 163
+[21-Sep-2018 16:02:34 UTC] the meta_value is 
+[21-Sep-2018 16:02:34 UTC] The current user is object 
+[21-Sep-2018 16:02:34 UTC] The first name of this user is Peter 
+[21-Sep-2018 16:02:34 UTC] The current_user_id_type is NULL
+[21-Sep-2018 16:02:34 UTC] The current_user_id is  
+[21-Sep-2018 16:02:34 UTC] the division in the profile is
+[21-Sep-2018 16:02:34 UTC] Senior
+[21-Sep-2018 16:02:34 UTC] The user in profile page is 
+[21-Sep-2018 16:02:34 UTC] 
+[21-Sep-2018 16:02:34 UTC] NULL
+[21-Sep-2018 16:02:34 UTC] in senior
+[21-Sep-2018 16:04:58 UTC] hello sugar
+[21-Sep-2018 16:04:58 UTC] the gettype_val is object
+[21-Sep-2018 16:04:58 UTC] the type of data is object
+[21-Sep-2018 16:04:58 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 163
+[21-Sep-2018 16:04:58 UTC] the meta_value is 
+[21-Sep-2018 16:04:58 UTC] The current user is object 
+[21-Sep-2018 16:04:58 UTC] The first name of this user is Peter 
+[21-Sep-2018 16:04:58 UTC] The current_user_id_type is NULL
+[21-Sep-2018 16:04:58 UTC] The current_user_id is  
+[21-Sep-2018 16:04:58 UTC] the division in the profile is
+[21-Sep-2018 16:04:58 UTC] Senior
+[21-Sep-2018 16:04:58 UTC] The user in profile page is 
+[21-Sep-2018 16:04:58 UTC] 
+[21-Sep-2018 16:04:58 UTC] NULL
+[21-Sep-2018 16:04:58 UTC] in senior
+[21-Sep-2018 16:05:01 UTC] hello sugar
+[21-Sep-2018 16:05:01 UTC] the gettype_val is object
+[21-Sep-2018 16:05:01 UTC] the type of data is object
+[21-Sep-2018 16:05:01 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 163
+[21-Sep-2018 16:05:01 UTC] the meta_value is 
+[21-Sep-2018 16:05:01 UTC] The current user is object 
+[21-Sep-2018 16:05:01 UTC] The first name of this user is Peter 
+[21-Sep-2018 16:05:01 UTC] The current_user_id_type is NULL
+[21-Sep-2018 16:05:01 UTC] The current_user_id is  
+[21-Sep-2018 16:05:01 UTC] the division in the profile is
+[21-Sep-2018 16:05:01 UTC] Senior
+[21-Sep-2018 16:05:01 UTC] The user in profile page is 
+[21-Sep-2018 16:05:01 UTC] 
+[21-Sep-2018 16:05:01 UTC] NULL
+[21-Sep-2018 16:05:01 UTC] in senior
+[21-Sep-2018 16:06:48 UTC] hello sugar
+[21-Sep-2018 16:06:48 UTC] the gettype_val is object
+[21-Sep-2018 16:06:48 UTC] the type of data is object
+[21-Sep-2018 16:06:48 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 163
+[21-Sep-2018 16:06:48 UTC] the meta_value is 
+[21-Sep-2018 16:06:48 UTC] The current user is object 
+[21-Sep-2018 16:06:48 UTC] The first name of this user is Peter 
+[21-Sep-2018 16:06:48 UTC] The current_user_id_type is NULL
+[21-Sep-2018 16:06:48 UTC] The current_user_id is  
+[21-Sep-2018 16:06:48 UTC] the division in the profile is
+[21-Sep-2018 16:06:48 UTC] Senior
+[21-Sep-2018 16:06:48 UTC] The user in profile page is 
+[21-Sep-2018 16:06:48 UTC] 
+[21-Sep-2018 16:06:48 UTC] NULL
+[21-Sep-2018 16:06:48 UTC] in senior
+[21-Sep-2018 16:33:19 UTC] the user variable is object
+[21-Sep-2018 16:33:19 UTC] the type of data is object
+[21-Sep-2018 16:33:19 UTC] 
+[21-Sep-2018 16:33:19 UTC] the meta_value is 
+[21-Sep-2018 16:33:19 UTC] The current user is object 
+[21-Sep-2018 16:33:19 UTC] The first name of this user is Peter 
+[21-Sep-2018 16:33:19 UTC] The current_user_id_type is NULL
+[21-Sep-2018 16:33:19 UTC] The current_user_id is  
+[21-Sep-2018 16:33:19 UTC] the division in the profile is
+[21-Sep-2018 16:33:19 UTC] Senior
+[21-Sep-2018 16:33:19 UTC] The user in profile page is 
+[21-Sep-2018 16:33:19 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 187
+[21-Sep-2018 16:33:19 UTC] NULL
+[21-Sep-2018 16:33:19 UTC] in senior
+[21-Sep-2018 16:36:42 UTC] PHP Parse error:  syntax error, unexpected '$type_of_data' (T_VARIABLE) in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 159
+[21-Sep-2018 16:37:07 UTC] PHP Warning:  strlen() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 158
+[21-Sep-2018 16:37:07 UTC] the user variable is object
+[21-Sep-2018 16:37:07 UTC] the integer value is 
+[21-Sep-2018 16:37:07 UTC] the type of data is object
+[21-Sep-2018 16:37:07 UTC] 
+[21-Sep-2018 16:37:07 UTC] the meta_value is 
+[21-Sep-2018 16:37:07 UTC] The current user is object 
+[21-Sep-2018 16:37:07 UTC] The first name of this user is Peter 
+[21-Sep-2018 16:37:07 UTC] The current_user_id_type is NULL
+[21-Sep-2018 16:37:07 UTC] The current_user_id is  
+[21-Sep-2018 16:37:07 UTC] the division in the profile is
+[21-Sep-2018 16:37:07 UTC] Senior
+[21-Sep-2018 16:37:07 UTC] The user in profile page is 
+[21-Sep-2018 16:37:07 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 189
+[21-Sep-2018 16:37:07 UTC] NULL
+[21-Sep-2018 16:37:07 UTC] in senior
+[21-Sep-2018 16:40:09 UTC] PHP Warning:  strlen() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 158
+[21-Sep-2018 16:40:09 UTC] the user variable is object
+[21-Sep-2018 16:40:09 UTC] the integer value is 
+[21-Sep-2018 16:40:09 UTC] the type of data is object
+[21-Sep-2018 16:40:09 UTC] 
+[21-Sep-2018 16:40:09 UTC] the meta_value is 
+[21-Sep-2018 16:40:09 UTC] The current user is object 
+[21-Sep-2018 16:40:09 UTC] The first name of this user is Peter 
+[21-Sep-2018 16:40:09 UTC] The current_user_id_type is NULL
+[21-Sep-2018 16:40:09 UTC] The current_user_id is  
+[21-Sep-2018 16:40:09 UTC] the division in the profile is
+[21-Sep-2018 16:40:09 UTC] Senior
+[21-Sep-2018 16:40:09 UTC] The user in profile page is 
+[21-Sep-2018 16:40:09 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 189
+[21-Sep-2018 16:40:09 UTC] NULL
+[21-Sep-2018 16:40:09 UTC] in senior
+[21-Sep-2018 16:41:00 UTC] PHP Warning:  strlen() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 158
+[21-Sep-2018 16:41:00 UTC] the user variable is object
+[21-Sep-2018 16:41:00 UTC] the integer value is 
+[21-Sep-2018 16:41:00 UTC] the type of data is object
+[21-Sep-2018 16:41:00 UTC] 
+[21-Sep-2018 16:41:00 UTC] the meta_value is 
+[21-Sep-2018 16:41:00 UTC] The current user is object 
+[21-Sep-2018 16:41:00 UTC] The first name of this user is Peter 
+[21-Sep-2018 16:41:00 UTC] The current_user_id_type is NULL
+[21-Sep-2018 16:41:00 UTC] The current_user_id is  
+[21-Sep-2018 16:41:00 UTC] the division in the profile is
+[21-Sep-2018 16:41:00 UTC] Senior
+[21-Sep-2018 16:41:00 UTC] The user in profile page is 
+[21-Sep-2018 16:41:00 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 189
+[21-Sep-2018 16:41:00 UTC] NULL
+[21-Sep-2018 16:41:00 UTC] in senior
+[21-Sep-2018 16:41:37 UTC] PHP Warning:  strlen() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 158
+[21-Sep-2018 16:41:37 UTC] the user variable is object
+[21-Sep-2018 16:41:37 UTC] the integer value is 
+[21-Sep-2018 16:41:37 UTC] the type of data is object
+[21-Sep-2018 16:41:37 UTC] 
+[21-Sep-2018 16:41:37 UTC] the meta_value is 
+[21-Sep-2018 16:41:37 UTC] The current user is object 
+[21-Sep-2018 16:41:37 UTC] The first name of this user is Peter 
+[21-Sep-2018 16:41:37 UTC] The current_user_id_type is NULL
+[21-Sep-2018 16:41:37 UTC] The current_user_id is  
+[21-Sep-2018 16:41:37 UTC] the division in the profile is
+[21-Sep-2018 16:41:37 UTC] Senior
+[21-Sep-2018 16:41:37 UTC] The user in profile page is 
+[21-Sep-2018 16:41:37 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 189
+[21-Sep-2018 16:41:37 UTC] NULL
+[21-Sep-2018 16:41:37 UTC] in senior
+[21-Sep-2018 16:42:28 UTC] PHP Warning:  strlen() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 158
+[21-Sep-2018 16:42:28 UTC] the user variable is object
+[21-Sep-2018 16:42:28 UTC] the integer value is 
+[21-Sep-2018 16:42:28 UTC] the type of data is object
+[21-Sep-2018 16:42:28 UTC] 
+[21-Sep-2018 16:42:28 UTC] the meta_value is 
+[21-Sep-2018 16:42:28 UTC] The current user is object 
+[21-Sep-2018 16:42:28 UTC] The first name of this user is Peter 
+[21-Sep-2018 16:42:28 UTC] The current_user_id_type is NULL
+[21-Sep-2018 16:42:28 UTC] The current_user_id is  
+[21-Sep-2018 16:42:28 UTC] the division in the profile is
+[21-Sep-2018 16:42:28 UTC] Senior
+[21-Sep-2018 16:42:28 UTC] The user in profile page is 
+[21-Sep-2018 16:42:28 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 189
+[21-Sep-2018 16:42:28 UTC] NULL
+[21-Sep-2018 16:42:28 UTC] in senior
+[21-Sep-2018 16:56:07 UTC] PHP Warning:  strlen() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 158
+[21-Sep-2018 16:56:07 UTC] the user variable is object
+[21-Sep-2018 16:56:07 UTC] the integer value is 
+[21-Sep-2018 16:56:07 UTC] the type of data is object
+[21-Sep-2018 16:56:07 UTC] 
+[21-Sep-2018 16:56:07 UTC] the meta_value is 
+[21-Sep-2018 16:56:07 UTC] The current user is object 
+[21-Sep-2018 16:56:07 UTC] The first name of this user is Peter 
+[21-Sep-2018 16:56:07 UTC] The current_user_id_type is NULL
+[21-Sep-2018 16:56:07 UTC] The current_user_id is  
+[21-Sep-2018 16:56:07 UTC] the division in the profile is
+[21-Sep-2018 16:56:07 UTC] Senior
+[21-Sep-2018 16:56:07 UTC] The user in profile page is 
+[21-Sep-2018 16:56:07 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 189
+[21-Sep-2018 16:56:07 UTC] NULL
+[21-Sep-2018 16:56:07 UTC] in senior
+[21-Sep-2018 16:57:19 UTC] PHP Warning:  strlen() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 158
+[21-Sep-2018 16:57:19 UTC] the user variable is object
+[21-Sep-2018 16:57:19 UTC] the integer value is 
+[21-Sep-2018 16:57:19 UTC] the type of data is object
+[21-Sep-2018 16:57:19 UTC] 
+[21-Sep-2018 16:57:19 UTC] the meta_value is 
+[21-Sep-2018 16:57:19 UTC] The current user is object 
+[21-Sep-2018 16:57:19 UTC] The first name of this user is Peter 
+[21-Sep-2018 16:57:19 UTC] The current_user_id_type is NULL
+[21-Sep-2018 16:57:19 UTC] The current_user_id is  
+[21-Sep-2018 16:57:19 UTC] the division in the profile is
+[21-Sep-2018 16:57:19 UTC] Senior
+[21-Sep-2018 16:57:19 UTC] The user in profile page is 
+[21-Sep-2018 16:57:19 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 189
+[21-Sep-2018 16:57:19 UTC] NULL
+[21-Sep-2018 16:57:19 UTC] in senior
+[21-Sep-2018 17:02:43 UTC] PHP Warning:  strlen() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 158
+[21-Sep-2018 17:02:43 UTC] the user variable is object
+[21-Sep-2018 17:02:43 UTC] the integer value is 
+[21-Sep-2018 17:02:43 UTC] the type of data is object
+[21-Sep-2018 17:02:43 UTC] 
+[21-Sep-2018 17:02:43 UTC] the meta_value is 
+[21-Sep-2018 17:02:43 UTC] The current user is object 
+[21-Sep-2018 17:02:43 UTC] The first name of this user is Peter 
+[21-Sep-2018 17:02:43 UTC] The current_user_id_type is NULL
+[21-Sep-2018 17:02:43 UTC] The current_user_id is  
+[21-Sep-2018 17:02:43 UTC] the division in the profile is
+[21-Sep-2018 17:02:43 UTC] Senior
+[21-Sep-2018 17:02:43 UTC] The user in profile page is 
+[21-Sep-2018 17:02:43 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 189
+[21-Sep-2018 17:02:43 UTC] NULL
+[21-Sep-2018 17:02:43 UTC] in senior
+[21-Sep-2018 17:13:29 UTC] PHP Warning:  strlen() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 158
+[21-Sep-2018 17:13:29 UTC] the user variable is object
+[21-Sep-2018 17:13:29 UTC] the integer value is 
+[21-Sep-2018 17:13:29 UTC] the type of data is object
+[21-Sep-2018 17:13:29 UTC] 
+[21-Sep-2018 17:13:29 UTC] the meta_value is 
+[21-Sep-2018 17:13:29 UTC] The current user is object 
+[21-Sep-2018 17:13:29 UTC] The first name of this user is Peter 
+[21-Sep-2018 17:13:29 UTC] The current_user_id_type is NULL
+[21-Sep-2018 17:13:29 UTC] The current_user_id is  
+[21-Sep-2018 17:13:29 UTC] the division in the profile is
+[21-Sep-2018 17:13:29 UTC] Senior
+[21-Sep-2018 17:13:29 UTC] The user in profile page is 
+[21-Sep-2018 17:13:29 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 189
+[21-Sep-2018 17:13:29 UTC] NULL
+[21-Sep-2018 17:13:29 UTC] in senior
+[21-Sep-2018 17:23:41 UTC] PHP Warning:  strlen() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 158
+[21-Sep-2018 17:23:41 UTC] the user variable is object
+[21-Sep-2018 17:23:41 UTC] the integer value is 
+[21-Sep-2018 17:23:41 UTC] the type of data is object
+[21-Sep-2018 17:23:41 UTC] 
+[21-Sep-2018 17:23:41 UTC] the meta_value is 
+[21-Sep-2018 17:23:41 UTC] The current user is object 
+[21-Sep-2018 17:23:41 UTC] The first name of this user is Peter 
+[21-Sep-2018 17:23:41 UTC] The current_user_id_type is NULL
+[21-Sep-2018 17:23:41 UTC] The current_user_id is  
+[21-Sep-2018 17:23:41 UTC] the division in the profile is
+[21-Sep-2018 17:23:41 UTC] Senior
+[21-Sep-2018 17:23:41 UTC] The user in profile page is 
+[21-Sep-2018 17:23:41 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 189
+[21-Sep-2018 17:23:41 UTC] NULL
+[21-Sep-2018 17:23:41 UTC] in senior
+[21-Sep-2018 17:25:29 UTC] PHP Warning:  strlen() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 158
+[21-Sep-2018 17:25:29 UTC] the user variable is object
+[21-Sep-2018 17:25:29 UTC] the integer value is 
+[21-Sep-2018 17:25:29 UTC] the type of data is object
+[21-Sep-2018 17:25:29 UTC] 
+[21-Sep-2018 17:25:29 UTC] the meta_value is 
+[21-Sep-2018 17:25:29 UTC] The current user is object 
+[21-Sep-2018 17:25:29 UTC] The first name of this user is Peter 
+[21-Sep-2018 17:25:29 UTC] The current_user_id_type is NULL
+[21-Sep-2018 17:25:29 UTC] The current_user_id is  
+[21-Sep-2018 17:25:29 UTC] the division in the profile is
+[21-Sep-2018 17:25:29 UTC] Senior
+[21-Sep-2018 17:25:29 UTC] The user in profile page is 
+[21-Sep-2018 17:25:29 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 189
+[21-Sep-2018 17:25:29 UTC] NULL
+[21-Sep-2018 17:25:29 UTC] in senior
+[21-Sep-2018 17:41:57 UTC] PHP Warning:  strlen() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 158
+[21-Sep-2018 17:41:57 UTC] the user variable is object
+[21-Sep-2018 17:41:57 UTC] the integer value is 
+[21-Sep-2018 17:41:57 UTC] the type of data is object
+[21-Sep-2018 17:41:57 UTC] 
+[21-Sep-2018 17:41:57 UTC] the meta_value is 
+[21-Sep-2018 17:41:57 UTC] The current user is object 
+[21-Sep-2018 17:41:57 UTC] The first name of this user is Peter
+[21-Sep-2018 17:41:57 UTC] The current_user_id_type is NULL
+[21-Sep-2018 17:41:57 UTC] The current_user_id is  
+[21-Sep-2018 17:41:57 UTC] the division in the profile is
+[21-Sep-2018 17:41:57 UTC] Senior
+[21-Sep-2018 17:41:57 UTC] The user in profile page is 
+[21-Sep-2018 17:41:57 UTC] PHP Warning:  error_log() expects parameter 1 to be string, object given in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 189
+[21-Sep-2018 17:41:57 UTC] NULL
+[21-Sep-2018 17:41:57 UTC] in senior
+[21-Sep-2018 17:48:31 UTC] PHP Parse error:  syntax error, unexpected 'error_log' (T_STRING) in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 165
+[21-Sep-2018 17:48:59 UTC] PHP Parse error:  syntax error, unexpected 'error_log' (T_STRING) in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 165
+[21-Sep-2018 17:50:30 UTC] PHP Parse error:  syntax error, unexpected 'error_log' (T_STRING) in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 165
+[21-Sep-2018 17:51:00 UTC] PHP Parse error:  syntax error, unexpected 'error_log' (T_STRING) in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 165
+[21-Sep-2018 17:52:00 UTC] PHP Parse error:  syntax error, unexpected 'error_log' (T_STRING) in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 165
+[21-Sep-2018 17:52:31 UTC] PHP Parse error:  syntax error, unexpected 'error_log' (T_STRING) in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 165
+[21-Sep-2018 17:54:57 UTC] the type of current_user variable is object
+[21-Sep-2018 17:54:57 UTC] the type of data is object
+[21-Sep-2018 17:54:57 UTC] 
+[21-Sep-2018 17:54:57 UTC] the meta_value is 
+[21-Sep-2018 17:54:57 UTC] The current user is object 
+[21-Sep-2018 17:54:57 UTC] The first name of this user is Peter
+[21-Sep-2018 17:54:57 UTC] The current_user_id_type is NULL
+[21-Sep-2018 17:54:57 UTC] The current_user_id is  
+[21-Sep-2018 17:54:57 UTC] the division in the profile is
+[21-Sep-2018 17:54:57 UTC] Senior
+[21-Sep-2018 17:54:57 UTC] The user in profile page is 
+[21-Sep-2018 17:54:57 UTC] 
+[21-Sep-2018 17:54:57 UTC] NULL
+[21-Sep-2018 17:54:57 UTC] in senior
+[21-Sep-2018 19:03:52 UTC] the type of current_user variable is object
+[21-Sep-2018 19:03:52 UTC] the type of data is object
+[21-Sep-2018 19:03:52 UTC] 
+[21-Sep-2018 19:03:52 UTC] the meta_value is 
+[21-Sep-2018 19:03:52 UTC] The current user is object
+[21-Sep-2018 19:03:52 UTC] The first name of this user is Peter
+[21-Sep-2018 19:03:52 UTC] The current_user_id_type is NULL
+[21-Sep-2018 19:03:52 UTC] The current_user_id is  
+[21-Sep-2018 19:03:52 UTC] the division in the profile is
+[21-Sep-2018 19:03:52 UTC] Senior
+[21-Sep-2018 19:03:52 UTC] The user in profile page is 
+[21-Sep-2018 19:03:52 UTC] 
+[21-Sep-2018 19:03:52 UTC] NULL
+[21-Sep-2018 19:03:52 UTC] in senior
+[21-Sep-2018 19:11:42 UTC] the type of current_user variable is object
+[21-Sep-2018 19:11:42 UTC] the type of data is object
+[21-Sep-2018 19:11:42 UTC] 
+[21-Sep-2018 19:11:42 UTC] the meta_value is 
+[21-Sep-2018 19:11:42 UTC] The current user is object
+[21-Sep-2018 19:11:42 UTC] The first name of this user is Peter
+[21-Sep-2018 19:11:42 UTC] The current user ID is 50
+[21-Sep-2018 19:11:42 UTC] The current_user_id_type is NULL
+[21-Sep-2018 19:11:42 UTC] The current_user_id is  
+[21-Sep-2018 19:11:42 UTC] the division in the profile is
+[21-Sep-2018 19:11:42 UTC] Senior
+[21-Sep-2018 19:11:42 UTC] The user in profile page is 
+[21-Sep-2018 19:11:42 UTC] 
+[21-Sep-2018 19:11:42 UTC] NULL
+[21-Sep-2018 19:11:42 UTC] in senior
+[21-Sep-2018 19:14:23 UTC] the type of current_user variable is object
+[21-Sep-2018 19:14:23 UTC] the type of data is object
+[21-Sep-2018 19:14:23 UTC] 
+[21-Sep-2018 19:14:23 UTC] the meta_value is 
+[21-Sep-2018 19:14:23 UTC] The current user is object
+[21-Sep-2018 19:14:23 UTC] The first name of this user is Peter
+[21-Sep-2018 19:14:23 UTC] The current user ID is 50
+[21-Sep-2018 19:14:23 UTC] The current_user_id_type is NULL
+[21-Sep-2018 19:14:23 UTC] The current_user_id is  
+[21-Sep-2018 19:14:23 UTC] the division in the profile is
+[21-Sep-2018 19:14:23 UTC] Senior
+[21-Sep-2018 19:14:23 UTC] The user in profile page is 
+[21-Sep-2018 19:14:23 UTC] 
+[21-Sep-2018 19:14:23 UTC] NULL
+[21-Sep-2018 19:14:23 UTC] in senior
+[21-Sep-2018 19:16:35 UTC] the type of current_user variable is object
+[21-Sep-2018 19:16:35 UTC] the type of data is object
+[21-Sep-2018 19:16:35 UTC] 
+[21-Sep-2018 19:16:35 UTC] the meta_value is 
+[21-Sep-2018 19:16:35 UTC] The current user is object
+[21-Sep-2018 19:16:35 UTC] The first name of this user is Peter
+[21-Sep-2018 19:16:35 UTC] The current user ID is 50
+[21-Sep-2018 19:16:35 UTC] The current_user_id_type is NULL
+[21-Sep-2018 19:16:35 UTC] The current_user_id is  
+[21-Sep-2018 19:16:35 UTC] the division in the profile is
+[21-Sep-2018 19:16:35 UTC] Senior
+[21-Sep-2018 19:16:35 UTC] The user in profile page is 
+[21-Sep-2018 19:16:35 UTC] 
+[21-Sep-2018 19:16:35 UTC] NULL
+[21-Sep-2018 19:16:35 UTC] in senior
+[21-Sep-2018 19:17:17 UTC] the type of current_user variable is object
+[21-Sep-2018 19:17:17 UTC] the type of data is object
+[21-Sep-2018 19:17:17 UTC] 
+[21-Sep-2018 19:17:17 UTC] the meta_value is 
+[21-Sep-2018 19:17:17 UTC] The current user is object
+[21-Sep-2018 19:17:17 UTC] The first name of this user is Peter
+[21-Sep-2018 19:17:17 UTC] The current user ID is 50
+[21-Sep-2018 19:17:17 UTC] The current_user_id_type is NULL
+[21-Sep-2018 19:17:17 UTC] The current_user_id is  
+[21-Sep-2018 19:17:17 UTC] the division in the profile is
+[21-Sep-2018 19:17:17 UTC] Senior
+[21-Sep-2018 19:17:17 UTC] The user in profile page is 
+[21-Sep-2018 19:17:17 UTC] 
+[21-Sep-2018 19:17:17 UTC] NULL
+[21-Sep-2018 19:17:17 UTC] in senior
+[21-Sep-2018 19:17:20 UTC] the type of current_user variable is object
+[21-Sep-2018 19:17:20 UTC] the type of data is object
+[21-Sep-2018 19:17:20 UTC] 
+[21-Sep-2018 19:17:20 UTC] the meta_value is 
+[21-Sep-2018 19:17:20 UTC] The current user is object
+[21-Sep-2018 19:17:20 UTC] The first name of this user is Peter
+[21-Sep-2018 19:17:20 UTC] The current user ID is 50
+[21-Sep-2018 19:17:20 UTC] The current_user_id_type is NULL
+[21-Sep-2018 19:17:20 UTC] The current_user_id is  
+[21-Sep-2018 19:17:20 UTC] the division in the profile is
+[21-Sep-2018 19:17:20 UTC] Senior
+[21-Sep-2018 19:17:20 UTC] The user in profile page is 
+[21-Sep-2018 19:17:20 UTC] 
+[21-Sep-2018 19:17:20 UTC] NULL
+[21-Sep-2018 19:17:20 UTC] in senior
+[21-Sep-2018 19:44:55 UTC] the type of current_user variable is object
+[21-Sep-2018 19:44:55 UTC] the type of data is object
+[21-Sep-2018 19:44:55 UTC] 
+[21-Sep-2018 19:44:55 UTC] the meta_value is 
+[21-Sep-2018 19:44:55 UTC] 
+[21-Sep-2018 19:44:55 UTC] The current user is object
+[21-Sep-2018 19:44:55 UTC] The first name of this user is Peter
+[21-Sep-2018 19:44:55 UTC] The current user ID is 50
+[21-Sep-2018 19:44:55 UTC] The current_user_id_type is NULL
+[21-Sep-2018 19:44:55 UTC] The current_user_id is  
+[21-Sep-2018 19:44:55 UTC] the division in the profile is
+[21-Sep-2018 19:44:55 UTC] Senior
+[21-Sep-2018 19:44:55 UTC] The user in profile page is 
+[21-Sep-2018 19:44:55 UTC] 
+[21-Sep-2018 19:44:55 UTC] NULL
+[21-Sep-2018 19:44:55 UTC] in senior
+[21-Sep-2018 19:50:43 UTC] the type of current_user variable is object
+[21-Sep-2018 19:50:43 UTC] the type of data is object
+[21-Sep-2018 19:50:43 UTC] 
+[21-Sep-2018 19:50:43 UTC] the meta_value is 
+[21-Sep-2018 19:50:43 UTC] 
+[21-Sep-2018 19:50:43 UTC] The current user is object
+[21-Sep-2018 19:50:43 UTC] The first name of this user is Peter
+[21-Sep-2018 19:50:43 UTC] The current user ID is 50
+[21-Sep-2018 19:50:43 UTC] The current_user_id_type is NULL
+[21-Sep-2018 19:50:43 UTC] The current_user_id is  
+[21-Sep-2018 19:50:43 UTC] the division in the profile is
+[21-Sep-2018 19:50:43 UTC] Senior
+[21-Sep-2018 19:50:43 UTC] The user in profile page is 
+[21-Sep-2018 19:50:43 UTC] 
+[21-Sep-2018 19:50:43 UTC] NULL
+[21-Sep-2018 19:50:43 UTC] in senior
+[21-Sep-2018 19:56:32 UTC] the type of current_user variable is object
+[21-Sep-2018 19:56:32 UTC] the type of data is object
+[21-Sep-2018 19:56:32 UTC] 
+[21-Sep-2018 19:56:32 UTC] the meta_value is 
+[21-Sep-2018 19:56:32 UTC] 
+[21-Sep-2018 19:56:32 UTC] The current user is object
+[21-Sep-2018 19:56:32 UTC] The first name of this user is Peter
+[21-Sep-2018 19:56:32 UTC] The current user ID is 50
+[21-Sep-2018 19:56:32 UTC] The current_user_id_type is NULL
+[21-Sep-2018 19:56:32 UTC] The current_user_id is  
+[21-Sep-2018 19:56:32 UTC] the division in the profile is
+[21-Sep-2018 19:56:32 UTC] Senior
+[21-Sep-2018 19:56:32 UTC] The user in profile page is 
+[21-Sep-2018 19:56:32 UTC] 
+[21-Sep-2018 19:56:32 UTC] NULL
+[21-Sep-2018 19:56:32 UTC] in senior
+[21-Sep-2018 19:57:27 UTC] the type of current_user variable is object
+[21-Sep-2018 19:57:27 UTC] the type of data is object
+[21-Sep-2018 19:57:27 UTC] 
+[21-Sep-2018 19:57:27 UTC] the meta_value is 
+[21-Sep-2018 19:57:27 UTC] 
+[21-Sep-2018 19:57:27 UTC] The current user is object
+[21-Sep-2018 19:57:27 UTC] The first name of this user is Peter
+[21-Sep-2018 19:57:27 UTC] The current user ID is 50
+[21-Sep-2018 19:57:27 UTC] The current_user_id_type is NULL
+[21-Sep-2018 19:57:27 UTC] The current_user_id is  
+[21-Sep-2018 19:57:27 UTC] the division in the profile is
+[21-Sep-2018 19:57:27 UTC] Senior
+[21-Sep-2018 19:57:27 UTC] The user in profile page is 
+[21-Sep-2018 19:57:27 UTC] 
+[21-Sep-2018 19:57:27 UTC] NULL
+[21-Sep-2018 19:57:27 UTC] in senior
+[21-Sep-2018 21:22:56 UTC] the type of current_user variable is object
+[21-Sep-2018 21:22:56 UTC] the type of data is object
+[21-Sep-2018 21:22:56 UTC] 
+[21-Sep-2018 21:22:56 UTC] the meta_value is 
+[21-Sep-2018 21:22:56 UTC] 
+[21-Sep-2018 21:22:56 UTC] The current user is object
+[21-Sep-2018 21:22:56 UTC] The first name of this user is Peter
+[21-Sep-2018 21:22:56 UTC] The current user ID is 50
+[21-Sep-2018 21:22:56 UTC] The current_user_id_type is NULL
+[21-Sep-2018 21:22:56 UTC] The current_user_id is  
+[21-Sep-2018 21:22:56 UTC] the division in the profile is
+[21-Sep-2018 21:22:56 UTC] Senior
+[21-Sep-2018 21:22:56 UTC] The user in profile page is 
+[21-Sep-2018 21:22:56 UTC] 
+[21-Sep-2018 21:22:56 UTC] NULL
+[21-Sep-2018 21:22:56 UTC] in senior
+[21-Sep-2018 21:36:48 UTC] the type of current_user variable is object
+[21-Sep-2018 21:36:48 UTC] the type of data is object
+[21-Sep-2018 21:36:48 UTC] 
+[21-Sep-2018 21:36:48 UTC] the meta_value is 
+[21-Sep-2018 21:36:48 UTC] 
+[21-Sep-2018 21:36:48 UTC] The current user is object
+[21-Sep-2018 21:36:48 UTC] The first name of this user is Peter
+[21-Sep-2018 21:36:48 UTC] The current user ID is 50
+[21-Sep-2018 21:36:48 UTC] The current_user_id_type is NULL
+[21-Sep-2018 21:36:48 UTC] The current_user_id is  
+[21-Sep-2018 21:36:48 UTC] the division in the profile is
+[21-Sep-2018 21:36:48 UTC] Senior
+[21-Sep-2018 21:36:48 UTC] The user in profile page is 
+[21-Sep-2018 21:36:48 UTC] 
+[21-Sep-2018 21:36:48 UTC] NULL
+[21-Sep-2018 21:36:48 UTC] in senior
+[21-Sep-2018 21:41:04 UTC] the type of current_user variable is object
+[21-Sep-2018 21:41:04 UTC] the type of data is object
+[21-Sep-2018 21:41:04 UTC] 
+[21-Sep-2018 21:41:04 UTC] the meta_value is 
+[21-Sep-2018 21:41:04 UTC] 
+[21-Sep-2018 21:41:04 UTC] The current user is object
+[21-Sep-2018 21:41:04 UTC] The first name of this user is testuser20
+[21-Sep-2018 21:41:04 UTC] The current user ID is 50
+[21-Sep-2018 21:41:04 UTC] The current_user_id_type is NULL
+[21-Sep-2018 21:41:04 UTC] The current_user_id is  
+[21-Sep-2018 21:41:04 UTC] the division in the profile is
+[21-Sep-2018 21:41:04 UTC] Senior
+[21-Sep-2018 21:41:04 UTC] The user in profile page is 
+[21-Sep-2018 21:41:04 UTC] 
+[21-Sep-2018 21:41:04 UTC] NULL
+[21-Sep-2018 21:41:04 UTC] in senior
+[21-Sep-2018 21:45:30 UTC] the type of current_user variable is object
+[21-Sep-2018 21:45:30 UTC] the type of data is object
+[21-Sep-2018 21:45:30 UTC] 
+[21-Sep-2018 21:45:30 UTC] the meta_value is 
+[21-Sep-2018 21:45:30 UTC] 
+[21-Sep-2018 21:45:30 UTC] The current user is object
+[21-Sep-2018 21:45:30 UTC] The first name of this user is testuser20
+[21-Sep-2018 21:45:30 UTC] The current user ID is 50
+[21-Sep-2018 21:45:30 UTC] The current_user_id_type is NULL
+[21-Sep-2018 21:45:30 UTC] The current_user_id is  
+[21-Sep-2018 21:45:30 UTC] the division in the profile is
+[21-Sep-2018 21:45:30 UTC] Senior
+[21-Sep-2018 21:45:30 UTC] The user in profile page is 
+[21-Sep-2018 21:45:30 UTC] 
+[21-Sep-2018 21:45:30 UTC] NULL
+[21-Sep-2018 21:45:30 UTC] in senior
+[21-Sep-2018 21:46:53 UTC] the type of current_user variable is object
+[21-Sep-2018 21:46:53 UTC] the type of data is object
+[21-Sep-2018 21:46:53 UTC] 
+[21-Sep-2018 21:46:53 UTC] the meta_value is 
+[21-Sep-2018 21:46:53 UTC] 
+[21-Sep-2018 21:46:53 UTC] The current user is object
+[21-Sep-2018 21:46:53 UTC] The first name of this user is testuser20
+[21-Sep-2018 21:46:53 UTC] The current user ID is 50
+[21-Sep-2018 21:46:53 UTC] The current_user_id_type is NULL
+[21-Sep-2018 21:46:53 UTC] The current_user_id is  
+[21-Sep-2018 21:46:53 UTC] the division in the profile is
+[21-Sep-2018 21:46:53 UTC] Senior
+[21-Sep-2018 21:46:53 UTC] The user in profile page is 
+[21-Sep-2018 21:46:53 UTC] 
+[21-Sep-2018 21:46:53 UTC] NULL
+[21-Sep-2018 21:46:53 UTC] in senior
+[21-Sep-2018 21:48:05 UTC] the type of current_user variable is object
+[21-Sep-2018 21:48:05 UTC] the type of data is object
+[21-Sep-2018 21:48:05 UTC] 
+[21-Sep-2018 21:48:05 UTC] the meta_value is 
+[21-Sep-2018 21:48:05 UTC] 
+[21-Sep-2018 21:48:05 UTC] The current user is object
+[21-Sep-2018 21:48:05 UTC] The first name of this user is testuser20
+[21-Sep-2018 21:48:05 UTC] The current user ID is 50
+[21-Sep-2018 21:48:05 UTC] The current_user_id_type is NULL
+[21-Sep-2018 21:48:05 UTC] The current_user_id is  
+[21-Sep-2018 21:48:05 UTC] the division in the profile is
+[21-Sep-2018 21:48:05 UTC] Senior
+[21-Sep-2018 21:48:05 UTC] The user in profile page is 
+[21-Sep-2018 21:48:05 UTC] 
+[21-Sep-2018 21:48:05 UTC] NULL
+[21-Sep-2018 21:48:05 UTC] in senior
+[21-Sep-2018 21:52:10 UTC] the type of current_user variable is object
+[21-Sep-2018 21:52:10 UTC] the type of data is object
+[21-Sep-2018 21:52:10 UTC] 
+[21-Sep-2018 21:52:10 UTC] the meta_value is 
+[21-Sep-2018 21:52:10 UTC] 
+[21-Sep-2018 21:52:10 UTC] The current user is object
+[21-Sep-2018 21:52:10 UTC] The first name of this user is testuser20
+[21-Sep-2018 21:52:10 UTC] The current user ID is 50
+[21-Sep-2018 21:52:10 UTC] The current_user_id_type is NULL
+[21-Sep-2018 21:52:10 UTC] The current_user_id is  
+[21-Sep-2018 21:52:10 UTC] the division in the profile is
+[21-Sep-2018 21:52:10 UTC] Senior
+[21-Sep-2018 21:52:10 UTC] The user in profile page is 
+[21-Sep-2018 21:52:10 UTC] 
+[21-Sep-2018 21:52:10 UTC] NULL
+[21-Sep-2018 21:52:10 UTC] in senior
+[21-Sep-2018 21:58:15 UTC] the type of current_user variable is object
+[21-Sep-2018 21:58:15 UTC] the type of data is object
+[21-Sep-2018 21:58:15 UTC] 
+[21-Sep-2018 21:58:15 UTC] the meta_value is 
+[21-Sep-2018 21:58:15 UTC] 
+[21-Sep-2018 21:58:15 UTC] The current user is object
+[21-Sep-2018 21:58:15 UTC] The first name of this user is testuser20
+[21-Sep-2018 21:58:15 UTC] The current user ID is 50
+[21-Sep-2018 21:58:15 UTC] The current_user_id_type is NULL
+[21-Sep-2018 21:58:15 UTC] The current_user_id is  
+[21-Sep-2018 21:58:15 UTC] the division in the profile is
+[21-Sep-2018 21:58:15 UTC] Senior
+[21-Sep-2018 21:58:15 UTC] The user in profile page is 
+[21-Sep-2018 21:58:15 UTC] 
+[21-Sep-2018 21:58:15 UTC] NULL
+[21-Sep-2018 21:58:15 UTC] in senior
+[21-Sep-2018 21:58:52 UTC] the type of current_user variable is object
+[21-Sep-2018 21:58:52 UTC] the type of data is object
+[21-Sep-2018 21:58:52 UTC] 
+[21-Sep-2018 21:58:52 UTC] the meta_value is 
+[21-Sep-2018 21:58:52 UTC] 
+[21-Sep-2018 21:58:52 UTC] The current user is object
+[21-Sep-2018 21:58:52 UTC] The first name of this user is testuser20
+[21-Sep-2018 21:58:52 UTC] The current user ID is 50
+[21-Sep-2018 21:58:52 UTC] The current_user_id_type is NULL
+[21-Sep-2018 21:58:52 UTC] The current_user_id is  
+[21-Sep-2018 21:58:52 UTC] the division in the profile is
+[21-Sep-2018 21:58:52 UTC] Senior
+[21-Sep-2018 21:58:52 UTC] The user in profile page is 
+[21-Sep-2018 21:58:52 UTC] 
+[21-Sep-2018 21:58:52 UTC] NULL
+[21-Sep-2018 21:58:52 UTC] in senior
+[21-Sep-2018 21:59:06 UTC] PHP Warning:  call_user_func_array() expects parameter 1 to be a valid callback, function 'save_extra_profile_fields' not found or invalid function name in /var/www/html/www.visorsourcing.com/wp-includes/class-wp-hook.php on line 286
+[21-Sep-2018 21:59:06 UTC] the type of current_user variable is object
+[21-Sep-2018 21:59:06 UTC] the type of data is object
+[21-Sep-2018 21:59:06 UTC] 
+[21-Sep-2018 21:59:06 UTC] the meta_value is 
+[21-Sep-2018 21:59:06 UTC] 
+[21-Sep-2018 21:59:06 UTC] The current user is object
+[21-Sep-2018 21:59:06 UTC] The first name of this user is testuser20
+[21-Sep-2018 21:59:06 UTC] The current user ID is 50
+[21-Sep-2018 21:59:06 UTC] The current_user_id_type is NULL
+[21-Sep-2018 21:59:06 UTC] The current_user_id is  
+[21-Sep-2018 21:59:06 UTC] the division in the profile is
+[21-Sep-2018 21:59:06 UTC] Senior
+[21-Sep-2018 21:59:06 UTC] The user in profile page is 
+[21-Sep-2018 21:59:06 UTC] 
+[21-Sep-2018 21:59:06 UTC] NULL
+[21-Sep-2018 21:59:06 UTC] in senior
+[21-Sep-2018 21:59:11 UTC] the type of current_user variable is object
+[21-Sep-2018 21:59:11 UTC] the type of data is object
+[21-Sep-2018 21:59:11 UTC] 
+[21-Sep-2018 21:59:11 UTC] the meta_value is 
+[21-Sep-2018 21:59:11 UTC] 
+[21-Sep-2018 21:59:11 UTC] The current user is object
+[21-Sep-2018 21:59:11 UTC] The first name of this user is testuser20
+[21-Sep-2018 21:59:11 UTC] The current user ID is 50
+[21-Sep-2018 21:59:11 UTC] The current_user_id_type is NULL
+[21-Sep-2018 21:59:11 UTC] The current_user_id is  
+[21-Sep-2018 21:59:11 UTC] the division in the profile is
+[21-Sep-2018 21:59:11 UTC] Senior
+[21-Sep-2018 21:59:11 UTC] The user in profile page is 
+[21-Sep-2018 21:59:11 UTC] 
+[21-Sep-2018 21:59:11 UTC] NULL
+[21-Sep-2018 21:59:11 UTC] in senior
+[21-Sep-2018 22:00:19 UTC] the type of current_user variable is object
+[21-Sep-2018 22:00:19 UTC] the type of data is object
+[21-Sep-2018 22:00:19 UTC] 
+[21-Sep-2018 22:00:19 UTC] the meta_value is 
+[21-Sep-2018 22:00:19 UTC] 
+[21-Sep-2018 22:00:19 UTC] The current user is object
+[21-Sep-2018 22:00:19 UTC] The first name of this user is testuser20
+[21-Sep-2018 22:00:19 UTC] The current user ID is 50
+[21-Sep-2018 22:00:19 UTC] The current_user_id_type is NULL
+[21-Sep-2018 22:00:19 UTC] The current_user_id is  
+[21-Sep-2018 22:00:19 UTC] the division in the profile is
+[21-Sep-2018 22:00:19 UTC] Senior
+[21-Sep-2018 22:00:19 UTC] The user in profile page is 
+[21-Sep-2018 22:00:19 UTC] 
+[21-Sep-2018 22:00:19 UTC] NULL
+[21-Sep-2018 22:00:19 UTC] in senior
+[21-Sep-2018 22:02:23 UTC] the type of current_user variable is object
+[21-Sep-2018 22:02:23 UTC] the type of data is object
+[21-Sep-2018 22:02:23 UTC] 
+[21-Sep-2018 22:02:23 UTC] the meta_value is 
+[21-Sep-2018 22:02:23 UTC] 
+[21-Sep-2018 22:02:23 UTC] The current user is object
+[21-Sep-2018 22:02:23 UTC] The first name of this user is testuser20
+[21-Sep-2018 22:02:23 UTC] The current user ID is 50
+[21-Sep-2018 22:02:23 UTC] The current_user_id_type is NULL
+[21-Sep-2018 22:02:23 UTC] The current_user_id is  
+[21-Sep-2018 22:02:23 UTC] the division in the profile is
+[21-Sep-2018 22:02:23 UTC] Senior
+[21-Sep-2018 22:02:23 UTC] The user in profile page is 
+[21-Sep-2018 22:02:23 UTC] 
+[21-Sep-2018 22:02:23 UTC] NULL
+[21-Sep-2018 22:02:23 UTC] in senior
+[21-Sep-2018 22:02:37 UTC] PHP Warning:  call_user_func_array() expects parameter 1 to be a valid callback, function 'save_extra_profile_fields' not found or invalid function name in /var/www/html/www.visorsourcing.com/wp-includes/class-wp-hook.php on line 286
+[21-Sep-2018 22:02:38 UTC] the type of current_user variable is object
+[21-Sep-2018 22:02:38 UTC] the type of data is object
+[21-Sep-2018 22:02:38 UTC] 
+[21-Sep-2018 22:02:38 UTC] the meta_value is 
+[21-Sep-2018 22:02:38 UTC] 
+[21-Sep-2018 22:02:38 UTC] The current user is object
+[21-Sep-2018 22:02:38 UTC] The first name of this user is testuser20
+[21-Sep-2018 22:02:38 UTC] The current user ID is 50
+[21-Sep-2018 22:02:38 UTC] The current_user_id_type is NULL
+[21-Sep-2018 22:02:38 UTC] The current_user_id is  
+[21-Sep-2018 22:02:38 UTC] the division in the profile is
+[21-Sep-2018 22:02:38 UTC] Senior
+[21-Sep-2018 22:02:38 UTC] The user in profile page is 
+[21-Sep-2018 22:02:38 UTC] 
+[21-Sep-2018 22:02:38 UTC] NULL
+[21-Sep-2018 22:02:38 UTC] in senior
+[21-Sep-2018 22:02:58 UTC] the type of current_user variable is object
+[21-Sep-2018 22:02:58 UTC] the type of data is object
+[21-Sep-2018 22:02:58 UTC] 
+[21-Sep-2018 22:02:58 UTC] the meta_value is 
+[21-Sep-2018 22:02:58 UTC] 
+[21-Sep-2018 22:02:58 UTC] The current user is object
+[21-Sep-2018 22:02:58 UTC] The first name of this user is testuser20
+[21-Sep-2018 22:02:58 UTC] The current user ID is 50
+[21-Sep-2018 22:02:58 UTC] The current_user_id_type is NULL
+[21-Sep-2018 22:02:58 UTC] The current_user_id is  
+[21-Sep-2018 22:02:58 UTC] the division in the profile is
+[21-Sep-2018 22:02:58 UTC] Senior
+[21-Sep-2018 22:02:58 UTC] The user in profile page is 
+[21-Sep-2018 22:02:58 UTC] 
+[21-Sep-2018 22:02:58 UTC] NULL
+[21-Sep-2018 22:02:58 UTC] in senior
+[21-Sep-2018 22:03:09 UTC] the type of current_user variable is object
+[21-Sep-2018 22:03:09 UTC] the type of data is object
+[21-Sep-2018 22:03:09 UTC] 
+[21-Sep-2018 22:03:09 UTC] the meta_value is 
+[21-Sep-2018 22:03:09 UTC] 
+[21-Sep-2018 22:03:09 UTC] The current user is object
+[21-Sep-2018 22:03:09 UTC] The first name of this user is testuser20
+[21-Sep-2018 22:03:09 UTC] The current user ID is 50
+[21-Sep-2018 22:03:09 UTC] The current_user_id_type is NULL
+[21-Sep-2018 22:03:09 UTC] The current_user_id is  
+[21-Sep-2018 22:03:09 UTC] the division in the profile is
+[21-Sep-2018 22:03:09 UTC] Senior
+[21-Sep-2018 22:03:09 UTC] The user in profile page is 
+[21-Sep-2018 22:03:09 UTC] 
+[21-Sep-2018 22:03:09 UTC] NULL
+[21-Sep-2018 22:03:09 UTC] in senior
+[21-Sep-2018 22:03:26 UTC] the type of current_user variable is object
+[21-Sep-2018 22:03:26 UTC] the type of data is object
+[21-Sep-2018 22:03:26 UTC] 
+[21-Sep-2018 22:03:26 UTC] the meta_value is 
+[21-Sep-2018 22:03:26 UTC] 
+[21-Sep-2018 22:03:26 UTC] The current user is object
+[21-Sep-2018 22:03:26 UTC] The first name of this user is testuser20
+[21-Sep-2018 22:03:26 UTC] The current user ID is 50
+[21-Sep-2018 22:03:26 UTC] The current_user_id_type is NULL
+[21-Sep-2018 22:03:26 UTC] The current_user_id is  
+[21-Sep-2018 22:03:26 UTC] the division in the profile is
+[21-Sep-2018 22:03:26 UTC] Senior
+[21-Sep-2018 22:03:26 UTC] The user in profile page is 
+[21-Sep-2018 22:03:26 UTC] 
+[21-Sep-2018 22:03:26 UTC] NULL
+[21-Sep-2018 22:03:26 UTC] in senior
+[21-Sep-2018 22:04:11 UTC] the type of current_user variable is object
+[21-Sep-2018 22:04:11 UTC] the type of data is object
+[21-Sep-2018 22:04:11 UTC] 
+[21-Sep-2018 22:04:11 UTC] the meta_value is 
+[21-Sep-2018 22:04:11 UTC] 
+[21-Sep-2018 22:04:11 UTC] The current user is object
+[21-Sep-2018 22:04:11 UTC] The first name of this user is testuser20
+[21-Sep-2018 22:04:11 UTC] The current user ID is 50
+[21-Sep-2018 22:04:11 UTC] The current_user_id_type is NULL
+[21-Sep-2018 22:04:11 UTC] The current_user_id is  
+[21-Sep-2018 22:04:11 UTC] the division in the profile is
+[21-Sep-2018 22:04:11 UTC] Senior
+[21-Sep-2018 22:04:11 UTC] The user in profile page is 
+[21-Sep-2018 22:04:11 UTC] 
+[21-Sep-2018 22:04:11 UTC] NULL
+[21-Sep-2018 22:04:11 UTC] in senior
+[21-Sep-2018 22:04:48 UTC] the type of current_user variable is object
+[21-Sep-2018 22:04:48 UTC] the type of data is object
+[21-Sep-2018 22:04:48 UTC] 
+[21-Sep-2018 22:04:48 UTC] the meta_value is 
+[21-Sep-2018 22:04:48 UTC] 
+[21-Sep-2018 22:04:48 UTC] The current user is object
+[21-Sep-2018 22:04:48 UTC] The first name of this user is testuser20
+[21-Sep-2018 22:04:48 UTC] The current user ID is 50
+[21-Sep-2018 22:04:48 UTC] The current_user_id_type is NULL
+[21-Sep-2018 22:04:48 UTC] The current_user_id is  
+[21-Sep-2018 22:04:48 UTC] the division in the profile is
+[21-Sep-2018 22:04:48 UTC] Senior
+[21-Sep-2018 22:04:48 UTC] The user in profile page is 
+[21-Sep-2018 22:04:48 UTC] 
+[21-Sep-2018 22:04:48 UTC] NULL
+[21-Sep-2018 22:04:48 UTC] in senior
+[22-Sep-2018 05:19:01 UTC] the type of current_user variable is object
+[22-Sep-2018 05:19:01 UTC] the type of data is object
+[22-Sep-2018 05:19:01 UTC] 
+[22-Sep-2018 05:19:01 UTC] the meta_value is 
+[22-Sep-2018 05:19:01 UTC] 
+[22-Sep-2018 05:19:01 UTC] The current user is object
+[22-Sep-2018 05:19:01 UTC] The first name of this user is testuser20
+[22-Sep-2018 05:19:01 UTC] The current user ID is 50
+[22-Sep-2018 05:19:01 UTC] The current_user_id_type is NULL
+[22-Sep-2018 05:19:01 UTC] The current_user_id is  
+[22-Sep-2018 05:19:01 UTC] the division in the profile is
+[22-Sep-2018 05:19:01 UTC] Senior
+[22-Sep-2018 05:19:01 UTC] The user in profile page is 
+[22-Sep-2018 05:19:01 UTC] 
+[22-Sep-2018 05:19:01 UTC] NULL
+[22-Sep-2018 05:19:01 UTC] in senior
+[22-Sep-2018 05:27:59 UTC] the type of current_user variable is object
+[22-Sep-2018 05:27:59 UTC] the type of data is object
+[22-Sep-2018 05:27:59 UTC] 
+[22-Sep-2018 05:27:59 UTC] the meta_value is 
+[22-Sep-2018 05:27:59 UTC] 
+[22-Sep-2018 05:27:59 UTC] The current user is object
+[22-Sep-2018 05:27:59 UTC] The first name of this user is testuser20
+[22-Sep-2018 05:27:59 UTC] The current user ID is 50
+[22-Sep-2018 05:27:59 UTC] The current_user_id_type is NULL
+[22-Sep-2018 05:27:59 UTC] The current_user_id is  
+[22-Sep-2018 05:27:59 UTC] the division in the profile is
+[22-Sep-2018 05:27:59 UTC] Senior
+[22-Sep-2018 05:27:59 UTC] The user in profile page is 
+[22-Sep-2018 05:27:59 UTC] 
+[22-Sep-2018 05:27:59 UTC] NULL
+[22-Sep-2018 05:27:59 UTC] in senior
+[22-Sep-2018 05:30:44 UTC] the type of current_user variable is object
+[22-Sep-2018 05:30:44 UTC] the type of data is object
+[22-Sep-2018 05:30:44 UTC] 
+[22-Sep-2018 05:30:44 UTC] the meta_value is 
+[22-Sep-2018 05:30:44 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function __get() in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php:176
+Stack trace:
+#0 /var/www/html/www.visorsourcing.com/wp-includes/class-wp-hook.php(286): extra_profile_fields(Object(WP_User))
+#1 /var/www/html/www.visorsourcing.com/wp-includes/class-wp-hook.php(310): WP_Hook->apply_filters('', Array)
+#2 /var/www/html/www.visorsourcing.com/wp-includes/plugin.php(453): WP_Hook->do_action(Array)
+#3 /var/www/html/www.visorsourcing.com/wp-admin/user-edit.php(362): do_action('profile_persona...', Object(WP_User))
+#4 /var/www/html/www.visorsourcing.com/wp-admin/profile.php(18): require_once('/var/www/html/w...')
+#5 {main}
+  thrown in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 176
+[22-Sep-2018 05:31:12 UTC] the type of current_user variable is object
+[22-Sep-2018 05:31:12 UTC] the type of data is object
+[22-Sep-2018 05:31:12 UTC] 
+[22-Sep-2018 05:31:12 UTC] the meta_value is 
+[22-Sep-2018 05:31:12 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function __get() in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php:176
+Stack trace:
+#0 /var/www/html/www.visorsourcing.com/wp-includes/class-wp-hook.php(286): extra_profile_fields(Object(WP_User))
+#1 /var/www/html/www.visorsourcing.com/wp-includes/class-wp-hook.php(310): WP_Hook->apply_filters('', Array)
+#2 /var/www/html/www.visorsourcing.com/wp-includes/plugin.php(453): WP_Hook->do_action(Array)
+#3 /var/www/html/www.visorsourcing.com/wp-admin/user-edit.php(362): do_action('profile_persona...', Object(WP_User))
+#4 /var/www/html/www.visorsourcing.com/wp-admin/profile.php(18): require_once('/var/www/html/w...')
+#5 {main}
+  thrown in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 176
+[22-Sep-2018 05:32:10 UTC] the type of current_user variable is object
+[22-Sep-2018 05:32:10 UTC] the type of data is object
+[22-Sep-2018 05:32:10 UTC] 
+[22-Sep-2018 05:32:10 UTC] the meta_value is 
+[22-Sep-2018 05:32:10 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function get() in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php:176
+Stack trace:
+#0 /var/www/html/www.visorsourcing.com/wp-includes/class-wp-hook.php(286): extra_profile_fields(Object(WP_User))
+#1 /var/www/html/www.visorsourcing.com/wp-includes/class-wp-hook.php(310): WP_Hook->apply_filters('', Array)
+#2 /var/www/html/www.visorsourcing.com/wp-includes/plugin.php(453): WP_Hook->do_action(Array)
+#3 /var/www/html/www.visorsourcing.com/wp-admin/user-edit.php(362): do_action('profile_persona...', Object(WP_User))
+#4 /var/www/html/www.visorsourcing.com/wp-admin/profile.php(18): require_once('/var/www/html/w...')
+#5 {main}
+  thrown in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 176
+[22-Sep-2018 05:33:25 UTC] the type of current_user variable is object
+[22-Sep-2018 05:33:25 UTC] the type of data is object
+[22-Sep-2018 05:33:25 UTC] 
+[22-Sep-2018 05:33:25 UTC] the meta_value is 
+[22-Sep-2018 05:33:25 UTC] 
+[22-Sep-2018 05:33:25 UTC] The current user is object
+[22-Sep-2018 05:33:25 UTC] The first name of this user is testuser20
+[22-Sep-2018 05:33:25 UTC] The current user ID is 50
+[22-Sep-2018 05:33:25 UTC] The current_user_id_type is NULL
+[22-Sep-2018 05:33:25 UTC] The current_user_id is  
+[22-Sep-2018 05:33:25 UTC] the division in the profile is
+[22-Sep-2018 05:33:25 UTC] Senior
+[22-Sep-2018 05:33:25 UTC] The user in profile page is 
+[22-Sep-2018 05:33:25 UTC] 
+[22-Sep-2018 05:33:25 UTC] NULL
+[22-Sep-2018 05:33:25 UTC] in senior
+[22-Sep-2018 05:34:26 UTC] PHP Parse error:  syntax error, unexpected ';' in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 177
+[22-Sep-2018 05:34:27 UTC] PHP Parse error:  syntax error, unexpected ';' in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 177
+[22-Sep-2018 05:34:41 UTC] PHP Parse error:  syntax error, unexpected ';' in /var/www/html/www.visorsourcing.com/wp-content/themes/all-purpose/inc/theme-functions.php on line 177
+[22-Sep-2018 05:35:01 UTC] the type of current_user variable is object
+[22-Sep-2018 05:35:01 UTC] the type of data is object
+[22-Sep-2018 05:35:01 UTC] 
+[22-Sep-2018 05:35:01 UTC] the meta_value is 
+[22-Sep-2018 05:35:01 UTC] 
+[22-Sep-2018 05:35:01 UTC] The current user is object
+[22-Sep-2018 05:35:01 UTC] The first name of this user is testuser20
+[22-Sep-2018 05:35:01 UTC] The current user ID is 50
+[22-Sep-2018 05:35:01 UTC] The current_user_id_type is NULL
+[22-Sep-2018 05:35:01 UTC] The current_user_id is  
+[22-Sep-2018 05:35:01 UTC] the division in the profile is
+[22-Sep-2018 05:35:01 UTC] Senior
+[22-Sep-2018 05:35:01 UTC] The user in profile page is 
+[22-Sep-2018 05:35:01 UTC] 
+[22-Sep-2018 05:35:01 UTC] NULL
+[22-Sep-2018 05:35:01 UTC] in senior
+[22-Sep-2018 05:36:19 UTC] the type of current_user variable is object
+[22-Sep-2018 05:36:19 UTC] the type of data is object
+[22-Sep-2018 05:36:19 UTC] 
+[22-Sep-2018 05:36:19 UTC] the meta_value is 
+[22-Sep-2018 05:36:19 UTC] string
+[22-Sep-2018 05:36:19 UTC] 
+[22-Sep-2018 05:36:19 UTC] The current user is object
+[22-Sep-2018 05:36:19 UTC] The first name of this user is testuser20
+[22-Sep-2018 05:36:19 UTC] The current user ID is 50
+[22-Sep-2018 05:36:19 UTC] The current_user_id_type is NULL
+[22-Sep-2018 05:36:19 UTC] The current_user_id is  
+[22-Sep-2018 05:36:19 UTC] the division in the profile is
+[22-Sep-2018 05:36:19 UTC] Senior
+[22-Sep-2018 05:36:19 UTC] The user in profile page is 
+[22-Sep-2018 05:36:19 UTC] 
+[22-Sep-2018 05:36:19 UTC] NULL
+[22-Sep-2018 05:36:19 UTC] in senior
+[22-Sep-2018 05:36:46 UTC] the type of current_user variable is object
+[22-Sep-2018 05:36:46 UTC] the type of data is object
+[22-Sep-2018 05:36:46 UTC] 
+[22-Sep-2018 05:36:46 UTC] the meta_value is 
+[22-Sep-2018 05:36:46 UTC] string
+[22-Sep-2018 05:36:46 UTC] 
+[22-Sep-2018 05:36:46 UTC] The current user is object
+[22-Sep-2018 05:36:46 UTC] The first name of this user is testuser20
+[22-Sep-2018 05:36:46 UTC] The current user ID is 50
+[22-Sep-2018 05:36:46 UTC] The current_user_id_type is NULL
+[22-Sep-2018 05:36:46 UTC] The current_user_id is  
+[22-Sep-2018 05:36:46 UTC] the division in the profile is
+[22-Sep-2018 05:36:46 UTC] Senior
+[22-Sep-2018 05:36:46 UTC] The user in profile page is 
+[22-Sep-2018 05:36:46 UTC] 
+[22-Sep-2018 05:36:46 UTC] NULL
+[22-Sep-2018 05:36:46 UTC] in senior
+[22-Sep-2018 05:37:17 UTC] the type of current_user variable is object
+[22-Sep-2018 05:37:17 UTC] the type of data is object
+[22-Sep-2018 05:37:17 UTC] 
+[22-Sep-2018 05:37:17 UTC] the meta_value is 
+[22-Sep-2018 05:37:17 UTC] string
+[22-Sep-2018 05:37:17 UTC] 
+[22-Sep-2018 05:37:17 UTC] The current user is object
+[22-Sep-2018 05:37:17 UTC] The first name of this user is testuser20
+[22-Sep-2018 05:37:17 UTC] The current user ID is 50
+[22-Sep-2018 05:37:17 UTC] The current_user_id_type is NULL
+[22-Sep-2018 05:37:17 UTC] The current_user_id is  
+[22-Sep-2018 05:37:17 UTC] the division in the profile is
+[22-Sep-2018 05:37:17 UTC] Senior
+[22-Sep-2018 05:37:17 UTC] The user in profile page is 
+[22-Sep-2018 05:37:17 UTC] 
+[22-Sep-2018 05:37:17 UTC] NULL
+[22-Sep-2018 05:37:17 UTC] in senior
+[22-Sep-2018 05:41:36 UTC] the type of current_user variable is object
+[22-Sep-2018 05:41:36 UTC] the type of data is object
+[22-Sep-2018 05:41:36 UTC] 
+[22-Sep-2018 05:41:36 UTC] the meta_value is 
+[22-Sep-2018 05:41:36 UTC] string
+[22-Sep-2018 05:41:36 UTC] 
+[22-Sep-2018 05:41:36 UTC] The current user is object
+[22-Sep-2018 05:41:36 UTC] The first name of this user is testuser20
+[22-Sep-2018 05:41:36 UTC] The current user ID is 50
+[22-Sep-2018 05:41:36 UTC] The current_user_id_type is NULL
+[22-Sep-2018 05:41:36 UTC] The current_user_id is  
+[22-Sep-2018 05:41:36 UTC] the division in the profile is
+[22-Sep-2018 05:41:36 UTC] Senior
+[22-Sep-2018 05:41:36 UTC] The user in profile page is 
+[22-Sep-2018 05:41:36 UTC] 
+[22-Sep-2018 05:41:36 UTC] NULL
+[22-Sep-2018 05:41:36 UTC] in senior
+[22-Sep-2018 05:41:41 UTC] the type of current_user variable is object
+[22-Sep-2018 05:41:41 UTC] the type of data is object
+[22-Sep-2018 05:41:41 UTC] 
+[22-Sep-2018 05:41:41 UTC] the meta_value is 
+[22-Sep-2018 05:41:41 UTC] string
+[22-Sep-2018 05:41:41 UTC] 
+[22-Sep-2018 05:41:41 UTC] The current user is object
+[22-Sep-2018 05:41:41 UTC] The first name of this user is testuser20
+[22-Sep-2018 05:41:41 UTC] The current user ID is 50
+[22-Sep-2018 05:41:41 UTC] The current_user_id_type is NULL
+[22-Sep-2018 05:41:41 UTC] The current_user_id is  
+[22-Sep-2018 05:41:41 UTC] the division in the profile is
+[22-Sep-2018 05:41:41 UTC] Senior
+[22-Sep-2018 05:41:41 UTC] The user in profile page is 
+[22-Sep-2018 05:41:41 UTC] 
+[22-Sep-2018 05:41:41 UTC] NULL
+[22-Sep-2018 05:41:41 UTC] in senior
+[22-Sep-2018 05:46:40 UTC] the type of current_user variable is object
+[22-Sep-2018 05:46:40 UTC] the type of data is object
+[22-Sep-2018 05:46:40 UTC] 
+[22-Sep-2018 05:46:40 UTC] the meta_value is 
+[22-Sep-2018 05:46:40 UTC] string
+[22-Sep-2018 05:46:40 UTC] 
+[22-Sep-2018 05:46:40 UTC] The current user is object
+[22-Sep-2018 05:46:40 UTC] The first name of this user is testuser20
+[22-Sep-2018 05:46:40 UTC] The current user ID is 50
+[22-Sep-2018 05:46:40 UTC] The current_user_id_type is NULL
+[22-Sep-2018 05:46:40 UTC] The current_user_id is  
+[22-Sep-2018 05:46:40 UTC] the division in the profile is
+[22-Sep-2018 05:46:40 UTC] Senior
+[22-Sep-2018 05:46:40 UTC] The user in profile page is 
+[22-Sep-2018 05:46:40 UTC] 
+[22-Sep-2018 05:46:40 UTC] NULL
+[22-Sep-2018 05:46:40 UTC] in senior
+[22-Sep-2018 05:46:48 UTC] the type of current_user variable is object
+[22-Sep-2018 05:46:48 UTC] the type of data is object
+[22-Sep-2018 05:46:48 UTC] 
+[22-Sep-2018 05:46:48 UTC] the meta_value is 
+[22-Sep-2018 05:46:48 UTC] string
+[22-Sep-2018 05:46:48 UTC] 
+[22-Sep-2018 05:46:48 UTC] The current user is object
+[22-Sep-2018 05:46:48 UTC] The first name of this user is testuser20
+[22-Sep-2018 05:46:48 UTC] The current user ID is 50
+[22-Sep-2018 05:46:48 UTC] The current_user_id_type is NULL
+[22-Sep-2018 05:46:48 UTC] The current_user_id is  
+[22-Sep-2018 05:46:48 UTC] the division in the profile is
+[22-Sep-2018 05:46:48 UTC] Senior
+[22-Sep-2018 05:46:48 UTC] The user in profile page is 
+[22-Sep-2018 05:46:48 UTC] 
+[22-Sep-2018 05:46:48 UTC] NULL
+[22-Sep-2018 05:46:48 UTC] in senior
+[22-Sep-2018 05:52:21 UTC] the type of current_user variable is object
+[22-Sep-2018 05:52:21 UTC] the type of data is object
+[22-Sep-2018 05:52:21 UTC] 
+[22-Sep-2018 05:52:21 UTC] the meta_value is 
+[22-Sep-2018 05:52:21 UTC] string
+[22-Sep-2018 05:52:21 UTC] 
+[22-Sep-2018 05:52:21 UTC] The current user is object
+[22-Sep-2018 05:52:21 UTC] The first name of this user is testuser20
+[22-Sep-2018 05:52:21 UTC] The current user ID is 50
+[22-Sep-2018 05:52:21 UTC] The current_user_id_type is NULL
+[22-Sep-2018 05:52:21 UTC] The current_user_id is  
+[22-Sep-2018 05:52:21 UTC] the division in the profile is
+[22-Sep-2018 05:52:21 UTC] Senior
+[22-Sep-2018 05:52:21 UTC] The user in profile page is 
+[22-Sep-2018 05:52:21 UTC] 
+[22-Sep-2018 05:52:21 UTC] NULL
+[22-Sep-2018 05:52:21 UTC] in senior
+[22-Sep-2018 05:52:42 UTC] the type of current_user variable is object
+[22-Sep-2018 05:52:42 UTC] the type of data is object
+[22-Sep-2018 05:52:42 UTC] 
+[22-Sep-2018 05:52:42 UTC] the meta_value is 
+[22-Sep-2018 05:52:42 UTC] string
+[22-Sep-2018 05:52:42 UTC] 
+[22-Sep-2018 05:52:42 UTC] The current user is object
+[22-Sep-2018 05:52:42 UTC] The first name of this user is testuser20
+[22-Sep-2018 05:52:42 UTC] The current user ID is 50
+[22-Sep-2018 05:52:42 UTC] The current_user_id_type is NULL
+[22-Sep-2018 05:52:42 UTC] The current_user_id is  
+[22-Sep-2018 05:52:42 UTC] the division in the profile is
+[22-Sep-2018 05:52:42 UTC] Senior
+[22-Sep-2018 05:52:42 UTC] The user in profile page is 
+[22-Sep-2018 05:52:42 UTC] 
+[22-Sep-2018 05:52:42 UTC] NULL
+[22-Sep-2018 05:52:42 UTC] in senior
+[22-Sep-2018 05:58:19 UTC] the type of current_user variable is object
+[22-Sep-2018 05:58:19 UTC] the type of data is object
+[22-Sep-2018 05:58:19 UTC] 
+[22-Sep-2018 05:58:19 UTC] the meta_value is 
+[22-Sep-2018 05:58:19 UTC] The current user is object
+[22-Sep-2018 05:58:19 UTC] The current user ID is 
+[22-Sep-2018 05:58:19 UTC] The current_user_id_type is NULL
+[22-Sep-2018 05:58:19 UTC] The current_user_id is  
+[22-Sep-2018 05:58:19 UTC] the division in the profile is
+[22-Sep-2018 05:58:19 UTC] Senior
+[22-Sep-2018 05:58:19 UTC] The user in profile page is 
+[22-Sep-2018 05:58:19 UTC] 
+[22-Sep-2018 05:58:19 UTC] NULL
+[22-Sep-2018 05:58:19 UTC] in senior
+[22-Sep-2018 06:09:23 UTC] PHP Deprecated:  Function create_function() is deprecated in /var/www/html/www.visorsourcing.com/wp-content/plugins/bwp-recaptcha/bwp-recaptcha.php on line 40
