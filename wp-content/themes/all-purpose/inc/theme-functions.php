@@ -270,8 +270,10 @@ function my_wp_new_user_notification_init() {
 	add_filter( 'wp_new_user_notification_email', 'my_wp_new_user_notification_email', 10, 3 );
 }
 function my_wp_new_user_notification_email( $wp_new_user_notification_email, $user, $blogname ) {
-	$message = sprintf(__('Username: %s'), $user->user_login) . "\r\n\r\n";
+	$key = wp_generate_password( 20, false );
+	$message = sprintf(__('Your new username is: %s'), $user->user_login) . "\r\n";
 	$message .= __('To set your password and complete registration, visit the following URL:') . "r\n\r\n";
+	$message .= __('你的新用戶名是: %s'), $user->user_login) . "\r\n";
 	$message .= __('請點撃以的網址，更改密碼，以便完成證記新用戶名：') . "r\n\r\n";
 	$message .= '<' .network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user->user_login), 'login') . ">\r\n\r\n";
 	$wp_new_user_notification_email['subject'] = sprintf( ' Registration email', $blogname, $user->user_login );
