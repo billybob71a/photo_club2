@@ -270,6 +270,8 @@ function my_wp_new_user_notification_init() {
 	add_filter( 'wp_new_user_notification_email', 'my_wp_new_user_notification_email', 10, 3 );
 }
 function my_wp_new_user_notification_email( $wp_new_user_notification_email, $user, $blogname ) {
+	global $wpdb, $wp_hasher;
+    $user = get_userdata( $user_id );
 	$key = wp_generate_password( 20, false );
 	do_action( 'retrieve_password_key', $user->user_login, $key );
 	// Now insert the key, hashed, into the DB.
