@@ -272,6 +272,7 @@ function my_wp_new_user_notification_init() {
 function my_wp_new_user_notification_email( $wp_new_user_notification_email, $user_id, $blogname ) {
 	global $wpdb, $wp_hasher;
     $user = get_userdata( $user_id );
+	error_log('the user_id shows ' . $user_id);
 	$key = wp_generate_password( 20, false );
 	do_action( 'retrieve_password_key', $user->user_login, $key );
 	// Now insert the key, hashed, into the DB.
