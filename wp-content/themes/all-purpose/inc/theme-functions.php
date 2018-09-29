@@ -267,7 +267,7 @@ add_filter( 'registration_errors', 'validate_extra_profile_fields', 10, 3);
 add_action( 'user_register', 'save_extra_profile_fields');
 add_action( 'login_init', 'my_wp_new_user_notification_init' );
 function my_wp_new_user_notification_init() {
-	add_filter( 'wp_new_user_notification_email', 'my_wp_new_user_notification_email', 10, 3 );
+	apply_filters( 'wp_new_user_notification_email', 'my_wp_new_user_notification_email', $user, $blogname );
 }
 function my_wp_new_user_notification_email( $wp_new_user_notification_email, $user_id, $blogname ) {
 	global $wpdb, $wp_hasher;
