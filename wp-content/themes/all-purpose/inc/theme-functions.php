@@ -236,7 +236,7 @@ update_user_meta( $user_id, "division_drop_down", $_POST['division_drop_down'] )
 }
 function  validate_extra_profile_fields( $errors, $sanitized_user_login, $user_email ) {
 	if ( $_POST['division_drop_down'] == "") {
-		$errors->add( 'no_division_error', __('<strong>ERROR</Strong>:You must select Junior or Senior for Division', 'mydomain') );}
+		$errors->add( 'no_division_error', __('<strong>ERROR</Strong>:You must select Junior or Senior for Photo Contest Division', 'mydomain') );}
 //
 return $errors;
 }
