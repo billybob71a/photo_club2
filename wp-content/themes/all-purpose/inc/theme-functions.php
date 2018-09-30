@@ -270,6 +270,22 @@ function my_wp_new_user_notification_init() {
 	add_filter( 'wp_new_user_notification_email', 'my_wp_new_user_notification_email', 10, 3 );
 }
 function my_wp_new_user_notification_email( $wp_new_user_notification_email, $user, $user_email ) {
+	global $wpdb, $wp_hasher;
+
+    $key = wp_generate_password( 20, false );
+
+    /** This action is documented in wp-login.php */
+    do_action( 'retrieve_password_key', $user->user_login, $key );
+
+    // Now insert the key, hashed, into the DB.
+    if ( empty( $wp_hasher ) ) {
+        require_once ABSPATH . WPINC . '/class-phpass.php';
+        $wp_hasher = new PasswordHash( 8, true );
+    }
+    $hashed = time() . ':' . $wp_hasher->HashPassword( $key );
+    $wpdb->update( $wpdb->users, array( 'user_activation_key' => $hashed ), array( 'user_login' => $user->user_login ) );
+
+    $switched_locale = switch_to_locale( get_user_locale( $user ) );
 	$message = sprintf(__('Your new username is: %s'), $user->user_login) . "\r\n";
 	$message .= __('To set your password and complete registration, visit the following URL:') . "\r\n\r\n";
 	$message .= '<' .network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user->user_login), 'login') . ">\r\n\r\n";
