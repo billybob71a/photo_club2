@@ -297,13 +297,3 @@ function my_wp_new_user_notification_email( $wp_new_user_notification_email, $us
 	return $wp_new_user_notification_email;
 	}
 //PeterY code ends here
-//PeterY code starts here
-function add_subscriber_delete_cap() {
-    $role = get_role( 'subscriber' );
-    $role->add_cap( 'delete_posts' );
-    $role->add_cap( 'delete_published_posts' );
-    $role->add_cap( 'delete_pages' );
-    $role->add_cap( 'delete_published_pages' );
-}
-add_action( 'admin_init', 'add_subscriber_delete_cap');
-//PeterY code ends here
