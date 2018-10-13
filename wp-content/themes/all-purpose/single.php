@@ -20,6 +20,13 @@ get_header(); ?>
 				<div class="postpagination">
 					<?php the_post_navigation(); ?>
 				</div>
+				<?php
+					//PeterY code starts 
+					if (function_exists('get_delete_post_link')) {
+						error_log('Hi i see get_delete_post_link);
+						}
+					//PeterY code ends
+				?>
 				
 				<?php
 					// If comments are open or we have at least one comment, load up the comment template.
