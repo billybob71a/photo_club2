@@ -190,7 +190,7 @@ function usp_gallery($attr, $content = null) {
 		error_log($item->ID);
 		$images = usp_get_images($size, $before, $after, $number, $item->ID);
 		foreach ($images as $image) $gallery .= $image;
-        	$gallery = $gallery ? '<div class="usp-image-gallery">'. $gallery .'</div><H1>'. $item->post_title .'</H1><a onclick="return confirm(\'Are you SURE you want to delete this post?\')"  href="'. wp_delete_post($item->ID) .'"><font color="red">Delete</font></a><br><br>' : '';
+        	$gallery = $gallery ? '<div class="usp-image-gallery">'. $gallery .'</div><H1>'. $item->post_title .'</H1><a onclick="return confirm(\'Are you SURE you want to delete this post?\')"  href="'. get_delete_post_link($item->ID) .'"><font color="red">Delete</font></a><br><br>' : '';
 		}
 	error_log($the_current_user_login_id);
 	//PeterY code ends here
