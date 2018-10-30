@@ -296,4 +296,11 @@ function my_wp_new_user_notification_email( $wp_new_user_notification_email, $us
 	$wp_new_user_notification_email['message'] = $message;
 	return $wp_new_user_notification_email;
 	}
+function petery_javascript(){
+	?>
+	<?php
+	error_log("the template directory is " . get_template_directory_uri());
+	wp_enqueue_script( 'my-script', get_template_directory_uri() . '/js/my-script.js', array(), true);
+	}
+add_action('wp_enqueue_scripts','petery_javascript');
 //PeterY code ends here
