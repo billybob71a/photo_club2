@@ -165,6 +165,7 @@ function usp_gallery($attr, $content = null) {
 		
 	), $attr));
 	// PeterY code starts here
+	error_log("the permalink is ". get_the_permalink());
 	$user_profile_data = get_userdata( 50 );
 	error_log(gettype( $user_profile_data ));
 	$user_division = $user_profile_data->__get( 'division_drop_down'  );
@@ -190,7 +191,7 @@ function usp_gallery($attr, $content = null) {
 		error_log($item->ID);
 		$images = usp_get_images($size, $before, $after, $number, $item->ID);
 		foreach ($images as $image) $gallery .= $image;
-        	$gallery = $gallery ? '<div class="usp-image-gallery">'. $gallery .'</div><H1>'. $item->post_title .'</H1><input type="button" onclick="petery_delete_post('. $item->ID .')" value="Delete" /><br><br>' : '';
+        	$gallery = $gallery ? '<div class="usp-image-gallery">'. $gallery .'</div><H1>'. $item->post_title .'</H1><input type="button" name="'. $item->ID .'" id="delete_button" value="Delete" /><br><br>' : '';
 		}
 	error_log($the_current_user_login_id);
 	//PeterY code ends here
