@@ -165,12 +165,12 @@ function usp_gallery($attr, $content = null) {
 		
 	), $attr));
 	// PeterY code starts here
-	error_log("the permalink is ". get_the_permalink());
-	$user_profile_data = get_userdata( 50 );
-	error_log(gettype( $user_profile_data ));
-	$user_division = $user_profile_data->__get( 'division_drop_down'  );
-	error_log("the user division is");
-	error_log( $user_division );
+	#error_log("the permalink is ". get_the_permalink());
+	#$user_profile_data = get_userdata( 50 );
+	#error_log(gettype( $user_profile_data ));
+	#$user_division = $user_profile_data->__get( 'division_drop_down'  );
+	#error_log("the user division is");
+	#error_log( $user_division );
 	$the_current_user_temp = wp_get_current_user();
 	$the_current_user_id = esc_html( $the_current_user_temp->ID );
 	$the_current_user_login_id = get_the_author_meta( 'user_login', $the_current_user_id );	
