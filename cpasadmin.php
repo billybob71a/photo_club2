@@ -43,8 +43,8 @@ if ($login_check) {
 						$results = preg_match_all($pattern, $image_item->guid, $all_matches);
 						$results2 = var_dump($all_matches);
 						//echo('<li>'.$all_matches[0][2].'/'.$all_matches[0][3].'/'.$all_matches[0][4].'/'.$all_matches[0][5].'/'.$all_matches[0][6].'</li>');
-						$source_location = $all_matches[0][2].'/'.$all_matches[0][3].'/'.$all_matches[0][4].'/'.$all_matches[0][5].'/'.$all_matches[0][6];
-						$presenter_list_junior = $post_item->post_title.', '. $all_matches[0][6] .', '. $user->division_drop_down .','. $user_info->first_name .' '. $user_info->last_name;
+						$source_location = $all_matches[0][2].'/'.$all_matches[0][3].'/'.$all_matches[0][4].'/'.$all_matches[0][5];
+						$presenter_list_junior = $post_item->post_title.', '.$source_location.', '. $all_matches[0][6] .', '. $user->division_drop_down .','. $user_info->first_name .' '. $user_info->last_name;
 						echo('<li> hihihihi '. $presenter_list_junior .'</li>');
 						//array_push($var_junior_array, $presenter_list_junior);
 						$var_junior_array[] = $presenter_list_junior;
@@ -66,8 +66,10 @@ if ($login_check) {
 						$results = preg_match_all($pattern, $image_item->guid, $all_matches);
 						$results2 = var_dump($all_matches);
 						//echo('<li>'.$all_matches[0][2].'/'.$all_matches[0][3].'/'.$all_matches[0][4].'/'.$all_matches[0][5].'/'.$all_matches[0][6].'</li>');
-						$source_location = $all_matches[0][2].'/'.$all_matches[0][3].'/'.$all_matches[0][4].'/'.$all_matches[0][5].'/'.$all_matches[0][6];
-						$presenter_list_senior = $post_item-post_title.', '. $all_matches[0][6] .', '. $user->division_drop_down .','. $user_info->first_name .' '. $user_info->last_name;
+						$source_location = $all_matches[0][2].'/'.$all_matches[0][3].'/'.$all_matches[0][4].'/'.$all_matches[0][5]; 
+						echo('The source location is '. $source_location);
+						$presenter_list_senior = $post_item->post_title.','.$source_location.','. $all_matches[0][6] .','. $user->division_drop_down .','. $user_info->first_name .' '. $user_info->last_name;
+						$var_senior_array[] = $presenter_list_senior;
 						$new_name = $post_item->post_title;
 						echo('<li>'.$new_name.'</li>');
 						preg_match_all('/[^.]+/',$all_matches[0][6],$image_split); 
@@ -89,11 +91,40 @@ if ($login_check) {
 	echo '---------------------------------';
 	$temp2 = var_dump($var_junior_array);
 	echo '<ul>';
+	$index = 0;
 	foreach ($var_junior_array as $item) {
 		$index++;
 		echo('<li>'. $index .', '.$item .'</li>');
+		$pattern = '/[^,]+/';
+		preg_match_all($pattern, $item, $item_delimited);
+		preg_match_all('/(\..*)$/', $item_delimited[0][1], $file_extension);
+		echo('<li>'.$index.'_'.$item_delimited[0][0] .'.'.$file_extension[1][0] .'</li>');
 	}
-	echo '</ul>';	
+	echo '</ul>';
+	echo('-------------------------');
+	echo('<br><br>');
+	$index = 0;
+	$senior_list_document = $source_location.'/photo_random/senior/senior_list.txt';
+	shuffle($var_senior_array);
+	$myfileSenior = fopen($senior_list_document, "w");
+	echo($senior_list_document);
+	foreach ($var_senior_array as $item) {
+		$index++;
+		$pattern = '/[^,]+/';
+		//echo('<li>'. $index .', '.$item .'</li>');
+		preg_match_all($pattern, $item, $item_delimited);
+		//echo('<li>'.$index .', '.$item_delimited[0][0].', '.$item_delimited[0][3].', '. $item_delimited[0][4].'</li>');
+		fwrite($myfileSenior, $index."__".$item_delimited[0][0]."__".$item_delimited[0][3]."__".$item_delimited[0][4]." ".$item_delimited[0][5]."\r\n");
+		preg_match_all('/([^\.]+)$/', $item_delimited[0][2], $file_extension);
+		echo('<li>'.$file_extension[1][0].'</li>');
+		echo('<li>'.$index.'_'.$item_delimited[0][0] .'.'.$file_extension[1][0] .','.$item_delimited[0][1].'</li>');
+		$dest_location = $item_delimited[0][1] .'/photo_random/senior/'.$index.'_'. $item_delimited[0][0] .'.'. $file_extension[1][0];
+		$source_location = $item_delimited[0][1].'/'.$item_delimited[0][2];
+		//$dest_location = $item_delimited[0][1].'/'.$item_delimited[0][0];
+		echo($source_location.' copy to '. $dest_location);
+		copy($source_location, $dest_location);
+	}
+	fclose($myfileSenior);
 }
 else {
 }
