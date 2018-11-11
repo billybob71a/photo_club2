@@ -13,6 +13,7 @@ if ($login_check) {
 	error_log("the user id is ". $user_id);
 	error_log("The user first name last name is ". $current_user->user_firstname ." ". $current_user->user_lastname);
 	error_log("The user division is ". $current_user->division_drop_down);
+	date_default_timezone_set('America/Edmonton');
 	//$list_of_posts = get_posts('author' => $user_id);
 	$args = array( 'who' => 'subscribers', 
 					'has_published_posts' => True );
@@ -43,8 +44,8 @@ if ($login_check) {
 						$results = preg_match_all($pattern, $image_item->guid, $all_matches);
 						$results2 = var_dump($all_matches);
 						//echo('<li>'.$all_matches[0][2].'/'.$all_matches[0][3].'/'.$all_matches[0][4].'/'.$all_matches[0][5].'/'.$all_matches[0][6].'</li>');
-						$source_location = $all_matches[0][2].'/'.$all_matches[0][3].'/'.$all_matches[0][4].'/'.$all_matches[0][5];
-						$presenter_list_junior = $post_item->post_title.', '.$source_location.', '. $all_matches[0][6] .', '. $user->division_drop_down .','. $user_info->first_name .' '. $user_info->last_name;
+						$source_location_junior = $all_matches[0][2].'/'.$all_matches[0][3].'/'.$all_matches[0][4].'/'.$all_matches[0][5];
+						$presenter_list_junior = $post_item->post_title.','.$source_location_junior.','. $all_matches[0][6] .','. $user->division_drop_down .','. $user_info->first_name .' '. $user_info->last_name;
 						echo('<li> hihihihi '. $presenter_list_junior .'</li>');
 						//array_push($var_junior_array, $presenter_list_junior);
 						$var_junior_array[] = $presenter_list_junior;
@@ -66,9 +67,9 @@ if ($login_check) {
 						$results = preg_match_all($pattern, $image_item->guid, $all_matches);
 						$results2 = var_dump($all_matches);
 						//echo('<li>'.$all_matches[0][2].'/'.$all_matches[0][3].'/'.$all_matches[0][4].'/'.$all_matches[0][5].'/'.$all_matches[0][6].'</li>');
-						$source_location = $all_matches[0][2].'/'.$all_matches[0][3].'/'.$all_matches[0][4].'/'.$all_matches[0][5]; 
+						$source_location_senior = $all_matches[0][2].'/'.$all_matches[0][3].'/'.$all_matches[0][4].'/'.$all_matches[0][5]; 
 						echo('The source location is '. $source_location);
-						$presenter_list_senior = $post_item->post_title.','.$source_location.','. $all_matches[0][6] .','. $user->division_drop_down .','. $user_info->first_name .' '. $user_info->last_name;
+						$presenter_list_senior = $post_item->post_title.','.$source_location_senior.','. $all_matches[0][6] .','. $user->division_drop_down .','. $user_info->first_name .' '. $user_info->last_name;
 						$var_senior_array[] = $presenter_list_senior;
 						$new_name = $post_item->post_title;
 						echo('<li>'.$new_name.'</li>');
@@ -85,6 +86,34 @@ if ($login_check) {
 	}
 	echo '</ul>';
 	echo '-------------------------------';
+	$localtime_assoc = getdate();
+	print_r($localtime_assoc);
+	$date_iso = ($localtime_assoc['year'].
+		$localtime_assoc['mon'].
+		$localtime_assoc['mday'].
+		$localtime_assoc['hours'].
+		$localtime_assoc['minutes'].
+		$localtime_assoc['seconds']);
+	echo($date_iso);
+	$dir_read = $source_location_junior.'/photo_random';
+	$dir_contents = scandir($dir_read,1);
+	foreach ($dir_contents as $item) {
+		echo($item);
+		if ($item == 'junior') {
+			$junior_folder = $dir_read.'/'.$item;
+			$junior_folder_backup = $dir_read.'/'.$item.'_'.$date_iso;
+			echo('the junior folder is '. $junior_folder);
+			$result = rename($junior_folder, $junior_folder_backup);
+			echo('the result from renaming is '. $result);
+			mkdir($junior_folder);
+		}
+		else if ($item == 'senior') {
+			$senior_folder = $dir_read.'/'.$item;
+			$senior_folder_backup = $dir_read.'/'.$item.'_'.$date_iso;
+			rename($senior_folder, $senior_folder_backup);
+			mkdir($senior_folder);
+		}
+	}
 	$temp = var_dump($var_junior_array);
 	shuffle($var_junior_array);
 	echo '<br>';
@@ -92,22 +121,34 @@ if ($login_check) {
 	$temp2 = var_dump($var_junior_array);
 	echo '<ul>';
 	$index = 0;
+	$junior_list_document = $source_location_junior.'/photo_random/junior/junior_list.txt';
+	$myfileJunior = fopen($junior_list_document, "w");
 	foreach ($var_junior_array as $item) {
 		$index++;
-		echo('<li>'. $index .', '.$item .'</li>');
 		$pattern = '/[^,]+/';
+		//echo('<li>'. $index .', '.$item .'</li>');
 		preg_match_all($pattern, $item, $item_delimited);
-		preg_match_all('/(\..*)$/', $item_delimited[0][1], $file_extension);
-		echo('<li>'.$index.'_'.$item_delimited[0][0] .'.'.$file_extension[1][0] .'</li>');
+		//echo('<li>'.$index .', '.$item_delimited[0][0].', '.$item_delimited[0][3].', '. $item_delimited[0][4].'</li>');
+		fwrite($myfileJunior, $index."__".$item_delimited[0][0]."__".$item_delimited[0][3]."__".$item_delimited[0][4]." ".$item_delimited[0][5]."\r\n");
+		preg_match_all('/([^\.]+)$/', $item_delimited[0][2], $file_extension);
+		echo('<li>'.$file_extension[1][0].'</li>');
+		echo('<li>'.$index.'_'.$item_delimited[0][0] .'.'.$file_extension[1][0] .','.$item_delimited[0][1].'</li>');
+		$dest_location = $item_delimited[0][1] .'/photo_random/junior/'.$index.'_'. $item_delimited[0][0] .'.'. $file_extension[1][0];
+		$source_location = $item_delimited[0][1].'/'.$item_delimited[0][2];
+		//$dest_location = $item_delimited[0][1].'/'.$item_delimited[0][0];
+		echo($source_location.' copy to '. $dest_location);
+		copy($source_location, $dest_location);
 	}
 	echo '</ul>';
+	fclose($myfileJunior);
 	echo('-------------------------');
 	echo('<br><br>');
 	$index = 0;
-	$senior_list_document = $source_location.'/photo_random/senior/senior_list.txt';
+	$senior_list_document = $source_location_senior.'/photo_random/senior/senior_list.txt';
 	shuffle($var_senior_array);
 	$myfileSenior = fopen($senior_list_document, "w");
-	echo($senior_list_document);
+	echo("the senior_list_document is ".$senior_list_document);
+	echo(" finished");
 	foreach ($var_senior_array as $item) {
 		$index++;
 		$pattern = '/[^,]+/';
