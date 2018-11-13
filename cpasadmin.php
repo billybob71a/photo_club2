@@ -5,7 +5,7 @@
 require( '/var/www/html/www.visorsourcing.com/wp-load.php' );
 $login_check = is_user_logged_in();
 error_log("The user logged in is ". $login_check);
-if ($login_check) {
+if (($login_check) && isset($_POST['randomize'])) {
 	error_log("Arrived at photo admin page");
 	$current_user = wp_get_current_user();
 	$user_id = $current_user->ID;
@@ -169,4 +169,11 @@ if ($login_check) {
 }
 else {
 }
+echo("<br>");
+echo("<link href='style.css' rel='stylesheet' type='text/css'>");
+echo("<form method='POST' action='cpasadmin.php'>");
+echo("<input type='hidden' value='randomize' name='randomize'>");
+echo("<input type='submit' value='Randomize All Photos' class='submit_button'>");
+echo("</form>");
+	
 
