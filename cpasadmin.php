@@ -7,11 +7,8 @@ $login_check = is_user_logged_in();
 error_log("The user logged in is ". $login_check);
 function display_photos($file_location, $thumbnail_location) {
 	// try to use this expression regex (?<=________)(.*)
-	echo("Hi you all the file location is ".$file_location."<br>");
-	echo("the thumbnail location is ".$thumbnail_location."<br>");
-	if (file_exists($file_location)) {
-		echo "The file $filename exists";
-	}
+	//echo("Hi you all the file location is ".$file_location."<br>");
+	//echo("the thumbnail location is ".$thumbnail_location."<br>");
 	$file = fopen($file_location, "r");
 	$d = dir($thumbnail_location);
 	$dir_content = [];
@@ -22,10 +19,20 @@ function display_photos($file_location, $thumbnail_location) {
 	//echo("yoooooooooooooooooooooo");
 	//print_r($dir_content);
 	$counter = 0;
+	if (strpos($file_location, 'junior') !== false) {
+		echo("Junior Photos");
+	}
+	else if (strpos($file_location, 'senior') !== false) {
+		echo("Senior Photos");
+	}
+	// else {
+	// }
+	echo("<table>");
 	while(! feof($file)) {
+		$result = $counter % 3;
 		$readline = fgets($file);
 		if (preg_match("/(?<=________)(.*)/", $readline, $matches)) {
-			echo("The matched item is ". $matches[0]."<br/>");
+			//echo("The matched item is ". $matches[0]."<br/>");
 			preg_match_all('/.*(?=\.)/', $matches[0], $before_file_extension);
 			//preg_match_all('/[^\.]/', $matches[0], $before_file_extension);
 			$readline_items_array = preg_split("/__/",$readline);
@@ -48,9 +55,35 @@ function display_photos($file_location, $thumbnail_location) {
 			//echo("the thumbnail location is ". $thumbnail_location ."<br/>");
 			$thumbnail_location_file = 'https://www.visorsourcing.com/'.$thumbnail_location."/". $dir_content[$index_number];
 			//echo($thumbnail_location_file."<br/>");
-			echo("<img src='".$thumbnail_location_file."' /><br>");
-			echo("$readline_items_array[1] <br><br>");
+			if ($result == 0) {
+				echo("<tr><td class='widecell'>");
+				echo("<div class='cellwidener'> <img src='".$thumbnail_location_file."' /><br>$readline_items_array[1] </div>");
+				echo("</td>");
+			}
+			else if ($result == 2) {
+				echo("<td class='widecell'>");
+				echo("<div class='cellwidener'> <img src='".$thumbnail_location_file."' /><br>$readline_items_array[1] </div>");
+				echo("</td>");
+				echo("</tr>");
+			}
+			else {
+				echo("<td class='widecell'>");
+				echo("<div class='cellwidener'> <img src='".$thumbnail_location_file."' /><br>$readline_items_array[1]<br> </div>");
+				echo("</td>");
+			}
+			$counter++;
 		}
+	}
+	if ( $result == 2) {
+		echo("<td class='widecell'>&nbsp;</td></tr>");
+		echo("</table>");
+	}
+	else if ( $result == 1 ) {
+		echo("<td class='widecell'>&nbsp;</td><td class='widecell'>&nbsp;</td></tr>");
+		echo("</table>");
+	}
+	else{
+		echo("</table>");
 	}
 	fclose($file);
 	
@@ -152,7 +185,7 @@ if (($login_check) && isset($_POST['randomize'])) {
 		if ($item == 'junior') {
 			$junior_folder = $dir_read.'/'.$item;
 			$junior_folder_backup = $dir_read.'/'.$item.'_'.$date_iso;
-			echo('the junior folder is '. $junior_folder);
+			//echo('the junior folder is '. $junior_folder);
 			$result = rename($junior_folder, $junior_folder_backup);
 			//echo('the result from renaming is '. $result);
 			mkdir($junior_folder);

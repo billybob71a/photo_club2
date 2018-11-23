@@ -1,0 +1,16 @@
+.submit_button {background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+	border-radius: 10px;
+    font-size: 12px;
+	cursor:pointer;}
+div.cellwidener {
+  margin: 0px 15px 0px 15px;
+}
+td.widecell {
+  padding: 10px;
+}
