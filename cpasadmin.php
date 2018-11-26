@@ -88,16 +88,7 @@ function display_photos($file_location, $thumbnail_location) {
 	fclose($file);
 	
 }
-if (($login_check) && isset($_POST['randomize'])) {
-	error_log("Arrived at photo admin page");
-	$current_user = wp_get_current_user();
-	$user_id = $current_user->ID;
-	error_log("the user name is ". $current_user->user_login);
-	error_log("the user id is ". $user_id);
-	error_log("The user first name last name is ". $current_user->user_firstname ." ". $current_user->user_lastname);
-	error_log("The user division is ". $current_user->division_drop_down);
-	date_default_timezone_set('America/Edmonton');
-	//$list_of_posts = get_posts('author' => $user_id);
+function get_source_folder() {
 	$args = array( 'who' => 'subscribers', 
 					'has_published_posts' => True );
 	$user_query = new WP_User_Query( $args );
@@ -138,6 +129,96 @@ if (($login_check) && isset($_POST['randomize'])) {
 						//$temp = var_dump($image_split);
 						$image_renamed = $new_name.'.'.$image_split[0][1];
 						$dest_location = $all_matches[0][2].'/'.$all_matches[0][3].'/'.$all_matches[0][4].'/'.$all_matches[0][5].'/photo_random/junior/'.$image_renamed;
+						//echo('<li>'. $dest_location .'</li>');
+						//copy($source_location, $dest_location);
+					}
+					else if ($user->division_drop_down == 'Senior') {
+						//echo('<li>'. $user_info->first_name . ' ' . $user_info->last_name .', '.
+						//$user->division_drop_down .', '. $post_item->post_title .', '.
+						//$image_item->guid .'</li>');
+						$pattern = '/[^\/]+/';
+						//echo('<li>'. $image_item->guid .'</li>');
+						$results = preg_match_all($pattern, $image_item->guid, $all_matches);
+						//$results2 = var_dump($all_matches);
+						//echo('<li>'.$all_matches[0][2].'/'.$all_matches[0][3].'/'.$all_matches[0][4].'/'.$all_matches[0][5].'/'.$all_matches[0][6].'</li>');
+						$source_location_senior = $all_matches[0][2].'/'.$all_matches[0][3].'/'.$all_matches[0][4].'/'.$all_matches[0][5]; 
+						//echo('The source location is '. $source_location);
+						$presenter_list_senior = $post_item->post_title.','.$source_location_senior.','. $all_matches[0][6] .','. $user->division_drop_down .','. $user_info->first_name .' '. $user_info->last_name.','.$all_matches[0][6];
+						$var_senior_array[] = $presenter_list_senior;
+						$new_name = $post_item->post_title;
+						//echo('<li>'.$new_name.'</li>');
+						preg_match_all('/[^.]+/',$all_matches[0][6],$image_split); 
+						//$temp = var_dump($image_split);
+						$image_renamed = $new_name.'.'.$image_split[0][1];
+						$dest_location = $all_matches[0][2].'/'.$all_matches[0][3].'/'.$all_matches[0][4].'/'.$all_matches[0][5].'/photo_random/senior/'.$image_renamed;
+						//echo('<li>'. $dest_location .'</li>');
+						//copy($source_location, $dest_location);
+					}
+				}
+			}
+		}
+	}
+$source_locations = [];
+$source_locations = array($source_location_junior, $source_location_senior);
+return $source_locations;
+}
+
+if (($login_check) && isset($_POST['randomize'])) {
+	error_log("Arrived at photo admin page");
+	$current_user = wp_get_current_user();
+	$user_id = $current_user->ID;
+	error_log("the user name is ". $current_user->user_login);
+	error_log("the user id is ". $user_id);
+	error_log("The user first name last name is ". $current_user->user_firstname ." ". $current_user->user_lastname);
+	error_log("The user division is ". $current_user->division_drop_down);
+	date_default_timezone_set('America/Edmonton');
+	//$list_of_posts = get_posts('author' => $user_id);
+	$args = array( 'who' => 'subscribers', 
+					'has_published_posts' => True );
+	$user_query = new WP_User_Query( $args );
+	$user_array = $user_query->get_results();
+	$var_junior_array = array();
+	$var_senior_array = array();
+	//$zip = new ZipArchive();
+	//if ($zip->open($_SERVER['DOCUMENT_ROOT']."/TEST/".$DelFilePath, ZIPARCHIVE::CREATE) != TRUE) {
+    //    die ("Could not open archive");
+	//}
+	echo($_SERVER['DOCUMENT_ROOT']);
+	echo '<ul>';
+	foreach ( $user_array as $user ) {
+		error_log("the user id from the array is ". $user->ID );
+		if ($user->ID != '1') { 
+			$user_info = get_userdata( $user->ID );
+			$args2 = array( 'posts_per_page' => -1,
+							'author' => $user->ID
+							);
+			$current_user_posts = get_posts( $args2 );
+			error_log("the number of posts for this user is ". count( $current_user_posts ));
+			foreach ( $current_user_posts as $post_item ) {
+				$images = get_attached_media('image', $post_item->ID );
+				error_log("here are the images ". $temp);
+				foreach ( $images as $image_item ) {
+					if ($user->division_drop_down == 'Junior') {
+						//echo('<li>'. $user_info->first_name . ' ' . $user_info->last_name .', '.
+						//$user->division_drop_down .', '. $post_item->post_title .', '.
+						//$image_item->guid .'</li>');
+						$pattern = '/[^\/]+/';
+						//echo('<li>'. $image_item->guid .'</li>');
+						$results = preg_match_all($pattern, $image_item->guid, $all_matches);
+						//$results2 = var_dump($all_matches);
+						//echo('<li>'.$all_matches[0][2].'/'.$all_matches[0][3].'/'.$all_matches[0][4].'/'.$all_matches[0][5].'/'.$all_matches[0][6].'</li>');
+						$source_location_junior = $all_matches[0][2].'/'.$all_matches[0][3].'/'.$all_matches[0][4].'/'.$all_matches[0][5];
+						$presenter_list_junior = $post_item->post_title.','.$source_location_junior.','. $all_matches[0][6] .','. $user->division_drop_down .','. $user_info->first_name .' '. $user_info->last_name.','.$all_matches[0][6];
+						//echo('<li> hihihihi '. $presenter_list_junior .'</li>');
+						//array_push($var_junior_array, $presenter_list_junior);
+						$var_junior_array[] = $presenter_list_junior;
+						$new_name = $post_item->post_title;
+						//echo('<li>'.$new_name.'</li>');
+						preg_match_all('/[^.]+/',$all_matches[0][6],$image_split); 
+						//$temp = var_dump($image_split);
+						$image_renamed = $new_name.'.'.$image_split[0][1];
+						$dest_location = $all_matches[0][2].'/'.$all_matches[0][3].'/'.$all_matches[0][4].'/'.$all_matches[0][5].'/photo_random/junior/'.$image_renamed;
+						$zip->addFile($dest_location);
 						//echo('<li>'. $dest_location .'</li>');
 						//copy($source_location, $dest_location);
 					}
@@ -252,6 +333,13 @@ if (($login_check) && isset($_POST['randomize'])) {
 	}
 	fclose($myfileSenior);
 	display_photos($senior_list_document, $source_location_senior);
+}
+else if ($login_check) {
+	$locations = get_source_folder();
+	$senior_file = $locations[0]."/photo_random/senior/senior_list.txt";
+	$junior_file = $locations[1]."/photo_random/junior/junior_list.txt";
+	display_photos($junior_file, $locations[0]);
+	display_photos($senior_file, $locations[0]);
 }
 else {
 }
