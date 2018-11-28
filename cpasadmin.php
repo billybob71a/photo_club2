@@ -9,6 +9,8 @@ function display_photos($file_location, $thumbnail_location) {
 	// try to use this expression regex (?<=________)(.*)
 	//echo("Hi you all the file location is ".$file_location."<br>");
 	//echo("the thumbnail location is ".$thumbnail_location."<br>");
+	$junior_preg_match = 0;
+	$senior_preg_match = 0;
 	$file = fopen($file_location, "r");
 	$d = dir($thumbnail_location);
 	$dir_content = [];
@@ -19,10 +21,17 @@ function display_photos($file_location, $thumbnail_location) {
 	//echo("yoooooooooooooooooooooo");
 	//print_r($dir_content);
 	$counter = 0;
-	if (strpos($file_location, 'junior') !== false) {
+	//echo("The file location is $file_location");
+	if (file_exists("./download/junior.zip")) {
+		echo("The last randomization of photos was at: " . date ("F d Y H:i:s.", filemtime('./download/junior.zip'))."<br><br>");
+	}
+	//if (strpos($file_location, 'junior') === true) {
+	$junior_preg_match = preg_match('/junior/', $file_location, $matches);
+	$senior_preg_match = preg_match('/senior/', $file_location, $matches);
+	if ($junior_preg_match === 1) {
 		echo("Junior Photos");
 	}
-	else if (strpos($file_location, 'senior') !== false) {
+	else if ($senior_preg_match === 1 ) {
 		echo("Senior Photos");
 	}
 	// else {
@@ -33,6 +42,7 @@ function display_photos($file_location, $thumbnail_location) {
 		$readline = fgets($file);
 		if (preg_match("/(?<=________)(.*)/", $readline, $matches)) {
 			//echo("The matched item is ". $matches[0]."<br/>");
+			$counter++;
 			preg_match_all('/.*(?=\.)/', $matches[0], $before_file_extension);
 			//preg_match_all('/[^\.]/', $matches[0], $before_file_extension);
 			$readline_items_array = preg_split("/__/",$readline);
@@ -71,26 +81,43 @@ function display_photos($file_location, $thumbnail_location) {
 				echo("<div class='cellwidener'> <img src='".$thumbnail_location_file."' /><br>$readline_items_array[1]<br> </div>");
 				echo("</td>");
 			}
-			$counter++;
 		}
 	}
 	if ( $result == 2) {
-		echo("<td class='widecell'>&nbsp;</td></tr>");
-		echo("</table>");
+		if ($junior_preg_match === 1) {
+			echo("<td class='widecell'>&nbsp;</td></tr>");
+			echo("</table><br><a href='https://www.visorsourcing.com/download/junior.zip'>Download Junior Photos</a><br><br>");
+		}
+		else if ($senior_preg_match === 1) {
+			echo("<td class='widecell'>&nbsp;</td></tr>");
+			echo("</table><br><a href='https://www.visorsourcing.com/download/senior.zip'>Download Senior Photos</a><br>");
+		}
 	}
 	else if ( $result == 1 ) {
-		echo("<td class='widecell'>&nbsp;</td><td class='widecell'>&nbsp;</td></tr>");
-		echo("</table>");
+		if ($junior_preg_match === 1) {
+			echo("<td class='widecell'>&nbsp;</td><td class='widecell'>&nbsp;</td></tr>");
+			echo("</table><br><a href='https://www.visorsourcing.com/download/junior.zip'>Download Junior Photos</a><br><br>");
+		}
+		else if ($senior_preg_match === 1) {
+			echo("<td class='widecell'>&nbsp;</td><td class='widecell'>&nbsp;</td></tr>");
+			echo("</table><br><a href='https://www.visorsourcing.com/download/senior.zip'>Download Senior Photos</a><br>");
+		}
 	}
 	else{
-		echo("</table>");
+		if ($junior_preg_match === 1) {
+			echo("</table><br><a href='https://www.visorsourcing.com/download/junior.zip'>Download Junior Photos</a><br><br>");
+		}
+		else if ($senior_preg_match === 1) {
+			echo("</table><br><a href='https://www.visorsourcing.com/download/senior.zip'>Download Senior Photos</a><br>");
+		}
 	}
 	fclose($file);
 	
 }
 function get_source_folder() {
 	$args = array( 'who' => 'subscribers', 
-					'has_published_posts' => True );
+					'has_published_posts' => True,
+					);
 	$user_query = new WP_User_Query( $args );
 	$user_array = $user_query->get_results();
 	$var_junior_array = array();
@@ -101,7 +128,8 @@ function get_source_folder() {
 		if ($user->ID != '1') { 
 			$user_info = get_userdata( $user->ID );
 			$args2 = array( 'posts_per_page' => -1,
-							'author' => $user->ID
+							'author' => $user->ID,
+							'lang' => ''
 							);
 			$current_user_posts = get_posts( $args2 );
 			error_log("the number of posts for this user is ". count( $current_user_posts ));
@@ -174,29 +202,36 @@ if (($login_check) && isset($_POST['randomize'])) {
 	date_default_timezone_set('America/Edmonton');
 	//$list_of_posts = get_posts('author' => $user_id);
 	$args = array( 'who' => 'subscribers', 
-					'has_published_posts' => True );
+					'has_published_posts' => True,
+					);
 	$user_query = new WP_User_Query( $args );
 	$user_array = $user_query->get_results();
 	$var_junior_array = array();
 	$var_senior_array = array();
-	//$zip = new ZipArchive();
-	//if ($zip->open($_SERVER['DOCUMENT_ROOT']."/TEST/".$DelFilePath, ZIPARCHIVE::CREATE) != TRUE) {
-    //    die ("Could not open archive");
-	//}
-	echo($_SERVER['DOCUMENT_ROOT']);
+	//below debugging level is very usefl
+	error_reporting(E_ALL);
+	ini_set('display_errors', '1');
+	//if ($res === True) {
+	//	echo("I did not find an archive");
+		//$zip->addFile($_SERVER['DOCUMENT_ROOT']."/wp-content/upload/2018/11/IMG06802_defished.jpg");
+	//	}
+	//else if ($res === False) {
+	//	echo("I found an archive");
+	//	}
 	echo '<ul>';
 	foreach ( $user_array as $user ) {
 		error_log("the user id from the array is ". $user->ID );
 		if ($user->ID != '1') { 
 			$user_info = get_userdata( $user->ID );
 			$args2 = array( 'posts_per_page' => -1,
-							'author' => $user->ID
+							'author' => $user->ID,
+							'lang' => ''
 							);
 			$current_user_posts = get_posts( $args2 );
 			error_log("the number of posts for this user is ". count( $current_user_posts ));
 			foreach ( $current_user_posts as $post_item ) {
 				$images = get_attached_media('image', $post_item->ID );
-				error_log("here are the images ". $temp);
+				//error_log("here are the images ". $temp);
 				foreach ( $images as $image_item ) {
 					if ($user->division_drop_down == 'Junior') {
 						//echo('<li>'. $user_info->first_name . ' ' . $user_info->last_name .', '.
@@ -218,7 +253,6 @@ if (($login_check) && isset($_POST['randomize'])) {
 						//$temp = var_dump($image_split);
 						$image_renamed = $new_name.'.'.$image_split[0][1];
 						$dest_location = $all_matches[0][2].'/'.$all_matches[0][3].'/'.$all_matches[0][4].'/'.$all_matches[0][5].'/photo_random/junior/'.$image_renamed;
-						$zip->addFile($dest_location);
 						//echo('<li>'. $dest_location .'</li>');
 						//copy($source_location, $dest_location);
 					}
@@ -285,6 +319,13 @@ if (($login_check) && isset($_POST['randomize'])) {
 	//$temp2 = var_dump($var_junior_array);
 	echo '<ul>';
 	$index = 0;
+	$zip_junior = new ZipArchive();
+	if(file_exists('./download/junior.zip')){
+		unlink('./download/junior.zip');
+	}
+	if ($zip_junior->open("./download/junior.zip", ZIPARCHIVE::CREATE ) !== True) {
+		die("Could not open file");
+	}
 	$junior_list_document = $source_location_junior.'/photo_random/junior/junior_list.txt';
 	$myfileJunior = fopen($junior_list_document, "w");
 	foreach ($var_junior_array as $item) {
@@ -298,18 +339,29 @@ if (($login_check) && isset($_POST['randomize'])) {
 		//echo('<li>'.$file_extension[1][0].'</li>');
 		//echo('<li>'.$index.'_'.$item_delimited[0][0] .'.'.$file_extension[1][0] .','.$item_delimited[0][1].'</li>');
 		$dest_location = $item_delimited[0][1] .'/photo_random/junior/'.$index.'_'. $item_delimited[0][0] .'.'. $file_extension[1][0];
-		$source_dir = item_delimited[0][1];
+		//$source_dir = item_delimited[0][1];
 		$source_location = $item_delimited[0][1].'/'.$item_delimited[0][2];
 		//$dest_location = $item_delimited[0][1].'/'.$item_delimited[0][0];
 		//echo($source_location.' copy to '. $dest_location);
 		copy($source_location, $dest_location);
+			$filename = '/var/www/html/www.visorsourcing.com/wp-content/uploads/2018/11/photo_random/junior/junior_list.txt';
+		$zip_junior->addFile($dest_location, basename($dest_location));
 	}
 	echo '</ul>';
 	fclose($myfileJunior);
+	$zip_junior->addFile($junior_list_document, basename($junior_list_document));
+	$zip_junior->close();
 	display_photos($junior_list_document, $source_location_junior);
 	//echo('-------------------------');
 	echo('<br><br>');
 	$index = 0;
+	$zip_senior = new ZipArchive();
+	if(file_exists('./download/senior.zip')){
+		unlink('./download/senior.zip');
+	}
+	if ($zip_senior->open("./download/senior.zip", ZIPARCHIVE::CREATE ) !== True) {
+		die("Could not open file");
+	}
 	$senior_list_document = $source_location_senior.'/photo_random/senior/senior_list.txt';
 	shuffle($var_senior_array);
 	$myfileSenior = fopen($senior_list_document, "w");
@@ -330,8 +382,11 @@ if (($login_check) && isset($_POST['randomize'])) {
 		//$dest_location = $item_delimited[0][1].'/'.$item_delimited[0][0];
 		//echo($source_location.' copy to '. $dest_location);
 		copy($source_location, $dest_location);
+		$zip_senior->addFile($dest_location, basename($dest_location));
 	}
 	fclose($myfileSenior);
+	$zip_senior->addFile($senior_list_document, basename($senior_list_document));
+	$zip_senior->close();
 	display_photos($senior_list_document, $source_location_senior);
 }
 else if ($login_check) {
@@ -343,7 +398,7 @@ else if ($login_check) {
 }
 else {
 }
-echo("<br>");
+echo("<br><br><br>");
 echo("<link href='style.css' rel='stylesheet' type='text/css'>");
 echo("<form method='POST' action='cpasadmin.php'>");
 echo("<input type='hidden' value='randomize' name='randomize'>");
