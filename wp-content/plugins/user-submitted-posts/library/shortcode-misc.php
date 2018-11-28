@@ -178,6 +178,7 @@ function usp_gallery($attr, $content = null) {
 		'author' 	=> $the_current_user_id,
 		'orderby' 	=> 'post_date',
 		'order'		=> 'ASC',
+		'lang'		=> '',
 		'posts_per_page'	=> 5
 		);
 	$current_user_posts = get_posts( $args );
