@@ -302,37 +302,49 @@ add_action( 'personal_options_update', 'save_extra_profile_fields' );
 add_action( 'register_form', 'extra_profile_fields');
 add_filter( 'registration_errors', 'validate_extra_profile_fields', 10, 3);
 add_action( 'user_register', 'save_extra_profile_fields');
-add_action( 'login_init', 'my_wp_new_user_notification_init' );
-function my_wp_new_user_notification_init() {
-	add_filter( 'wp_new_user_notification_email', 'my_wp_new_user_notification_email', 10, 3 );
-}
-function my_wp_new_user_notification_email( $wp_new_user_notification_email, $user, $user_email ) {
-	global $wpdb, $wp_hasher;
-
-    $key = wp_generate_password( 20, false );
-
+//add_action( 'login_init', 'my_wp_new_user_notification_init' );
+//function my_wp_new_user_notification_init() {
+//	add_filter( 'wp_new_user_notification_email', 'my_wp_new_user_notification_email', 10, 3 );
+//}
+//function my_wp_new_user_notification_email( $wp_new_user_notification_email, $user, $user_email ) {
+//	global $wpdb, $wp_hasher;
+//
+//    $key = wp_generate_password( 20, false );
+//
     /** This action is documented in wp-login.php */
-    do_action( 'retrieve_password_key', $user->user_login, $key );
-
+//    do_action( 'retrieve_password_key', $user->user_login, $key );
+//
     // Now insert the key, hashed, into the DB.
-    if ( empty( $wp_hasher ) ) {
-        require_once ABSPATH . WPINC . '/class-phpass.php';
-        $wp_hasher = new PasswordHash( 8, true );
+//    if ( empty( $wp_hasher ) ) {
+//        require_once ABSPATH . WPINC . '/class-phpass.php';
+//        $wp_hasher = new PasswordHash( 8, true );
+//    }
+//    $hashed = time() . ':' . $wp_hasher->HashPassword( $key );
+//    $wpdb->update( $wpdb->users, array( 'user_activation_key' => $hashed ), array( 'user_login' => $user->user_login ) );
+//
+//    $switched_locale = switch_to_locale( get_user_locale( $user ) );
+//	$message = sprintf(__('Your new username is: %s'), $user->user_login) . "\r\n";
+//	$message .= __('To set your password and complete registration, visit the following URL:') . "\r\n\r\n";
+//	$message .= '<' .network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user->user_login), 'login') . ">\r\n\r\n";
+//	$message .= sprintf(__('你的新用戶名: %s'), $user->user_login) . "\r\n\r\n";
+//	$message .= __('請點撃以的網址，更改密碼，以便完成證記新用戶名：') . "\r\n\r\n";
+//	$message .= '<' .network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user->user_login), 'login') . ">\r\n\r\n";
+//	$wp_new_user_notification_email['subject'] = sprintf( ' Registration email', $blogname, $user->user_login );
+//	$wp_new_user_notification_email['message'] = $message;
+//	return $wp_new_user_notification_email;
+//	}
+add_filter( 'random_password', 'disable_random_password', 10, 2 );
+function disable_random_password( $password ) {
+    $action = isset( $_GET['action'] ) ? $_GET['action'] : '';
+    if ( 'wp-login.php' === $GLOBALS['pagenow'] && ( 'rp' == $action  || 'resetpass' == $action ) ) {
+        return '';
     }
-    $hashed = time() . ':' . $wp_hasher->HashPassword( $key );
-    $wpdb->update( $wpdb->users, array( 'user_activation_key' => $hashed ), array( 'user_login' => $user->user_login ) );
-
-    $switched_locale = switch_to_locale( get_user_locale( $user ) );
-	$message = sprintf(__('Your new username is: %s'), $user->user_login) . "\r\n";
-	$message .= __('To set your password and complete registration, visit the following URL:') . "\r\n\r\n";
-	$message .= '<' .network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user->user_login), 'login') . ">\r\n\r\n";
-	$message .= sprintf(__('你的新用戶名: %s'), $user->user_login) . "\r\n\r\n";
-	$message .= __('請點撃以的網址，更改密碼，以便完成證記新用戶名：') . "\r\n\r\n";
-	$message .= '<' .network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user->user_login), 'login') . ">\r\n\r\n";
-	$wp_new_user_notification_email['subject'] = sprintf( ' Registration email', $blogname, $user->user_login );
-	$wp_new_user_notification_email['message'] = $message;
-	return $wp_new_user_notification_email;
-	}
+    return $password;
+}
+add_filter( 'password_hint', function( $hint )
+{
+  return __( '' );
+} );
 function petery_javascript(){
 	?>
 	<?php
