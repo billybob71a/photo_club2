@@ -55,6 +55,7 @@ function display_photos($file_location, $thumbnail_location) {
 			the width seems to be a standard, so I decided to use width as a part of the search criteria instead
 			of the width and height
 			*/
+			$before_file_extension[0][0] = str_replace('%20', ' ', $before_file_extension[0][0]);
 			$thumbnail_search = $before_file_extension[0][0]."-150";
 			$thumbnail_search_regex = '/^('.$thumbnail_search.')/';
 			//echo("I am searching for the pattern ". $thumbnail_search_regex."");
@@ -343,6 +344,18 @@ if (($login_check) && isset($_POST['randomize'])) {
 		$source_location = $item_delimited[0][1].'/'.$item_delimited[0][2];
 		//$dest_location = $item_delimited[0][1].'/'.$item_delimited[0][0];
 		//echo($source_location.' copy to '. $dest_location);
+		if (file_exists($source_location)) {
+			error_log("The file $source_location exists");
+		}
+		else {
+			error_log("Hey Pete The file $source_location does not exist");
+			$source_location2 = str_replace('%20', ' ', $source_location);
+			error_log("changing the file name to $source_location2");
+			if(file_exists($source_location2)) {
+				error_log("The file replaced by source_location2 $source_location2 exists");
+				$source_location = $source_location2;
+			}
+		}
 		copy($source_location, $dest_location);
 			$filename = '/var/www/html/www.visorsourcing.com/wp-content/uploads/2018/11/photo_random/junior/junior_list.txt';
 		$zip_junior->addFile($dest_location, basename($dest_location));
