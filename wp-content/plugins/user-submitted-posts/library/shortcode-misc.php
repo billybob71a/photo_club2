@@ -184,8 +184,8 @@ function usp_gallery($attr, $content = null) {
 	$current_user_posts = get_posts( $args );
 	$total = count( $current_user_posts );
 	error_log($total);
-	error_log(var_export( $current_user_posts));
-	error_log(var_export($current_user_posts[1]->ID));
+	//error_log(var_export( $current_user_posts));
+	//error_log(var_export($current_user_posts[1]->ID));
 	$gallery = '';
 	foreach ($current_user_posts as $item) {
 		error_log("Logging item");
