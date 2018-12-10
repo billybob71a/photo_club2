@@ -394,6 +394,18 @@ if (($login_check) && isset($_POST['randomize'])) {
 		$source_location = $item_delimited[0][1].'/'.$item_delimited[0][2];
 		//$dest_location = $item_delimited[0][1].'/'.$item_delimited[0][0];
 		//echo($source_location.' copy to '. $dest_location);
+		if (file_exists($source_location)) {
+			error_log("The file $source_location exists");
+		}
+		else {
+			error_log("Hey Pete The file $source_location does not exist");
+			$source_location2 = str_replace('%20', ' ', $source_location);
+			error_log("changing the file name to $source_location2");
+			if(file_exists($source_location2)) {
+				error_log("The file replaced by source_location2 $source_location2 exists");
+				$source_location = $source_location2;
+			}
+		}
 		copy($source_location, $dest_location);
 		$zip_senior->addFile($dest_location, basename($dest_location));
 	}
