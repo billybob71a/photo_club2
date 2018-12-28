@@ -57,10 +57,16 @@ function display_photos($file_location, $thumbnail_location) {
 			*/
 			$before_file_extension[0][0] = str_replace('%20', ' ', $before_file_extension[0][0]);
 			$thumbnail_search = $before_file_extension[0][0]."-150";
-			$thumbnail_search_regex = '/^('.$thumbnail_search.')/';
+			error_log("I am looking for the thumbnail ". $thumbnail_search);
 			//echo("I am searching for the pattern ". $thumbnail_search_regex."");
-			//echo("I will be searching for ". $thumbnail_search."<br/>");
+			error_log("I will be searching for ". $thumbnail_search."<br/>");
+			//$error_log("The content is ". var_dump($dir_content));
+			// try this regex from Radu for search and replace to escape the parentheses /([().\])/\\1/g
+			$thumbnail_search = preg_replace('/([()])/', '\\\\$1', $thumbnail_search);
+			$thumbnail_search_regex = '/^('.$thumbnail_search.')/';
+			error_log("The replaced string is ". $thumbnail_search_regex);
 			$fl_array = preg_grep($thumbnail_search_regex, $dir_content);
+			error_log("I am looking for $matches[0]");
 			$index_number = key($fl_array);
 			//echo("I think I found it in the array index ". $dir_content[$index_number]."<br/>");
 			//echo("the thumbnail location is ". $thumbnail_location ."<br/>");
@@ -339,6 +345,12 @@ if (($login_check) && isset($_POST['randomize'])) {
 		preg_match_all('/([^\.]+)$/', $item_delimited[0][2], $file_extension);
 		//echo('<li>'.$file_extension[1][0].'</li>');
 		//echo('<li>'.$index.'_'.$item_delimited[0][0] .'.'.$file_extension[1][0] .','.$item_delimited[0][1].'</li>');
+		$folder_location_junior = $item_delimited[0][1] .'/photo_random/junior'; 
+		if (!file_exists($folder_location_junior)) {
+				error_log("The junior folder does not exist");
+		}
+		else {
+		}	
 		$dest_location = $item_delimited[0][1] .'/photo_random/junior/'.$index.'_'. $item_delimited[0][0] .'.'. $file_extension[1][0];
 		//$source_dir = item_delimited[0][1];
 		$source_location = $item_delimited[0][1].'/'.$item_delimited[0][2];
@@ -418,8 +430,12 @@ else if ($login_check) {
 	$locations = get_source_folder();
 	$senior_file = $locations[0]."/photo_random/senior/senior_list.txt";
 	$junior_file = $locations[1]."/photo_random/junior/junior_list.txt";
-	display_photos($junior_file, $locations[0]);
-	display_photos($senior_file, $locations[0]);
+	if (file_exists($senior_file)) {
+		display_photos($senior_file, $locations[0]);
+	}
+	if (file_exists($junior_file)) {
+		display_photos($junior_file, $locations[0]);
+	}
 }
 else {
 }
