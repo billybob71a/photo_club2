@@ -858,31 +858,27 @@ function usp_maybe_rotate($tmp_name, $file_local) {
 
 
 function usp_attach_images($post_id, $newPost, $files, $file_count) {
-	
+	//PeterY code to allow UTF-8 chinese characters for the file name
+	setlocale(LC_ALL,'en_US.UTF-8');
+	//PeterY code
 	do_action('usp_files_before', $files);
-	
 	$attach_ids = array();
 	
 	if ($files && $file_count > 0) {
 		
 		usp_include_deps();
-		
 		for ($i = 0; $i < $file_count; $i++) {
 			
 			if (isset($files['tmp_name'][$i]) && !empty($files['tmp_name'][$i])) {
-				
 				$file_local = file_get_contents($files['tmp_name'][$i]);
-				
 				$tmp_name = $files['tmp_name'][$i];
 				
 			} else {
-				
 				continue;
 				
 			}
 			
 			if (isset($files['name'][$i]) && !empty($files['name'][$i])) {
-				
 				$append = ($file_count > 1) ? '-'. $i : '';
 				
 				$append = apply_filters('usp_filename_append', $append);
@@ -896,7 +892,6 @@ function usp_attach_images($post_id, $newPost, $files, $file_count) {
 				$file_name = isset($parts['filename']) ? $parts['filename'] . $append .'.'. $ext : $file_name;
 				
 			} else {
-				
 				continue;
 				
 			}
