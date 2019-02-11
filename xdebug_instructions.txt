@@ -1,0 +1,24 @@
+
+https://xdebug.org/wizard.php
+
+Instructions
+Download xdebug-2.6.1.tgz
+Unpack the downloaded file with tar -xvzf xdebug-2.6.1.tgz
+Run: cd xdebug-2.6.1
+Run: phpize (See the FAQ if you don't have phpize.
+
+As part of its output it should show:
+
+Configuring for:
+...
+Zend Module Api No:      20170718
+Zend Extension Api No:   320170718
+If it does not, you are using the wrong phpize. Please follow this FAQ entry and skip the next step.
+
+Run: ./configure
+Run: make
+Run: cp modules/xdebug.so /usr/lib64/php/modules
+Edit /etc/php.ini and add the line
+zend_extension = /usr/lib64/php/modules/xdebug.so
+Restart the webserver
+If you like Xdebug, and thinks it saves you time and money, please have a look at the donation page.
