@@ -17,7 +17,6 @@
 		    <?php if ( get_the_title() ) : ?>
 		    	<h2 class="archive-post-title"><?php the_title(); ?></h2>
 		    <?php endif; ?>
-	    
 		</div>
 
 	</div>

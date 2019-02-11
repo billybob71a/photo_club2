@@ -884,6 +884,18 @@ function usp_attach_images($post_id, $newPost, $files, $file_count) {
 				$append = apply_filters('usp_filename_append', $append);
 				
 				$file_name = basename($files['name'][$i]);
+				date_default_timezone_set('America/Edmonton');
+
+				$localtime_assoc = getdate();
+				//print_r($localtime_assoc);
+				$date_iso = ($localtime_assoc['year'].
+                $localtime_assoc['mon'].
+                $localtime_assoc['mday'].
+                $localtime_assoc['hours'].
+                $localtime_assoc['minutes'].
+                $localtime_assoc['seconds']);
+				
+				$file_name = $date_iso . '-' . $file_name;
 				
 				$parts = pathinfo($file_name);
 				

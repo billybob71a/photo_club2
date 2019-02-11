@@ -1,7 +1,7 @@
 <?php get_header(); ?>
 
 <div class="content section-inner">
-
+<?php dynamic_sidebar( 'sidebar-1' ); ?>
 	<?php
 	
 	$paged = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
