@@ -12,7 +12,8 @@
 	</head>
 	
 	<body <?php body_class(); ?>>
-		
+		<!-- open navigation_id petery -->
+		<div id="navigation_id">
 		<div class="navigation">
 			
 			<div class="section-inner">
@@ -81,7 +82,8 @@
 			</div><!-- .mobile-navigation -->
 			
 		</div><!-- .navigation -->
-
+		<!-- close navigation_id petery-->
+		</div>
 		<?php $image_image_url = get_header_image() ? get_header_image() : get_template_directory_uri() . '/images/bg.jpg'; ?>
 		
 		<div class="header-image" style="background-image: url( <?php echo $image_image_url; ?> );"></div>

@@ -1,5 +1,9 @@
-<?php get_header();
-
+<?php get_header(); ?>
+<?php if ( is_active_sidebar( 'sidebar-1' ) ) : ?>
+	<ul id="sidebar">
+		<?php dynamic_sidebar( 'sidebar-1' ); ?>
+	</ul>
+<?php endif;
 if ( have_posts() ) : 
 	
 	while( have_posts() ) : the_post(); ?>
@@ -147,6 +151,4 @@ if ( have_posts() ) :
 
 endif;
 
-?>
-		
-<?php get_footer(); ?>
+get_footer(); ?>

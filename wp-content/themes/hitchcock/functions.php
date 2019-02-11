@@ -794,5 +794,36 @@ if ( ! function_exists( 'hitchcock_block_editor_styles' ) ) :
 	add_action( 'enqueue_block_editor_assets', 'hitchcock_block_editor_styles', 1 );
 
 endif;
+/*Peter Y custom functions
+custom function to make home page transparent*/
+function add_petery_script() {
+    wp_register_script('petery_script', get_template_directory_uri() . '/js/petery_script.js', array( 'jquery' ));
+    wp_enqueue_script('petery_script');
+}  
+add_action( 'wp_enqueue_scripts', 'add_petery_script' );
+//Adding a widget sidebar
+function petery_sidebar() {
+    register_sidebar( array(
+        'name' => __( 'Sidebar name', 'theme_hitchcock' ),
+        'id' => 'sidebar-1',
+        'description' => '',
+        'before_widget' => '',
+        'after_widget'  => '',
+        'before_title'  => '',
+        'after_title'   => '',
+    ) );
+}
+add_action( 'widgets_init', 'petery_sidebar' );
+//Petery code, the following will add a widgetized sidebar , maybe
+function wpsites_before_post_widget( $content ) {
+	if ( is_singular( array( 'post', 'page' ) ) && is_active_sidebar( 'sidebar-1' ) && is_main_query() ) { ?>
 
+<div id="myprefix-widget-area-wrap"><?php		
+																										  dynamic_sidebar('sidebar-1'); ?>
+ </div>
+	<?php
+	}
+	return $content;
+}
+add_filter( 'the_content', 'wpsites_before_post_widget' );
 ?>
