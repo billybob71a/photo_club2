@@ -797,8 +797,10 @@ endif;
 /*Peter Y custom functions
 custom function to make home page transparent*/
 function add_petery_script() {
-    wp_register_script('petery_script', get_template_directory_uri() . '/js/petery_script.js', array( 'jquery' ));
+    wp_register_script('petery_script', home_url() . '/wp-content/themes/hitchcock/js/petery_script.js');
+	wp_register_script('my-script', home_url() . '/wp-content/themes/hitchcock/js/my-script.js');
     wp_enqueue_script('petery_script');
+	wp_enqueue_script('my-script');
 }  
 add_action( 'wp_enqueue_scripts', 'add_petery_script' );
 //Adding a widget sidebar
@@ -814,16 +816,213 @@ function petery_sidebar() {
     ) );
 }
 add_action( 'widgets_init', 'petery_sidebar' );
-//Petery code, the following will add a widgetized sidebar , maybe
-function wpsites_before_post_widget( $content ) {
-	if ( is_singular( array( 'post', 'page' ) ) && is_active_sidebar( 'sidebar-1' ) && is_main_query() ) { ?>
+/*********************************************************************
+ *PeterY code
+ *********************************************************************/
 
-<div id="myprefix-widget-area-wrap"><?php		
-																										  dynamic_sidebar('sidebar-1'); ?>
- </div>
-	<?php
-	}
-	return $content;
+//PeterY code starts here
+add_action( 'register_form', 'myplugin_register_form' );
+function myplugin_register_form() {
+
+    $first_name = ( ! empty( $_POST['first_name'] ) ) ? trim( $_POST['first_name'] ) : '';
+    $last_name = ( ! empty( $_POST['last_name'] ) ) ? trim( $_POST['last_name'] ) : '';
+
+    ?>
+    <p>
+        <label for="first_name"><?php _e( 'First Name', 'mydomain' ) ?><br />
+            <input type="text" name="first_name" id="first_name" class="input" value="<?php echo esc_attr( wp_unslash( $first_name ) ); ?>" size="25" /></label>
+    </p>
+
+    <p>
+        <label for="last_name"><?php _e( 'Last Name', 'mydomain' ) ?><br />
+            <input type="text" name="last_name" id="last_name" class="input" value="<?php echo esc_attr( wp_unslash( $last_name ) ); ?>" size="25" /></label>
+    </p>
+
+    <?php
 }
-add_filter( 'the_content', 'wpsites_before_post_widget' );
+add_filter( 'registration_errors', 'myplugin_registration_errors', 10, 3 );
+function myplugin_registration_errors( $errors, $sanitized_user_login, $user_email ) {
+
+    if ( empty( $_POST['first_name'] ) || ! empty( $_POST['first_name'] ) && trim( $_POST['first_name'] ) == '' ) {
+        $errors->add( 'first_name_error', __( '<strong>ERROR</strong>: You must include a first name.', 'mydomain' ) );
+    }
+    if ( empty( $_POST['last_name'] ) || ! empty( $_POST['last_name'] ) && trim( $_POST['first_name'] ) == '' ) {
+        $errors->add( 'last_name_error', __( '<strong>ERROR</strong>: You must include a first name.', 'mydomain' ) );
+    }
+    return $errors;
+}
+add_action( 'user_register', 'myplugin_user_register' );
+function myplugin_user_register( $user_id ) {
+    if ( ! empty( $_POST['first_name'] ) ) {
+        update_user_meta( $user_id, 'first_name', trim( $_POST['first_name'] ) );
+        update_user_meta( $user_id, 'last_name', trim( $_POST['last_name'] ) );
+    }
+}
+function extra_profile_fields( $current_user ) {
+    global $wp;
+    $the_url = $_SERVER['REQUEST_URI'];
+    $current_user = wp_get_current_user();
+// Uncomment the line below to dump the data of current user
+//$temp_var = var_dump($current_user);
+    $type_current_user = gettype( $current_user );
+    error_log( 'The current user is ' . $type_current_user );
+    $var_temp = $current_user->exists();
+    error_log('the type of var_temp is ' . $var_temp );
+    if ( $current_user->exists() ) {
+        if ( strpos( $the_url, 'register') == false ) {
+            $login_current_user = $current_user->user_login;
+            $id_current_user = $current_user->ID;
+            error_log( 'The current user ID is ' . $id_current_user );
+            error_log("The current_user_id_type is $current_user_id_type" );
+            error_log("The current_user_id is $current_user_id " );
+            $user_profile_data = get_userdata( $current_user->ID );
+            $user_division = $user_profile_data->__get( 'division_drop_down'  );
+            error_log("the division in the profile is");
+            error_log( $user_division );
+            error_log('the url is coming from ' . $the_url );
+            error_log('the url type is ' . gettype($the_url));
+        }
+        else
+        {
+            $user_division = '';
+        }
+    }
+    else {
+        $user_division = "";
+    }
+    ?>
+    <h3><?php _e('Photo Contest Division', 'frontendprofile');
+        ?> </h3>
+    <?php
+    switch ($user_division) {
+        case "Junior":
+            error_log("in junior");
+            ?>
+            <select name="division_drop_down">
+                <option value="">Please select your division</option>
+                <option selected="Selected" value="Junior">Junior</option>
+                <option value="Senior">Senior</option>
+            </select>
+            <?php
+            break;
+        case "Senior":
+            error_log("in senior");
+            ?>
+            <select name="division_drop_down">
+                <option value="">Please select your division</option>
+                <option value="Junior">Junior</option>
+                <option selected="Selected" value="Senior">Senior</option>
+            </select>
+            <?php
+            break;
+        default:
+            error_log("in default");
+            ?>
+            <select name="division_drop_down">
+                <option selected="Selected" value="">Please select your division</option>
+                <option value="Junior">Junior</option>
+                <option value="Senior">Senior</option>
+            </select>
+            <?php
+            break;
+    }
+    ?>
+    <br>
+    <br>
+<?php }
+function save_extra_profile_fields( $user_id ) {
+    error_log( 'Hello the user_id is ' . $user_id );
+//if ( !current_user_can( 'edit_user', $user_id ) )
+//	return false;
+    error_log( 'about to save data the user_id field is ' . $user_id );
+    /* Edit the following lines according to your set fields */
+    error_log('I am going to save data for user ' . $user );
+    update_user_meta( $user_id, "division_drop_down", $_POST['division_drop_down'] );
+}
+function  validate_extra_profile_fields( $errors, $sanitized_user_login, $user_email ) {
+    if ( $_POST['division_drop_down'] == "") {
+        $errors->add( 'no_division_error', __('<strong>ERROR</Strong>:You must select Junior or Senior for Photo Contest Division', 'mydomain') );}
+//
+    return $errors;
+}
+//function save_extra_profile_fields( $user_id ) {
+//	if ( ! empty( $_POST['first_name'] )) {
+//		update_user_meta( $user_id, 'division_drop_down', $_POST['division_drop_down']);
+//	}
+//}
+//Function ends here
+//PeterY code ends here
+add_filter( 'wp_mail_from', 'wpb_sender_email' );
+add_filter( 'wp_mail_from_name', 'wpb_sender_name');
+//PeterY code starts here
+//add_action( 'profile_personal_options', 'add_contact_fields');
+//add_action('show_user_profile', 'extra_profile_fields', 10 );
+//add_action('edit_user_profile', 'extra_profile_fields', 10 );
+//add_filter( 'user_contactmethods', 'extra_profile_fields');
+//the above adds it into Contact Info as the first item
+//add_action('profile_personal_options', function (){error_log("hello sugar"); $current_user = wp_get_current_user(); $gettype_val = gettype($current_user); error_log("the gettype_val is $gettype_val" );},5,1);
+add_action('profile_personal_options', 'extra_profile_fields');
+//the above adds below color scheme and above personal options
+add_action( 'edit_user_profile', 'custom_user_profile_fields', 10, 1 );
+//the above adds for non-current user near the top of profile page
+add_action( 'personal_options_update', 'save_extra_profile_fields' );
+//the above is for updating and saving to usermeta
+add_action( 'register_form', 'extra_profile_fields');
+add_filter( 'registration_errors', 'validate_extra_profile_fields', 10, 3);
+add_action( 'user_register', 'save_extra_profile_fields');
+//add_action( 'login_init', 'my_wp_new_user_notification_init' );
+//function my_wp_new_user_notification_init() {
+//	add_filter( 'wp_new_user_notification_email', 'my_wp_new_user_notification_email', 10, 3 );
+//}
+//function my_wp_new_user_notification_email( $wp_new_user_notification_email, $user, $user_email ) {
+//	global $wpdb, $wp_hasher;
+//
+//    $key = wp_generate_password( 20, false );
+//
+/** This action is documented in wp-login.php */
+//    do_action( 'retrieve_password_key', $user->user_login, $key );
+//
+// Now insert the key, hashed, into the DB.
+//    if ( empty( $wp_hasher ) ) {
+//        require_once ABSPATH . WPINC . '/class-phpass.php';
+//        $wp_hasher = new PasswordHash( 8, true );
+//    }
+//    $hashed = time() . ':' . $wp_hasher->HashPassword( $key );
+//    $wpdb->update( $wpdb->users, array( 'user_activation_key' => $hashed ), array( 'user_login' => $user->user_login ) );
+//
+//    $switched_locale = switch_to_locale( get_user_locale( $user ) );
+//	$message = sprintf(__('Your new username is: %s'), $user->user_login) . "\r\n";
+//	$message .= __('To set your password and complete registration, visit the following URL:') . "\r\n\r\n";
+//	$message .= '<' .network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user->user_login), 'login') . ">\r\n\r\n";
+//	$message .= sprintf(__('你的新用戶名: %s'), $user->user_login) . "\r\n\r\n";
+//	$message .= __('請點撃以的網址，更改密碼，以便完成證記新用戶名：') . "\r\n\r\n";
+//	$message .= '<' .network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user->user_login), 'login') . ">\r\n\r\n";
+//	$wp_new_user_notification_email['subject'] = sprintf( ' Registration email', $blogname, $user->user_login );
+//	$wp_new_user_notification_email['message'] = $message;
+//	return $wp_new_user_notification_email;
+//	}
+add_filter( 'random_password', 'disable_random_password', 10, 2 );
+function disable_random_password( $password ) {
+    $action = isset( $_GET['action'] ) ? $_GET['action'] : '';
+    if ( 'wp-login.php' === $GLOBALS['pagenow'] && ( 'rp' == $action  || 'resetpass' == $action ) ) {
+        return '';
+    }
+    return $password;
+}
+add_filter( 'password_hint', function( $hint )
+{
+    return __( '' );
+} );
+//function rename_attachment($post_ID){
+//	$post = get_post($post_ID);
+//	$file = get_attached_file($post_ID);
+//	error_log("The file is called ". $file);
+//	$path = pathinfo($file);
+//	$oldfilename = $path['filename'];
+//	error_log("the old file name is ". $oldfilename);
+//	$newfilename = "l-".$oldfilename;
+//	$newuploadfile = $path['dirname']."/".$newfilename.".".$path['extension'];
+//	rename($file, $newuploadfile);
+//	update_attached_file( $post_ID, $newuploadfile);
+//	}
 ?>
