@@ -250,6 +250,14 @@ if (($login_check) && isset($_POST['randomize'])) {
     global $wpdb;
     $querystr = "SELECT DISTINCT meta_value FROM wp_usermeta WHERE meta_key = 'division_drop_down'";
     $division_competition =  $wpdb->get_results($querystr, ARRAY_A);
+    $counter = 0;
+
+    foreach ($division_competition as $division_item => $fields) {
+        $var_division[$fields['meta_value']] = array();
+        $counter = $counter++;
+    }
+    $var_division["Senior"][0] = "ddfldfljdklf";
+    $var_division["Senior"][1] = "hihihihihi";
 	$current_user = wp_get_current_user();
 	$user_id = $current_user->ID;
 	error_log("the user name is ". $current_user->user_login);
@@ -283,6 +291,10 @@ if (($login_check) && isset($_POST['randomize'])) {
 			foreach ( $current_user_posts as $post_item ) {
 				$images = get_attached_media('image', $post_item->ID );
 				//error_log("here are the images ". $temp);
+                // in the next line we look for the index value of where the user division is (ie Junior, Senior)
+                // in the $division_competition two dimensional array
+
+                $division_index = array_search($user_division, array_column($division_competition,'meta_value'));
 				foreach ( $images as $image_item ) {
 					if ($user_division == 'Junior') {
 						$pattern = '/[^\/]+/';
