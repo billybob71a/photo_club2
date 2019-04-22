@@ -256,8 +256,7 @@ if (($login_check) && isset($_POST['randomize'])) {
         $var_division[$fields['meta_value']] = array();
         $counter = $counter++;
     }
-    $var_division["Senior"][0] = "ddfldfljdklf";
-    $var_division["Senior"][1] = "hihihihihi";
+
 	$current_user = wp_get_current_user();
 	$user_id = $current_user->ID;
 	error_log("the user name is ". $current_user->user_login);
@@ -271,8 +270,8 @@ if (($login_check) && isset($_POST['randomize'])) {
 					);
 	$user_query = new WP_User_Query( $args );
 	$user_array = $user_query->get_results();
-	$var_junior_array = array();
-	$var_senior_array = array();
+	/*$var_junior_array = array();
+	$var_senior_array = array();*/
 	//below debugging level is very usefl
 	error_reporting(E_ALL);
 	ini_set('display_errors', '1');
@@ -296,68 +295,48 @@ if (($login_check) && isset($_POST['randomize'])) {
 
                 $division_index = array_search($user_division, array_column($division_competition,'meta_value'));
 				foreach ( $images as $image_item ) {
-					if ($user_division == 'Junior') {
-						$pattern = '/[^\/]+/';
-						// the next preg_match match everything but / from the location found of the folder
-						//echo('<li>'. $image_item->guid .'</li>');
-						$results = preg_match_all($pattern, $image_item->guid, $all_matches);
-						/*
-						 The $all_matches array will come up with
-						        [0] = https:
-						        [1] = www.visorsourcing.com
-						        [2] = "wp-content"
-						        [3] = "uploads"
-						        [4] = "2019"
-						        [5] = "04"
-                        */
-                        $source_location_junior = $all_matches[0][2].'/'.$all_matches[0][3].'/'.$all_matches[0][4].'/'.$all_matches[0][5];
-                        //$presenter_list_junior will compose the title, file location, image file name, division, user, and image file name again
-						$presenter_list_junior = $post_item->post_title.','.$source_location_junior.','. $all_matches[0][6] .','. $user_division .','. $user_info->first_name .' '. $user_info->last_name.','.$all_matches[0][6];
-						//echo('<li> hihihihi '. $presenter_list_junior .'</li>');
-						//array_push($var_junior_array, $presenter_list_junior);
-						$var_junior_array[] = $presenter_list_junior;
-						//this part will use the post title
-						$new_name = $post_item->post_title;
-						//echo('<li>'.$new_name.'</li>');
-						preg_match_all('/[^.]+/',$all_matches[0][6],$image_split); 
-						//$temp = var_dump($image_split);
-                        // rename the image file name as the post title
-						$image_renamed = $new_name.'.'.$image_split[0][1];
+                    $pattern = '/[^\/]+/';
+                    // the next preg_match match everything but / from the location found of the folder
+                    //echo('<li>'. $image_item->guid .'</li>');
+                    $results = preg_match_all($pattern, $image_item->guid, $all_matches);
+                    /*
+                     The $all_matches array will come up with
+                            [0] = https:
+                            [1] = www.visorsourcing.com
+                            [2] = "wp-content"
+                            [3] = "uploads"
+                            [4] = "2019"
+                            [5] = "04"
+                    */
+                    $source_location = $all_matches[0][2].'/'.$all_matches[0][3].'/'.$all_matches[0][4].'/'.$all_matches[0][5];
+                    //$presenter_list_junior will compose the title, file location, image file name, division, user, and image file name again
+                    // instead of $presenter_list and $var_junior_arry[] we will use $var_division[$user_division] and a $presenter_list for all divisions
+                    $presenter_list  = $post_item->post_title.','.$source_location.','. $all_matches[0][6] .','. $user_division .','. $user_info->first_name .' '. $user_info->last_name.','.$all_matches[0][6];
+                    //echo('<li> hihihihi '. $presenter_list_junior .'</li>');
+                    array_push($var_division[$user_division], $presenter_list);
+                    //$var_junior_array[] = $presenter_list_junior;
+                    //this part will use the post title
+                    $new_name = $post_item->post_title;
+                    //echo('<li>'.$new_name.'</li>');
+                    preg_match_all('/[^.]+/',$all_matches[0][6],$image_split);
+                    //$temp = var_dump($image_split);
+                    // rename the image file name as the post title
+                    $image_renamed = $new_name.'.'.$image_split[0][1];
 
-						//$dest_location will be the location of the destination photo of the "photo_random/<division>/<post title name>.jpg"
-                        // if the location does not exist it will be created
-                        $destination_directory = $_SERVER['DOCUMENT_ROOT'].'/'.$all_matches[0][2].'/'.$all_matches[0][3].'/'.$sub_folder_current.'/photo_random/'.$user_division.'/';
-                        $destination_directory = str_replace('\/', '/', $destination_directory);
-                        if ( !is_dir($destination_directory)) {
-                            //mkdir($all_matches[0][2].'/'.$all_matches[0][3].'/'.$sub_folder_current.'/photo_random/'.$user_division);
-                            mkdir($destination_directory, 0777, true);
-                            error_log("Directory ".$user_division." created");
-                        }
+                    //$dest_location will be the location of the destination photo of the "photo_random/<division>/<post title name>.jpg"
+                    // if the location does not exist it will be created
+                    $directory_base = $_SERVER['DOCUMENT_ROOT'].'/'.$all_matches[0][2].'/'.$all_matches[0][3];
+                    $destination_directory = $_SERVER['DOCUMENT_ROOT'].'/'.$all_matches[0][2].'/'.$all_matches[0][3].'/'.$sub_folder_current.'/photo_random/'.$user_division.'/';
+                    $destination_directory = str_replace('\/', '/', $destination_directory);
+                    if ( !is_dir($destination_directory)) {
+                        //mkdir($all_matches[0][2].'/'.$all_matches[0][3].'/'.$sub_folder_current.'/photo_random/'.$user_division);
+                        mkdir($destination_directory, 0777, true);
+                        error_log("Directory ".$user_division." created");
+                    }
 
-						$dest_location = $destination_directory.$image_renamed;
-						//echo('<li>'. $dest_location .'</li>');
-						//copy($source_location, $dest_location);
-					}
-					else if ($user_division == 'Senior') {
-						$pattern = '/[^\/]+/';
-						$results = preg_match_all($pattern, $image_item->guid, $all_matches);
-						//$results2 = var_dump($all_matches);
-						//echo('<li>'.$all_matches[0][2].'/'.$all_matches[0][3].'/'.$all_matches[0][4].'/'.$all_matches[0][5].'/'.$all_matches[0][6].'</li>');
-						//$source_location_senior = $all_matches[0][2].'/'.$all_matches[0][3].'/'.$all_matches[0][4].'/'.$all_matches[0][5];
-                        // '03' below means for March
-                        $source_location_senior = $all_matches[0][2].'/'.$all_matches[0][3].'/'.$all_matches[0][4].'/'.'03';
-						//echo('The source location is '. $source_location);
-						$presenter_list_senior = $post_item->post_title.','.$source_location_senior.','. $all_matches[0][6] .','. $user_division .','. $user_info->first_name .' '. $user_info->last_name.','.$all_matches[0][6];
-						$var_senior_array[] = $presenter_list_senior;
-						$new_name = $post_item->post_title;
-						//echo('<li>'.$new_name.'</li>');
-						preg_match_all('/[^.]+/',$all_matches[0][6],$image_split); 
-						//$temp = var_dump($image_split);
-						$image_renamed = $new_name.'.'.$image_split[0][1];
-						$dest_location = $all_matches[0][2].'/'.$all_matches[0][3].'/'.$all_matches[0][4].'/'.$all_matches[0][5].'/photo_random/senior/'.$image_renamed;
-						//echo('<li>'. $dest_location .'</li>');
-						//copy($source_location, $dest_location);
-					}
+                    $dest_location = $destination_directory.$image_renamed;
+                    //echo('<li>'. $dest_location .'</li>');
+                    //copy($source_location, $dest_location);
 				}
 			}
 		}
@@ -373,7 +352,7 @@ if (($login_check) && isset($_POST['randomize'])) {
 		$localtime_assoc['minutes'].
 		$localtime_assoc['seconds']);
 	//echo($date_iso);
-    if (isset($source_location_junior)) {
+    /*if (isset($source_location_junior)) {
         $dir_read = $source_location_junior.'/photo_random';
         $dir_contents = scandir($dir_read,1);
     }
@@ -397,9 +376,34 @@ if (($login_check) && isset($_POST['randomize'])) {
 			rename($senior_folder, $senior_folder_backup);
 			mkdir($senior_folder);
 		}
-	}
+	}*/
 	//$temp = var_dump($var_junior_array);
-	shuffle($var_junior_array);
+    //shuffle($var_junior_array) will be replaced by shuffle $var_division
+	//shuffle($var_junior_array);
+    $keys_of_division = array_keys($var_division);
+    /*the following loop is used to clear the Senior and Junior folders
+    in order that we may put a new list file and image file(s)
+    */
+    foreach ($keys_of_division as $item)
+    {
+        $delete_any_files_here = $directory_base.'/'.$sub_folder_current.'/photo_random/'.$item.'/*';
+        $delete_any_files_here = str_replace('\/', '/', $delete_any_files_here);
+        $files = glob($delete_any_files_here);
+        foreach( $files as $file )
+        {
+            if(is_file($file))
+            {
+                unlink($file);
+            }
+        }
+    }
+    foreach ($var_division as $var_division_item => $fields)
+    {
+        //randomize the photos in the presentation_list
+        shuffle($fields);
+        echo("Hey ".var_dump($fields));
+    }
+
 	//echo '<br>';
 	//echo '---------------------------------';
 	//$temp2 = var_dump($var_junior_array);
