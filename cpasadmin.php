@@ -309,34 +309,41 @@ if (($login_check) && isset($_POST['randomize'])) {
                             [5] = "04"
                     */
                     $source_location = $all_matches[0][2].'/'.$all_matches[0][3].'/'.$all_matches[0][4].'/'.$all_matches[0][5];
-                    //$presenter_list_junior will compose the title, file location, image file name, division, user, and image file name again
-                    // instead of $presenter_list and $var_junior_arry[] we will use $var_division[$user_division] and a $presenter_list for all divisions
-                    $presenter_list  = $post_item->post_title.','.$source_location.','. $all_matches[0][6] .','. $user_division .','. $user_info->first_name .' '. $user_info->last_name.','.$all_matches[0][6];
-                    //echo('<li> hihihihi '. $presenter_list_junior .'</li>');
-                    array_push($var_division[$user_division], $presenter_list);
-                    //$var_junior_array[] = $presenter_list_junior;
-                    //this part will use the post title
-                    $new_name = $post_item->post_title;
-                    //echo('<li>'.$new_name.'</li>');
-                    preg_match_all('/[^.]+/',$all_matches[0][6],$image_split);
-                    //$temp = var_dump($image_split);
-                    // rename the image file name as the post title
-                    $image_renamed = $new_name.'.'.$image_split[0][1];
+                    $sub_folder_current = str_replace('\/', '/',$sub_folder_current);
+                    $sub_folder_previous = str_replace('\/', '/',$sub_folder_previous);
+                    if ( (strpos($source_location, $sub_folder_current)!== False) || (strpos($source_location, $sub_folder_previous) !== False))
+                    {
+                        echo ("I found ". $sub_folder_current ." in $source_location");
+                        //$presenter_list_junior will compose the title, file location, image file name, division, user, and image file name again
+                        // instead of $presenter_list and $var_junior_arry[] we will use $var_division[$user_division] and a $presenter_list for all divisions
+                        $presenter_list  = $post_item->post_title.'||'.$source_location.'||'. $all_matches[0][6] .'||'. $user_division .'||'. $user_info->first_name .' '. $user_info->last_name.'||'.$all_matches[0][6];
+                        //echo('<li> hihihihi '. $presenter_list_junior .'</li>');
+                        array_push($var_division[$user_division], $presenter_list);
+                        //$var_junior_array[] = $presenter_list_junior;
+                        //this part will use the post title
+                        $new_name = $post_item->post_title;
+                        //echo('<li>'.$new_name.'</li>');
+                        preg_match_all('/[^.]+/',$all_matches[0][6],$image_split);
+                        //$temp = var_dump($image_split);
+                        // rename the image file name as the post title
+                        $image_renamed = $new_name.'.'.$image_split[0][1];
 
-                    //$dest_location will be the location of the destination photo of the "photo_random/<division>/<post title name>.jpg"
-                    // if the location does not exist it will be created
-                    $directory_base = $_SERVER['DOCUMENT_ROOT'].'/'.$all_matches[0][2].'/'.$all_matches[0][3];
-                    $destination_directory = $_SERVER['DOCUMENT_ROOT'].'/'.$all_matches[0][2].'/'.$all_matches[0][3].'/'.$sub_folder_current.'/photo_random/'.$user_division.'/';
-                    $destination_directory = str_replace('\/', '/', $destination_directory);
-                    if ( !is_dir($destination_directory)) {
-                        //mkdir($all_matches[0][2].'/'.$all_matches[0][3].'/'.$sub_folder_current.'/photo_random/'.$user_division);
-                        mkdir($destination_directory, 0777, true);
-                        error_log("Directory ".$user_division." created");
+                        //$dest_location will be the location of the destination photo of the "photo_random/<division>/<post title name>.jpg"
+                        // if the location does not exist it will be created
+                        $directory_base = $_SERVER['DOCUMENT_ROOT'].'/'.$all_matches[0][2].'/'.$all_matches[0][3];
+                        $destination_directory = $_SERVER['DOCUMENT_ROOT'].'/'.$all_matches[0][2].'/'.$all_matches[0][3].'/'.$sub_folder_current.'/photo_random/'.$user_division.'/';
+                        $destination_directory = str_replace('\/', '/', $destination_directory);
+                        if ( !is_dir($destination_directory)) {
+                            //mkdir($all_matches[0][2].'/'.$all_matches[0][3].'/'.$sub_folder_current.'/photo_random/'.$user_division);
+                            mkdir($destination_directory, 0777, true);
+                            error_log("Directory ".$user_division." created");
+                        }
+
+                        $dest_location = $destination_directory.$image_renamed;
+                        //echo('<li>'. $dest_location .'</li>');
+                        //copy($source_location, $dest_location);
                     }
 
-                    $dest_location = $destination_directory.$image_renamed;
-                    //echo('<li>'. $dest_location .'</li>');
-                    //copy($source_location, $dest_location);
 				}
 			}
 		}
@@ -416,6 +423,25 @@ if (($login_check) && isset($_POST['randomize'])) {
 	if ($zip_junior->open("./download/junior.zip", ZIPARCHIVE::CREATE ) !== True) {
 		die("Could not open file");
 	}
+	// go through the divisions and copy it the destination
+	foreach ($keys_of_division as $item)
+    {
+        foreach ($var_division[$item] as $list_entries)
+        {
+            echo("in division ". $item ." I have ". $list_entries ."<br>");
+            $array_source_location = explode("||",$list_entries);
+            $original_location_file = $_SERVER['DOCUMENT_ROOT'].'/'.$array_source_location[1].'/'.$array_source_location[2];
+            preg_match_all('/([^\.]+)$/',$array_source_location[2],$image_split);
+            $new_location_file =  $_SERVER['DOCUMENT_ROOT'].'/wp-content/uploads/'.$sub_folder_current.'/photo_random/'.$item.'/'.$array_source_location[0].'.'.$image_split[1][0];
+            echo("the old file is ". $original_location_file)."<br>";
+            echo("the new file is ". $new_location_file ."<br>");
+            $new_location_file = str_replace('&amp;','&',$new_location_file);
+            $new_location_file = str_replace('%20', ' ', $new_location_file);
+            copy($original_location_file, $new_location_file);
+
+        }
+
+    }
     if (isset($source_location_junior)) {
         $junior_list_document = $source_location_junior . '/photo_random/junior/junior_list.txt';
         $myfileJunior = fopen($junior_list_document, "w");
