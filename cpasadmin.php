@@ -426,21 +426,38 @@ if (($login_check) && isset($_POST['randomize'])) {
 	// go through the divisions and copy it the destination
 	foreach ($keys_of_division as $item)
     {
+        $list_file = $_SERVER['DOCUMENT_ROOT'].'/wp-content/uploads/'.$sub_folder_current.'/photo_random/'.$item.'/'.$item.'_list.txt';
+        $myfile = fopen($list_file, "w");
+        echo("the file is ". $list_file ."<br>");
+        $counter = 0;
+        $zipfile = new ZipArchive();
+        $destination_zip = $_SERVER['DOCUMENT_ROOT'].'/download/'.$item.'.zip';
+        echo("the destination zip will be ". $destination_zip);
+        $zipfile->open($destination_zip, ZipArchive::OVERWRITE );
+        shuffle($var_division[$item]);
+        echo("the var dump for division");
+        var_dump($var_division[$item]);
         foreach ($var_division[$item] as $list_entries)
         {
+            $counter++;
             echo("in division ". $item ." I have ". $list_entries ."<br>");
             $array_source_location = explode("||",$list_entries);
             $original_location_file = $_SERVER['DOCUMENT_ROOT'].'/'.$array_source_location[1].'/'.$array_source_location[2];
             preg_match_all('/([^\.]+)$/',$array_source_location[2],$image_split);
-            $new_location_file =  $_SERVER['DOCUMENT_ROOT'].'/wp-content/uploads/'.$sub_folder_current.'/photo_random/'.$item.'/'.$array_source_location[0].'.'.$image_split[1][0];
-            echo("the old file is ". $original_location_file)."<br>";
-            echo("the new file is ". $new_location_file ."<br>");
+            $new_location_file =  $_SERVER['DOCUMENT_ROOT'].'/wp-content/uploads/'.$sub_folder_current.'/photo_random/'.$item.'/'.$counter.'_'.$array_source_location[0].'.'.$image_split[1][0];
             $new_location_file = str_replace('&amp;','&',$new_location_file);
             $new_location_file = str_replace('%20', ' ', $new_location_file);
+            $new_location_file = html_entity_decode( $new_location_file);
+            echo("the old file is ". $original_location_file)."<br>";
+            echo("the new file is ". $new_location_file ."<br>");
             copy($original_location_file, $new_location_file);
-
+            fwrite($myfile, $counter . "__" . $array_source_location[0] . "__" . $array_source_location[3] . "__" . $array_source_location[4] . "________" . $counter.'_'.$array_source_location[0].'.'.$image_split[1][0] . "\r\n");
+            $zipfile->addFile($new_location_file, basename($new_location_file));
+            //$zip_junior->addFile($new_location_file, basename($dest_location));
         }
-
+        fclose($myfile);
+        $zipfile->addFile($list_file, basename($list_file));
+        $zipfile->close();
     }
     if (isset($source_location_junior)) {
         $junior_list_document = $source_location_junior . '/photo_random/junior/junior_list.txt';
