@@ -122,6 +122,9 @@ function display_photos($file_location, $thumbnail_location) {
 	fclose($file);
 	
 }
+function display_photos_all() {
+
+}
 function get_current_date() {
     $localtime_assoc = getdate();
     //print_r($localtime_assoc);
@@ -259,10 +262,7 @@ if (($login_check) && isset($_POST['randomize'])) {
 
 	$current_user = wp_get_current_user();
 	$user_id = $current_user->ID;
-	error_log("the user name is ". $current_user->user_login);
-	error_log("the user id is ". $user_id);
-	error_log("The user first name last name is ". $current_user->user_firstname ." ". $current_user->user_lastname);
-	error_log("The user division is ". $current_user->division_drop_down);
+
 	date_default_timezone_set('America/Edmonton');
 	//$list_of_posts = get_posts('author' => $user_id);
 	$args = array( 'who' => 'subscribers', 
@@ -424,42 +424,96 @@ if (($login_check) && isset($_POST['randomize'])) {
 		die("Could not open file");
 	}
 	// go through the divisions and copy it the destination
-	foreach ($keys_of_division as $item)
-    {
-        $list_file = $_SERVER['DOCUMENT_ROOT'].'/wp-content/uploads/'.$sub_folder_current.'/photo_random/'.$item.'/'.$item.'_list.txt';
+	foreach ($keys_of_division as $item) {
+        $list_file = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/uploads/' . $sub_folder_current . '/photo_random/' . $item . '/' . $item . '_list.txt';
+        $list_file_thumbnail = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/uploads/' . $sub_folder_current . '/photo_random/' . $item . '/' . $item . '_list_thumbnail.txt';
         $myfile = fopen($list_file, "w");
-        echo("the file is ". $list_file ."<br>");
+        $myfilethumbnail = fopen($list_file_thumbnail, "w");
+        echo("the file is " . $list_file . "<br>");
         $counter = 0;
         $zipfile = new ZipArchive();
-        $destination_zip = $_SERVER['DOCUMENT_ROOT'].'/download/'.$item.'.zip';
-        echo("the destination zip will be ". $destination_zip);
-        $zipfile->open($destination_zip, ZipArchive::OVERWRITE );
+        $destination_zip = $_SERVER['DOCUMENT_ROOT'] . '/download/' . $item . '.zip';
+        echo("the destination zip will be " . $destination_zip);
+        $zipfile->open($destination_zip, ZipArchive::OVERWRITE);
         shuffle($var_division[$item]);
         echo("the var dump for division");
         var_dump($var_division[$item]);
-        foreach ($var_division[$item] as $list_entries)
-        {
+        foreach ($var_division[$item] as $list_entries) {
             $counter++;
-            echo("in division ". $item ." I have ". $list_entries ."<br>");
-            $array_source_location = explode("||",$list_entries);
-            $original_location_file = $_SERVER['DOCUMENT_ROOT'].'/'.$array_source_location[1].'/'.$array_source_location[2];
-            preg_match_all('/([^\.]+)$/',$array_source_location[2],$image_split);
-            $new_location_file =  $_SERVER['DOCUMENT_ROOT'].'/wp-content/uploads/'.$sub_folder_current.'/photo_random/'.$item.'/'.$counter.'_'.$array_source_location[0].'.'.$image_split[1][0];
-            $new_location_file = str_replace('&amp;','&',$new_location_file);
+            echo("in division " . $item . " I have " . $list_entries . "<br>");
+            $array_source_location = explode("||", $list_entries);
+            $original_location_file = $_SERVER['DOCUMENT_ROOT'] . '/' . $array_source_location[1] . '/' . $array_source_location[2];
+            preg_match_all('/([^\.]+)$/', $array_source_location[2], $image_split_extension);
+            preg_match_all('/(.*\.)/', $array_source_location[2], $image_split_name);
+            $image_split_name[1][0] = rtrim($image_split_name[1][0], '.');
+            var_dump($image_split_name);
+            $new_location_file = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/uploads/' . $sub_folder_current . '/photo_random/' . $item . '/' . $counter . '_' . $array_source_location[0] . '.' . $image_split[1][0];
+            $new_location_file = str_replace('&amp;', '&', $new_location_file);
             $new_location_file = str_replace('%20', ' ', $new_location_file);
-            $new_location_file = html_entity_decode( $new_location_file);
-            echo("the old file is ". $original_location_file)."<br>";
-            echo("the new file is ". $new_location_file ."<br>");
+            $new_location_file = html_entity_decode($new_location_file);
+            echo ("the old file is " . $original_location_file) . "<br>";
+            echo("the new file is " . $new_location_file . "<br>");
             copy($original_location_file, $new_location_file);
-            fwrite($myfile, $counter . "__" . $array_source_location[0] . "__" . $array_source_location[3] . "__" . $array_source_location[4] . "________" . $counter.'_'.$array_source_location[0].'.'.$image_split[1][0] . "\r\n");
+            fwrite($myfile, $counter . "__" . $array_source_location[0] . "__" . $array_source_location[3] . "__" . $array_source_location[4] . "________" . $counter . '_' . $array_source_location[0] . '.' . $image_split_extension[1][0] . "\r\n");
+            fwrite($myfilethumbnail, 'https://' . $_SERVER['SERVER_NAME'] . '/' . $array_source_location[1] . '/' . $image_split_name[1][0] . "-150x150." . $image_split_extension[1][0] . '||' . $array_source_location[0] . "\r\n");
             $zipfile->addFile($new_location_file, basename($new_location_file));
             //$zip_junior->addFile($new_location_file, basename($dest_location));
         }
         fclose($myfile);
+        fclose($myfilethumbnail);
         $zipfile->addFile($list_file, basename($list_file));
         $zipfile->close();
     }
-    if (isset($source_location_junior)) {
+    foreach ($keys_of_division as $item) {
+        $list_file_thumbnail = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/uploads/' . $sub_folder_current . '/photo_random/' . $item . '/' . $item . '_list_thumbnail.txt';
+        echo("I am going to search this folder for the listing " . $list_file_thumbnail . "<br>");
+
+        if (!file_exists($list_file_thumbnail)) {
+            throw new Exception('File not found.');
+        }
+        echo("<table>");
+        echo("<tr>");
+        echo("<td>".$item."</td>");
+        echo("/tr>");
+        echo("tr");
+        $contents = fopen($list_file_thumbnail, "r");
+        //$lines = explode("\r\n", $contents);
+        $counter = 0;
+        while (!feof($contents)) {
+            $counter++;
+            $result = fgets($contents);
+            echo("I got the line as " . $result . "<br>");
+            $line_split = explode('||', $result);
+            preg_match_all('/([^\.]+)$/', $line_split[0], $file_extension);
+            echo("YO man!");
+            var_dump($file_extension);
+            if ($file_extension[0][0] != "")
+            {
+                $file_extension[0][0] = strtolower($file_extension[0][0]);
+                preg_match_all('/(.*\.)/', $line_split[0], $file_name);
+                echo("Hey dude");
+                var_dump($file_name);
+                $modulus_counter = $counter % 3;
+                echo("modulus counter is ".$modulus_counter);
+                if ($modulus_counter != 0) {
+                    echo("<td class='widecell'>");
+                    echo("<div class='cellwidener'> <img src='" . $file_name[0][0].$file_extension[0][0]."'><br>" . $line_split[1] . "</div>");
+                    echo("</td>");
+                } else {
+                    echo("</tr>");
+                    echo("<tr>");
+                }
+            }
+
+        }
+
+
+        }
+        echo("</table>");
+        fclose($contents);
+    }
+
+   /* if (isset($source_location_junior)) {
         $junior_list_document = $source_location_junior . '/photo_random/junior/junior_list.txt';
         $myfileJunior = fopen($junior_list_document, "w");
         foreach ($var_junior_array as $item) {
@@ -570,11 +624,12 @@ if (($login_check) && isset($_POST['randomize'])) {
         }
         fclose($myfileSenior);
     }
-	$zip_senior->addFile($senior_list_document, basename($senior_list_document));
-	$zip_senior->close();
-    $source_location_senior = 'wp-content/uploads/2019/03';
+	//$zip_senior->addFile($senior_list_document, basename($senior_list_document));
+	//$zip_senior->close();
+    //$source_location_senior = 'wp-content/uploads/2019/03';
 	display_photos($senior_list_document, $source_location_senior);
-}
+}*/
+
 else if ($login_check) {
     //first get the current month and then minus it one month so that we choose the first two months of photos
     $month_beforeafter = get_current_date();
