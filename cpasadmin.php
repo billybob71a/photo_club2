@@ -59,7 +59,9 @@ function display_photos_all($keys_of_division, $sub_folder_current) {
             }
 
         }
-     echo("<tr><td colspan='3'><a href='https://www.visorsourcing.com/download/".$item.".zip'>Download ".$item."</a></td></tr>");
+     if ($item != "") {
+            echo("<tr><td colspan='3'><a href='https://www.visorsourcing.com/download/".$item.".zip'>Download ".$item."</a></td></tr>");
+     }
     }
     echo("</table>");
     fclose($contents);
@@ -84,13 +86,25 @@ function get_current_date_array() {
         "March" => 3,
         "April" => 4,
         "May" => 5,
-        "June" => 6);
+        "June" => 6,
+        "July" => 7,
+        "August" => 8,
+        "September" => 9,
+        "October" => 10,
+        "November" => 11,
+        "December" => 12);
     $month_array_folder = array(1 => '01',
         2 => '02',
         3 => '03',
         4 => '04',
         5 => '05',
-        6 => '06');
+        6 => '06',
+        7 => '07',
+        8 => '08',
+        9 => '09',
+        10 => '10',
+        11 => '11',
+        12 => '12');
     $month_array_keys = array_keys($month_array);
     //the line below is to shift the whole array to start with index 1 so it is not confusing
     $month_array_keys = array_combine(range(1, count($month_array_keys)), $month_array_keys);
@@ -340,6 +354,8 @@ if (($login_check) && isset($_POST['randomize'])) {
                 //echo ("the old file is " . $original_location_file) . "<br>";
                 //echo("the new file is " . $new_location_file . "<br>");
                 copy($original_location_file, $new_location_file);
+                $array_source_location[0] = str_replace('&amp;', '&', $array_source_location[0]);
+                $array_source_location[0] = str_replace('%20', ' ', $array_source_location[0]);
                 fwrite($myfile, $counter . "__" . $array_source_location[0] . "__" . $array_source_location[3] . "__" . $array_source_location[4] . "________" . $counter . '_' . $array_source_location[0] . '.' . $image_split_extension[1][0] . "\r\n");
                 fwrite($myfilethumbnail, 'https://' . $_SERVER['SERVER_NAME'] . '/' . $array_source_location[1] . '/' . $image_split_name[1][0] . "-150x150." . $image_split_extension[1][0] . '||' . $array_source_location[0] . "\r\n");
                 $zipfile->addFile($new_location_file, basename($new_location_file));
