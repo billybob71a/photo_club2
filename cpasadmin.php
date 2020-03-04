@@ -2,13 +2,13 @@
 /**
  * Custom Page Template
  */
-require( '/var/www/html/www.visorsourcing.com/wp-load.php' );
+require( '/var/www/html/www.cpas-yyc.com/wp-load.php' );
 $login_check = is_user_logged_in();
 error_log("The user logged in is ". $login_check);
 
-function display_photos_all($keys_of_division, $sub_folder_current) {
-    foreach ($keys_of_division as $item) {
-        echo("I am going to start readying the thumbnail files");
+function display_photos_all($keys_of_division_unique, $sub_folder_current) {
+    foreach ($keys_of_division_unique as $item) {
+        //echo("I am going to start readying the thumbnail files");
         $list_file_thumbnail = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/uploads/' . $sub_folder_current . '/photo_random/' . $item . '/' . $item . '_list_thumbnail.txt';
         //echo("I am going to search this folder for the listing " . $list_file_thumbnail . "<br>");
 
@@ -60,7 +60,7 @@ function display_photos_all($keys_of_division, $sub_folder_current) {
 
         }
      if ($item != "") {
-            echo("<tr><td colspan='3'><a href='https://www.visorsourcing.com/download/".$item.".zip'>Download ".$item."</a></td></tr>");
+            echo("<tr><td colspan='3'><a href='https://www.cpas-yyc.com/download/".$item.".zip'>Download ".$item."</a></td></tr>");
      }
     }
     echo("</table>");
@@ -169,6 +169,8 @@ if (($login_check) && isset($_POST['randomize'])) {
     $folder_year_month_array = get_current_date_array();
     $sub_folder_current = $folder_year_month_array[0]."\/".$folder_year_month_array[2];
     $sub_folder_previous = $folder_year_month_array[0]."\/".$folder_year_month_array[1];
+    $sub_folder_current = str_replace('\/', '/',$sub_folder_current);
+    $sub_folder_previous = str_replace('\/', '/',$sub_folder_previous);
     global $wpdb;
     $querystr = "SELECT DISTINCT meta_value FROM wp_usermeta WHERE meta_key = 'division_drop_down'";
     $division_competition =  $wpdb->get_results($querystr, ARRAY_A);
@@ -189,8 +191,7 @@ if (($login_check) && isset($_POST['randomize'])) {
 					);
 	$user_query = new WP_User_Query( $args );
 	$user_array = $user_query->get_results();
-	/*$var_junior_array = array();
-	$var_senior_array = array();*/
+
 	//below debugging level is very usefl
 	error_reporting(E_ALL);
 	ini_set('display_errors', '1');
@@ -209,7 +210,7 @@ if (($login_check) && isset($_POST['randomize'])) {
 			foreach ( $current_user_posts as $post_item ) {
 				$images = get_attached_media('image', $post_item->ID );
 				//error_log("here are the images ". $temp);
-                // in the next line we look for the index value of where the user division is (ie Junior, Senior)
+
                 // in the $division_competition two dimensional array
 
                 $division_index = array_search($user_division, array_column($division_competition,'meta_value'));
@@ -221,7 +222,7 @@ if (($login_check) && isset($_POST['randomize'])) {
                     /*
                      The $all_matches array will come up with
                             [0] = https:
-                            [1] = www.visorsourcing.com
+                            [1] = www.cpas-yyc.com
                             [2] = "wp-content"
                             [3] = "uploads"
                             [4] = "2019"
@@ -232,14 +233,9 @@ if (($login_check) && isset($_POST['randomize'])) {
                     $sub_folder_previous = str_replace('\/', '/',$sub_folder_previous);
                     if ( (strpos($source_location, $sub_folder_current)!== False) || (strpos($source_location, $sub_folder_previous) !== False))
                     {
-                        //echo ("I found ". $sub_folder_current ." in $source_location");
-                        //$presenter_list_junior will compose the title, file location, image file name, division, user, and image file name again
-                        // instead of $presenter_list and $var_junior_arry[] we will use $var_division[$user_division] and a $presenter_list for all divisions
+
                         $presenter_list  = $post_item->post_title.'||'.$source_location.'||'. $all_matches[0][6] .'||'. $user_division .'||'. $user_info->first_name .' '. $user_info->last_name.'||'.$all_matches[0][6];
-                        //echo('<li> hihihihi '. $presenter_list_junior .'</li>');
                         array_push($var_division[$user_division], $presenter_list);
-                        //$var_junior_array[] = $presenter_list_junior;
-                        //this part will use the post title
                         $new_name = $post_item->post_title;
                         //echo('<li>'.$new_name.'</li>');
                         preg_match_all('/[^.]+/',$all_matches[0][6],$image_split);
@@ -279,12 +275,13 @@ if (($login_check) && isset($_POST['randomize'])) {
 		$localtime_assoc['seconds']);
 
     $keys_of_division = array_keys($var_division);
-    /*the following loop is used to clear the Senior and Junior folders
+    //echo("Petery the keys of division are ".var_dump($keys_of_division));
+    /*the following loop is used to clear the division folders
     in order that we may put a new list file and image file(s)
     */
     foreach ($keys_of_division as $item)
     {
-        $delete_any_files_here = $directory_base.'/'.$sub_folder_current.'/photo_random/'.$item.'/*';
+        $delete_any_files_here = $_SERVER['DOCUMENT_ROOT'].'/wp-content/uploads/'.$sub_folder_current.'/photo_random/'.$item.'/*';
         $delete_any_files_here = str_replace('\/', '/', $delete_any_files_here);
         $files = glob($delete_any_files_here);
         foreach( $files as $file )
@@ -295,27 +292,27 @@ if (($login_check) && isset($_POST['randomize'])) {
             }
         }
     }
+    $keys_of_division_total = array();
     foreach ($var_division as $var_division_item => $fields)
     {
         //randomize the photos in the presentation_list
         shuffle($fields);
-        //echo("Hey ".var_dump($fields));
+        if (sizeof($fields) != 0 ) {
+            //echo("Hey " . var_dump($fields));
+            $my_array_regex = preg_split("(\|\|)", $fields[0]);
+            //echo("Yo " . $my_array_regex[3]);
+            array_push($keys_of_division_total, $my_array_regex[3]);
+            //echo("Yo end");
+        }
     }
 
-	//echo '<br>';
-	//echo '---------------------------------';
-	//$temp2 = var_dump($var_junior_array);
 	echo '<ul>';
 	$index = 0;
-	/*$zip_junior = new ZipArchive();
-	if(file_exists('./download/junior.zip')){
-		unlink('./download/junior.zip');
-	}
-	if ($zip_junior->open("./download/junior.zip", ZIPARCHIVE::CREATE ) !== True) {
-		die("Could not open file");
-	}*/
+	$keys_of_division_unique = array_unique($keys_of_division_total);
+	// echo("the keys are unique ".var_dump($keys_of_division_unique));
+
 	// go through the divisions and copy it the destination
-	foreach ($keys_of_division as $item) {
+	foreach ($keys_of_division_unique as $item) {
         $list_file = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/uploads/' . $sub_folder_current . '/photo_random/' . $item . '/' . $item . '_list.txt';
         $list_file_thumbnail = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/uploads/' . $sub_folder_current . '/photo_random/' . $item . '/' . $item . '_list_thumbnail.txt';
         $myfile = fopen($list_file, "w");
@@ -367,27 +364,12 @@ if (($login_check) && isset($_POST['randomize'])) {
         $zipfile->addFile($list_file, basename($list_file));
         $zipfile->close();
     }
-    display_photos_all($keys_of_division, $sub_folder_current);
+    display_photos_all($keys_of_division_unique, $sub_folder_current);
 }
 
 
 
 else if ($login_check) {
-    //first get the current month and then minus it one month so that we choose the first two months of photos
-//    $month_beforeafter = get_current_date();
-//	$locations = get_source_folder();
-//	$locations_new = str_replace('02','03',$locations[0]);
-//	error_log("The location that I will read from is " . $location_new);
-//	$senior_file = $locations_new."/photo_random/senior/senior_list.txt";
-//	$junior_file = $locations_new."/photo_random/junior/junior_list.txt";
-//	error_log("New location " . $locations_new);
-//	error_log("I will look in senior file " . $senior_file);
-//	if (file_exists($junior_file)) {
-//		display_photos($junior_file, $locations_new);
-//	}
-//	if (file_exists($senior_file)) {
-//		display_photos($senior_file, $locations_new);
-//	}
     error_reporting(E_ALL);
     $folders_and_division = new GetDivisionAndFolders();
     $sub_folder_current = $folders_and_division->getCurrentFolder();
@@ -399,7 +381,7 @@ else if ($login_check) {
     echo("the previous folder is ".$sub_folder_previous);
     $keys_of_division = array_keys($var_division);
     //var_dump($var_division);
-    display_photos_all($keys_of_division, $sub_folder_current);
+    display_photos_all($keys_of_division_unique, $sub_folder_current);
 }
 else {
 }
