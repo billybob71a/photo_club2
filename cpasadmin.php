@@ -380,8 +380,14 @@ else if ($login_check) {
     echo("the current folder is ".$sub_folder_current);
     echo("the previous folder is ".$sub_folder_previous);
     $keys_of_division = array_keys($var_division);
+    $result = scandir("./wp-content/uploads/".$sub_folder_current."/photo_random");
     //var_dump($var_division);
-    display_photos_all($keys_of_division_unique, $sub_folder_current);
+    //echo(var_dump($keys_of_division));
+    $result_intersect = array_intersect($result, $keys_of_division);
+    unset($result_intersect[0]);
+    $folders_division = array_values($result_intersect);
+    //echo(var_dump($folders_division));
+    display_photos_all($folders_division, $sub_folder_current);
 }
 else {
 }
