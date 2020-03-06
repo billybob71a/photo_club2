@@ -12,56 +12,58 @@ function display_photos_all($keys_of_division_unique, $sub_folder_current) {
         $list_file_thumbnail = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/uploads/' . $sub_folder_current . '/photo_random/' . $item . '/' . $item . '_list_thumbnail.txt';
         //echo("I am going to search this folder for the listing " . $list_file_thumbnail . "<br>");
 
-        if (!file_exists($list_file_thumbnail)) {
+        if (file_exists($list_file_thumbnail)) {
             //throw new Exception('File not found.');
-            return;
-        }
-        echo("<table>");
-        echo("<tr>");
-        echo("<td>".$item."</td>");
-        echo("</tr>");
-        echo("<tr>");
-        $contents = fopen($list_file_thumbnail, "r");
-        //$lines = explode("\r\n", $contents);
-        $counter = 0;
-        while (!feof($contents)) {
-            $counter++;
-            $result = fgets($contents);
-            if (strlen($result)==0)
-            {
-                break;
-            }
-            //echo("I got the line as " . $result . "<br>");
-            $line_split = explode('||', $result);
-            preg_match_all('/([^\.]+)$/', $line_split[0], $file_extension);
-            //echo("YO man!");
-            //var_dump($file_extension);
-            //echo("the count is ". count($file_extension));
-            if (count($file_extension) == 2)
-            {
-                $file_extension[0][0] = strtolower($file_extension[0][0]);
-                preg_match_all('/(.*\.)/', $line_split[0], $file_name);
-                //echo("Hey dude");
-                // var_dump($file_name);
-                $modulus_counter = $counter % 3;
-                //echo("modulus counter is ".$modulus_counter);
-                if ($modulus_counter != 0) {
-                    echo("<td class='widecell'>");
-                    echo("<div class='cellwidener'> <img src='" . $file_name[0][0].$file_extension[0][0]."'><br>" . $line_split[1] . "</div>");
-                    echo("</td>");
-                } else {
-                    echo("<td class='widecell'>");
-                    echo("<div class='cellwidener'> <img src='" . $file_name[0][0].$file_extension[0][0]."'><br>" . $line_split[1] . "</div>");
-                    echo("</td>");
-                    echo("</tr>");
-                    echo("<tr>");
+            //return;
+            echo("<table>");
+            echo("<tr>");
+            echo("<td>".$item."</td>");
+            echo("</tr>");
+            echo("<tr>");
+            $contents = fopen($list_file_thumbnail, "r");
+            //$lines = explode("\r\n", $contents);
+            $counter = 0;
+            while (!feof($contents)) {
+                $counter++;
+                $result = fgets($contents);
+                if (strlen($result)==0)
+                {
+                    break;
                 }
-            }
+                //echo("I got the line as " . $result . "<br>");
+                $line_split = explode('||', $result);
+                preg_match_all('/([^\.]+)$/', $line_split[0], $file_extension);
+                //echo("YO man!");
+                //var_dump($file_extension);
+                //echo("the count is ". count($file_extension));
+                if (count($file_extension) == 2)
+                {
+                    $file_extension[0][0] = strtolower($file_extension[0][0]);
+                    preg_match_all('/(.*\.)/', $line_split[0], $file_name);
+                    //echo("Hey dude");
+                    // var_dump($file_name);
+                    $modulus_counter = $counter % 3;
+                    //echo("modulus counter is ".$modulus_counter);
+                    if ($modulus_counter != 0) {
+                        echo("<td class='widecell'>");
+                        echo("<div class='cellwidener'> <img src='" . $file_name[0][0].$file_extension[0][0]."'><br>" . $line_split[1] . "</div>");
+                        echo("</td>");
+                    } else {
+                        echo("<td class='widecell'>");
+                        echo("<div class='cellwidener'> <img src='" . $file_name[0][0].$file_extension[0][0]."'><br>" . $line_split[1] . "</div>");
+                        echo("</td>");
+                        echo("</tr>");
+                        echo("<tr>");
+                    }
+                }
 
+            }
+            if ($item != "") {
+                echo("<tr><td colspan='3'><a href='https://www.cpas-yyc.com/download/".$item.".zip'>Download ".$item."</a></td></tr>");
+            }
         }
-     if ($item != "") {
-            echo("<tr><td colspan='3'><a href='https://www.cpas-yyc.com/download/".$item.".zip'>Download ".$item."</a></td></tr>");
-     }
+
+
     }
     echo("</table>");
     fclose($contents);
