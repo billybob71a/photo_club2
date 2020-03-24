@@ -1,0 +1,29 @@
+/*
+ Theme Name: Hitchcock-child
+ Theme URI: https://wordpress.org/themes/hitchcock
+ Description: Hitchcock
+ Author: Anders Noren
+ Author URI: https://www.andersnoren.se
+ Template: hitchcock
+ Version: 1.0.0
+ License: GNU General Public License v2 or Later
+ License URI: http://www.gnu.org/licenses/gpl-2.0.html
+ Tags: Blog, Custom Colors, Custom Header, Custom Logo, Custom Menu, Editor Style, Featured Images, Grid Layout, Photography, Portfolio, Post Formats, Sticky Post, Theme Options, Threaded Comments, Three Columns, Translation Ready
+ Text Domain: hitchcock-child
+*/
+.content {
+	position: relative;
+	z-index: 2;
+	width: 60%;
+	background-color: transparent;
+}
+.post-container { background: transparent; }
+.post-title {
+	font-size: 2.5em;
+	line-height: 120%;
+	font-weight: 400;
+	text-align: center;
+	text-transform: uppercase;
+	color: white;
+}
+
