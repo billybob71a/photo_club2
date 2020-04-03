@@ -241,4 +241,30 @@ else { function add_petery_script() {
 }
 }
 add_action( 'wp_enqueue_scripts', 'add_petery_script');
+//Adding some font awesome
+add_action('wp_enqueue_scripts', 'enqueue_load_fa');
+function enqueue_load_fa() {
+	wp_enqueue_style('load_fa', 'https://use.fontawesome.com/releases/v5.7.2/css/all.css' );
+}
+//Adding Sidebar attempt
+function petery_sidebar() {
+    register_sidebar( array(
+        'name' => __( 'Sidebar name', 'theme_hitchcock' ),
+        'id' => 'sidebar-1',
+        'description' => '',
+        'before_widget' => '',
+        'after_widget'  => '',
+        'before_title'  => '',
+        'after_title'   => '',
+    ) );
+}
+add_action( 'widgets_init', 'petery_sidebar' );
+//Petery code, the following will add a widgetized sidebar , maybe
+function wpsites_before_post_widget( $content ) {
+    if ( is_singular( array( 'post', 'page' ) ) && is_active_sidebar( 'sidebar-1' ) && is_main_query() ) {
+        dynamic_sidebar('sidebar-1');
+    }
+    return $content;
+}
+add_filter( 'the_content', 'wpsites_before_post_widget' );
 ?>
