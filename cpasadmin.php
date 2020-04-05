@@ -133,52 +133,7 @@ function get_current_date_array() {
     return array($folder_number_year, $folder_number_before, $folder_number_current);
 }
 
-
-class GetDivisionAndFolders {
-
-    private $currentfolder;
-    private $previousfolder;
-    private $division;
-
-    function __construct()
-    {
-        $this->currentfolder;
-        $this->previousfolder;
-        $this->division;
-    }
-
-    function getCurrentFolder()
-    {
-        $folder_year_month_array = get_current_date_array();
-        $currentfolder = $folder_year_month_array[0]."\/".$folder_year_month_array[2];
-        $this->currentfolder = $currentfolder;
-        return $this->currentfolder;
-    }
-    function getPreviousFolder()
-    {
-        $folder_year_month_array = get_current_date_array();
-        $previousfolder = $folder_year_month_array[0]."\/".$folder_year_month_array[1];
-        $this->previousfolder = $previousfolder;
-        return $this->previousfolder;
-    }
-    function getDivision()
-    {
-        global $wpdb;
-        $querystr = "SELECT DISTINCT meta_value FROM wp_usermeta WHERE meta_key = 'division_drop_down'";
-        $division_competition =  $wpdb->get_results($querystr, ARRAY_A);
-        $counter = 0;
-        foreach ($division_competition as $division_item => $fields) {
-            $var_division[$fields['meta_value']] = array();
-            $counter = $counter++;
-        }
-        $this->division = $var_division;
-        return $this->division;
-    }
-}
-
-if (($login_check) && isset($_POST['randomize'])) {
-	//initialize array
-	error_log("Arrived at photo admin page");
+function html_prettyphoto() {
     echo("<!DOCTYPE html>");
     echo("<html>");
     echo("<head>");
@@ -233,6 +188,56 @@ if (($login_check) && isset($_POST['randomize'])) {
     <?php
     echo("</head><body><div id=\"main\">
 			<h1>prettyPhoto</h1>");
+}
+
+
+
+class GetDivisionAndFolders {
+
+    private $currentfolder;
+    private $previousfolder;
+    private $division;
+
+    function __construct()
+    {
+        $this->currentfolder;
+        $this->previousfolder;
+        $this->division;
+    }
+
+    function getCurrentFolder()
+    {
+        $folder_year_month_array = get_current_date_array();
+        $currentfolder = $folder_year_month_array[0]."\/".$folder_year_month_array[2];
+        $this->currentfolder = $currentfolder;
+        return $this->currentfolder;
+    }
+    function getPreviousFolder()
+    {
+        $folder_year_month_array = get_current_date_array();
+        $previousfolder = $folder_year_month_array[0]."\/".$folder_year_month_array[1];
+        $this->previousfolder = $previousfolder;
+        return $this->previousfolder;
+    }
+    function getDivision()
+    {
+        global $wpdb;
+        $querystr = "SELECT DISTINCT meta_value FROM wp_usermeta WHERE meta_key = 'division_drop_down'";
+        $division_competition =  $wpdb->get_results($querystr, ARRAY_A);
+        $counter = 0;
+        foreach ($division_competition as $division_item => $fields) {
+            $var_division[$fields['meta_value']] = array();
+            $counter = $counter++;
+        }
+        $this->division = $var_division;
+        return $this->division;
+    }
+}
+
+if (($login_check) && isset($_POST['randomize'])) {
+	//initialize array
+	error_log("Arrived at photo admin page");
+    html_prettyphoto();
    // folder
     $folder_year_month_array = get_current_date_array();
     $sub_folder_current = $folder_year_month_array[0]."\/".$folder_year_month_array[2];
@@ -439,60 +444,7 @@ if (($login_check) && isset($_POST['randomize'])) {
 
 else if ($login_check) {
     error_reporting(E_ALL);
-    echo("<!DOCTYPE html>");
-    echo("<html>");
-    echo("<head>");
-    echo('<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />');
-    echo("<!--<script src='https://www.cpas-yyc.com/wp-content/themes/hitchcock-child/js/jquery-1.7.2.min.js'></script>-->");
-    echo('<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>');
-    echo('<script src="js/jquery.prettyPhoto.js" type="text/javascript" charset="utf-8"></script>');
-    echo('<link rel="stylesheet" href="https://www.cpas-yyc.com/css/prettyPhoto.css" media="screen" title="prettyPhoto main stylesheet" type="text/css" />');
-    echo("		<style type=\"text/css\" media=\"screen\">
-			* { margin: 0; padding: 0; }
-			
-			body {
-				background: #ffffff;
-				font: 62.5%/1.2 Arial, Verdana, Sans-Serif;
-				padding: 0 20px;
-			}
-			
-			h1 { font-family: Georgia; font-style: italic; margin-bottom: 10px; }
-			
-			h2 {
-				font-family: Georgia;
-				font-style: italic;
-				margin: 25px 0 5px 0;
-			}
-			
-			p { font-size: 1.2em; }
-			
-			ul li { display: inline; }
-			
-			.wide {
-				border-bottom: 1px #000 solid;
-				width: 4000px;
-			}
-			
-			.fleft { float: left; margin: 0 20px 0 0; }
-			
-			.cboth { clear: both; }
-			
-			#main {
-				background: #fff;
-				margin: 0 auto;
-				padding: 30px;
-				width: 1000px;
-			}
-		</style>");
-    ?>
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function(){
-            $("a[rel^='prettyPhoto']").prettyPhoto();
-        });
-    </script>
-    <?php
-    echo("</head><body><div id=\"main\">
-			<h1>prettyPhoto</h1>");
+    html_prettyphoto();
     $folders_and_division = new GetDivisionAndFolders();
     $sub_folder_current = $folders_and_division->getCurrentFolder();
     $sub_folder_previous = $folders_and_division->getPreviousFolder();
