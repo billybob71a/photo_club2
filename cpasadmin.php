@@ -38,19 +38,31 @@ function display_photos_all($keys_of_division_unique, $sub_folder_current) {
                 //echo("the count is ". count($file_extension));
                 if (count($file_extension) == 2)
                 {
+                    $file_extension_temp = $file_extension[0][0];
+                    //echo("Before lower is ". $file_extension_temp);
                     $file_extension[0][0] = strtolower($file_extension[0][0]);
+                    //echo("After lower is ". $file_extension[0][0]);
                     preg_match_all('/(.*\.)/', $line_split[0], $file_name);
                     //echo("Hey dude");
                     // var_dump($file_name);
                     $modulus_counter = $counter % 3;
                     //echo("modulus counter is ".$modulus_counter);
+                    $small_photo =  $file_name[0][0];
+                    $large_photo = preg_replace("/-150x150/", "", $small_photo);
+                    if ($file_extension[0][0] == $file_extension_temp) {
+                        $large_photo_with_extension = $large_photo.$file_extension[0][0];
+                    }
+                    else {
+                        $large_photo_with_extension = $large_photo.$file_extension_temp;
+                    }
+
                     if ($modulus_counter != 0) {
                         echo("<td class='widecell'>");
-                        echo("<div class='cellwidener'> <img src='" . $file_name[0][0].$file_extension[0][0]."'><br>" . $line_split[1] . "</div>");
+                        echo("<div class='cellwidener'> <a href='" . $large_photo_with_extension ."' rel='prettyPhoto[Gallery1]'> <img src='" . $file_name[0][0].$file_extension[0][0]."'><br>" . $line_split[1] . "</a></div>");
                         echo("</td>");
                     } else {
                         echo("<td class='widecell'>");
-                        echo("<div class='cellwidener'> <img src='" . $file_name[0][0].$file_extension[0][0]."'><br>" . $line_split[1] . "</div>");
+                        echo("<div class='cellwidener'> <a href='" . $large_photo_with_extension ."' rel='prettyPhoto[Gallery1]'> <img src='" . $file_name[0][0].$file_extension[0][0]."'><br>" . $line_split[1] . "</a></div>");
                         echo("</td>");
                         echo("</tr>");
                         echo("<tr>");
@@ -167,6 +179,60 @@ class GetDivisionAndFolders {
 if (($login_check) && isset($_POST['randomize'])) {
 	//initialize array
 	error_log("Arrived at photo admin page");
+    echo("<!DOCTYPE html>");
+    echo("<html>");
+    echo("<head>");
+    echo('<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />');
+    echo("<!--<script src='https://www.cpas-yyc.com/wp-content/themes/hitchcock-child/js/jquery-1.7.2.min.js'></script>-->");
+    echo('<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>');
+    echo('<script src="js/jquery.prettyPhoto.js" type="text/javascript" charset="utf-8"></script>');
+    echo('<link rel="stylesheet" href="https://www.cpas-yyc.com/css/prettyPhoto.css" media="screen" title="prettyPhoto main stylesheet" type="text/css" />');
+    echo("		<style type=\"text/css\" media=\"screen\">
+			* { margin: 0; padding: 0; }
+			
+			body {
+				background: #ffffff;
+				font: 62.5%/1.2 Arial, Verdana, Sans-Serif;
+				padding: 0 20px;
+			}
+			
+			h1 { font-family: Georgia; font-style: italic; margin-bottom: 10px; }
+			
+			h2 {
+				font-family: Georgia;
+				font-style: italic;
+				margin: 25px 0 5px 0;
+			}
+			
+			p { font-size: 1.2em; }
+			
+			ul li { display: inline; }
+			
+			.wide {
+				border-bottom: 1px #000 solid;
+				width: 4000px;
+			}
+			
+			.fleft { float: left; margin: 0 20px 0 0; }
+			
+			.cboth { clear: both; }
+			
+			#main {
+				background: #fff;
+				margin: 0 auto;
+				padding: 30px;
+				width: 1000px;
+			}
+		</style>");
+    ?>
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function(){
+            $("a[rel^='prettyPhoto']").prettyPhoto();
+        });
+    </script>
+    <?php
+    echo("</head><body><div id=\"main\">
+			<h1>prettyPhoto</h1>");
    // folder
     $folder_year_month_array = get_current_date_array();
     $sub_folder_current = $folder_year_month_array[0]."\/".$folder_year_month_array[2];
@@ -373,6 +439,60 @@ if (($login_check) && isset($_POST['randomize'])) {
 
 else if ($login_check) {
     error_reporting(E_ALL);
+    echo("<!DOCTYPE html>");
+    echo("<html>");
+    echo("<head>");
+    echo('<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />');
+    echo("<!--<script src='https://www.cpas-yyc.com/wp-content/themes/hitchcock-child/js/jquery-1.7.2.min.js'></script>-->");
+    echo('<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>');
+    echo('<script src="js/jquery.prettyPhoto.js" type="text/javascript" charset="utf-8"></script>');
+    echo('<link rel="stylesheet" href="https://www.cpas-yyc.com/css/prettyPhoto.css" media="screen" title="prettyPhoto main stylesheet" type="text/css" />');
+    echo("		<style type=\"text/css\" media=\"screen\">
+			* { margin: 0; padding: 0; }
+			
+			body {
+				background: #ffffff;
+				font: 62.5%/1.2 Arial, Verdana, Sans-Serif;
+				padding: 0 20px;
+			}
+			
+			h1 { font-family: Georgia; font-style: italic; margin-bottom: 10px; }
+			
+			h2 {
+				font-family: Georgia;
+				font-style: italic;
+				margin: 25px 0 5px 0;
+			}
+			
+			p { font-size: 1.2em; }
+			
+			ul li { display: inline; }
+			
+			.wide {
+				border-bottom: 1px #000 solid;
+				width: 4000px;
+			}
+			
+			.fleft { float: left; margin: 0 20px 0 0; }
+			
+			.cboth { clear: both; }
+			
+			#main {
+				background: #fff;
+				margin: 0 auto;
+				padding: 30px;
+				width: 1000px;
+			}
+		</style>");
+    ?>
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function(){
+            $("a[rel^='prettyPhoto']").prettyPhoto();
+        });
+    </script>
+    <?php
+    echo("</head><body><div id=\"main\">
+			<h1>prettyPhoto</h1>");
     $folders_and_division = new GetDivisionAndFolders();
     $sub_folder_current = $folders_and_division->getCurrentFolder();
     $sub_folder_previous = $folders_and_division->getPreviousFolder();
@@ -399,5 +519,6 @@ echo("<form method='POST' action='cpasadmin.php'>");
 echo("<input type='hidden' value='randomize' name='randomize'>");
 echo("<input type='submit' value='Get New Photos and Randomize' class='submit_button'>");
 echo("</form>");
-	
+echo("</body>");
+echo("</html>");
 
