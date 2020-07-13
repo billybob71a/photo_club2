@@ -58,11 +58,11 @@ function display_photos_all($keys_of_division_unique, $sub_folder_current) {
 
                     if ($modulus_counter != 0) {
                         echo("<td class='widecell'>");
-                        echo("<div class='cellwidener'> <a href='" . $large_photo_with_extension ."' rel='prettyPhoto[Gallery1]'> <img src='" . $file_name[0][0].$file_extension[0][0]."'><br>" . $line_split[1] . "</a></div>");
+                        echo("<div class='cellwidener'> <a href=" . $large_photo_with_extension ." rel='prettyPhoto[Gallery1]'> <img src=" . $file_name[0][0].$file_extension[0][0]."><br>" . $line_split[1] . "</a></div>");
                         echo("</td>");
                     } else {
                         echo("<td class='widecell'>");
-                        echo("<div class='cellwidener'> <a href='" . $large_photo_with_extension ."' rel='prettyPhoto[Gallery1]'> <img src='" . $file_name[0][0].$file_extension[0][0]."'><br>" . $line_split[1] . "</a></div>");
+                        echo("<div class='cellwidener'> <a href=" . $large_photo_with_extension ." rel='prettyPhoto[Gallery1]'> <img src=" . $file_name[0][0].$file_extension[0][0]."><br>" . $line_split[1] . "</a></div>");
                         echo("</td>");
                         echo("</tr>");
                         echo("<tr>");
@@ -410,6 +410,8 @@ if (($login_check) && isset($_POST['randomize'])) {
             $original_location_file = $_SERVER['DOCUMENT_ROOT'] . '/' . $array_source_location[1] . '/' . $array_source_location[2];
             $original_location_file = str_replace('%20', ' ', $original_location_file);
             $original_location_file = str_replace('&amp;', '&', $original_location_file);
+            $original_location_file = str_replace('%5B', '[', $original_location_file);
+            $original_location_file = str_replace('%5D', ']', $original_location_file);
             preg_match_all('/([^\.]+)$/', $array_source_location[2], $image_split_extension);
             preg_match_all('/(.*\.)/', $array_source_location[2], $image_split_name);
             $image_split_name[1][0] = rtrim($image_split_name[1][0], '.');
