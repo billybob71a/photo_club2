@@ -267,4 +267,9 @@ function wpsites_before_post_widget( $content ) {
     return $content;
 }
 add_filter( 'the_content', 'wpsites_before_post_widget' );
+function wpse_19692_registration_redirect() {
+    return home_url( '/post-registration-2' );
+}
+
+add_filter( 'registration_redirect', 'wpse_19692_registration_redirect' );
 ?>
