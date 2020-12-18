@@ -91,13 +91,14 @@ add_action( 'wp_enqueue_scripts', 'my_theme_enqueue_styles' );
                 $user_division = "";
             }
             ?>
-            <h3><?php _e('Photo Contest Division', 'frontendprofile');
-                ?> </h3>
+            <!--<h3> //commented out function below because committee does not want members to change their own level
+            <?php /*_e('Photo Contest Division', 'frontendprofile');
+                */?> </h3>
             <?php
-            switch ($user_division) {
+/*            switch ($user_division) {
                 case "Level 1":
                     error_log("in Level 1");
-                    ?>
+                    */?>
                     <select name="division_drop_down">
                         <option value="">Please select your division</option>
                         <option selected="Selected" value="Level_1">Level 1</option>
@@ -105,10 +106,10 @@ add_action( 'wp_enqueue_scripts', 'my_theme_enqueue_styles' );
 			<option value="Level_3">Level 3</option>
                     </select>
                     <?php
-                    break;
+/*                    break;
                 case "Level 2":
                     error_log("in Level 2");
-                    ?>
+                    */?>
                     <select name="division_drop_down">
                         <option value="">Please select your division</option>
                         <option value="Level_1">Level 1</option>
@@ -116,20 +117,20 @@ add_action( 'wp_enqueue_scripts', 'my_theme_enqueue_styles' );
  			<option value="Level_3">Level 3</option>
                     </select>
                     <?php
-                    break;
+/*                    break;
                 default:
                     error_log("in default");
-                    ?>
+                    */?>
                     <select name="division_drop_down">
                         <option selected="Selected" value="">Please select your division</option>
                         <option value="Level_1">Level 1</option>
                         <option value="Level_2">Level 2</option>
 			<option value="Level_3">Level 3</option>
                     </select>
-                    <?php
-                    break;
+                    --><?php
+/*                    break;
             }
-            ?>
+            */?>
             <br>
             <br>
         <?php }
@@ -140,14 +141,16 @@ add_action( 'wp_enqueue_scripts', 'my_theme_enqueue_styles' );
             error_log( 'about to save data the user_id field is ' . $user_id );
             /* Edit the following lines according to your set fields */
             //error_log('I am going to save data for user ' . $user );
-            update_user_meta( $user_id, "division_drop_down", $_POST['division_drop_down'] );
+            //commented out line below because committee does not want members to change their own level
+            //update_user_meta( $user_id, "division_drop_down", $_POST['division_drop_down'] );
         }
-        function  validate_extra_profile_fields( $errors, $sanitized_user_login, $user_email ) {
+        //commented out function below because committee does not want members to change their own level
+       /* function  validate_extra_profile_fields( $errors, $sanitized_user_login, $user_email ) {
             if ( $_POST['division_drop_down'] == "") {
                 $errors->add( 'no_division_error', __('<strong>ERROR</Strong>:You must select Level 1 or Level 2 for Photo Contest Division', 'mydomain') );}
 //
             return $errors;
-        }
+        }*/
         //function save_extra_profile_fields( $user_id ) {
         //	if ( ! empty( $_POST['first_name'] )) {
         //		update_user_meta( $user_id, 'division_drop_down', $_POST['division_drop_down']);
