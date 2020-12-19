@@ -153,7 +153,12 @@ add_shortcode('usp_display_posts', 'usp_display_posts');
 */
 if (!function_exists('usp_gallery')) :
 
-function usp_gallery($attr, $content = null) {
+    /**
+     * @param $attr
+     * @param null $content
+     * @return string
+     */
+    function usp_gallery($attr, $content = null) {
 	
 	extract(shortcode_atts(array(
 		
@@ -201,8 +206,16 @@ function usp_gallery($attr, $content = null) {
 	//foreach ($images as $image) $gallery .= $image;
 	
 	//$gallery = $gallery ? '<div class="usp-image-gallery">'. $gallery .'</div>' : '';
-	return $gallery;
-	
+
+    error_log("The gallery value is");
+    error_log($gallery);
+    if ($gallery == "") {
+        return "<div id='photo_not_exist'><p style=\"font-size:1.5em\">You have not uploaded any photos</p></div>";
+    } else {
+        $photo_exists = "<div id='photo_exist'><p style=\"font-size:1.5em\">To view the actual photo that was uploaded, please click on image.</p></div><br><br>";
+        $gallery = $photo_exists.$gallery;
+	    return $gallery;
+    }
 }
 add_shortcode('usp_gallery', 'usp_gallery');
 
