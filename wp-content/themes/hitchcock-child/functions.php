@@ -234,12 +234,12 @@ add_action( 'wp_enqueue_scripts', 'my_theme_enqueue_styles' );
 /* Peter Y custom functions
 custom function to make home page transparent */
 if ( wp_is_mobile() ) { function add_petery_script() {
-    wp_register_script('petery_script_mobile', get_template_directory_uri() . '/js/petery_script_mobile.js', array( 'jquery' ),'',true);
+    wp_register_script('petery_script_mobile', get_template_directory_uri() . '/js/petery_script_mobile.js', array( 'jquery' ),'1.1',true);
     wp_enqueue_script('petery_script_mobile');
 }
 }
 else { function add_petery_script() {
-    wp_register_script('petery_script', get_template_directory_uri() . '/js/petery_script.js', array( 'jquery' ),'',true);
+    wp_register_script('petery_script', get_template_directory_uri() . '/js/petery_script.js', array( 'jquery' ),'1.1',true);
     wp_enqueue_script('petery_script');
 }
 }
