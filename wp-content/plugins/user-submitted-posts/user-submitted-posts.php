@@ -1187,7 +1187,6 @@ function usp_validateEmail($email) {
 function usp_send_mail_alert($post_id, $title, $content, $author, $email) {
 	
 	global $usp_options;
-	
 	if (isset($usp_options['usp_email_alerts']) && $usp_options['usp_email_alerts']) {
 		
 		$blog_url     = get_bloginfo('url');              // %%blog_url%%
@@ -1199,7 +1198,10 @@ function usp_send_mail_alert($post_id, $title, $content, $author, $email) {
 		$post_author  = $author;                          // %%post_author%%
 		$user_email   = $email;                           // %%user_email%%
 		$edit_link    = get_edit_post_link($post_id, ''); // %%edit_link%%
-		
+        global $wpdb;
+        $querystr = "SELECT DISTINCT user_email FROM wp_users WHERE user_nicename = '$post_author'";
+        $user_email =  $wpdb->get_results($querystr, ARRAY_A);
+
 		$patterns = array();
 		$patterns[0]  = "/%%blog_url%%/";
 		$patterns[1]  = "/%%blog_name%%/";
@@ -1267,6 +1269,14 @@ function usp_send_mail_alert($post_id, $title, $content, $author, $email) {
 				wp_mail($address_to, $subject, $message, $headers);
 				
 			}
+			$address_to_user_email = $user_email[0]["user_email"];
+			$message_to_user = '<html><head></head><body>';
+			$message_to_user = '<p>Dear '.$post_author.'</p>';
+            $message_to_user .= '<p>You have submitted a photo called '.$post_title.'</p>';
+			$message_to_user .= "Thank you for your participation in the photo contest.".'<br><br>';
+			$message_to_user .= "Calgary Photographic Art Society";
+			$message_to_user .= '</body></html>';
+			wp_mail($address_to_user_email, "photo submission $post_title", $message_to_user, $headers);
 			
 		}
 		
