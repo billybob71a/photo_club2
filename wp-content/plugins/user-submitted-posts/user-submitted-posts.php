@@ -1440,9 +1440,9 @@ function usp_login_required_message() {
 	
 	$message  = '<p>'. esc_html__('Please', 'usp');
 	$message .= ' <a href="'. esc_url($url) .'">'. esc_html__('log in', 'usp') .'</a> ';
-	$message .= esc_html__('to submit content!', 'usp') .'</p>';
+	$message .= esc_html__('to submit content.', 'usp') .'</p>';
 	
-	$message = apply_filters('usp_require_login', $message);
+	//$message = apply_filters('usp_require_login', $message);
 	
 	return $message;
 	
