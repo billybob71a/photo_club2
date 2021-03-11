@@ -46,22 +46,21 @@ jQuery('a[href="#2012_competitions"]').click(function(){$(this).next().slideTogg
 jQuery('a[href="#2011_competitions"]').click(function(){$(this).next().slideToggle();});
 jQuery('a[href="#2010_competitions"]').click(function(){$(this).next().slideToggle();});
 jQuery('a[href="#2009_competitions"]').click(function(){$(this).next().slideToggle();});
-$("#delete_button").click(function(){
-	if ($("#delete_button").val() == 'Delete') {
+$(".post-container").on('click','#delete_button', function(){
 		var isGood = confirm('Are you sure you want delete this photo?');
 		var post_number = $(this).attr('name');
 		if (isGood) {
 			$.ajax({ url: 'https://www.cpas-yyc.com/wp-content/themes/hitchcock-child/delete_post.php',
-					data: {delete_var: post_number},
-					type: 'post',
-					success: function(output) {
+				data: {delete_var: post_number},
+				type: 'post',
+				success: function(output) {
 					location.reload();
-					}});
-			}
-			else {
-				location.reload();
-			}
+				}});
 		}
-});
+		else {
+			location.reload();
+		}
+	}
+);
 }
 );
