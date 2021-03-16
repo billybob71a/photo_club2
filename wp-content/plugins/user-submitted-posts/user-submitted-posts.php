@@ -1200,7 +1200,7 @@ function usp_send_mail_alert($post_id, $title, $content, $author, $email) {
 		$edit_link    = get_edit_post_link($post_id, ''); // %%edit_link%%
         global $wpdb;
         error_log("the user submitting a photo is ". $post_author);
-        $querystr = "SELECT DISTINCT user_email FROM wp_users WHERE user_login = '$post_author'";
+        $querystr = "SELECT DISTINCT user_email FROM wp_users WHERE display_name = '$post_author'";
         $user_email =  $wpdb->get_results($querystr, ARRAY_A);
 
 		$patterns = array();
