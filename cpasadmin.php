@@ -435,6 +435,7 @@ if (($login_check) && isset($_POST['randomize'])) {
                 $array_source_location[0] = str_replace('&amp;', '&', $array_source_location[0]);
                 $array_source_location[0] = str_replace('%20', ' ', $array_source_location[0]);
                 fwrite($myfile, $counter . "__" . $array_source_location[0] . "__" . $array_source_location[3] . "__" . $array_source_location[4] . "________" . $counter . '_' . $array_source_location[0] . '.' . $image_split_extension[1][0] . "\r\n");
+                //the lines of code used to display the thumbnails starts here
                 $image_extension_lc = strtolower($image_split_extension[1][0]);
                 $file_thumbnail  = str_replace('%20', '\ ', $image_split_name[1][0]);
 
@@ -450,6 +451,7 @@ if (($login_check) && isset($_POST['randomize'])) {
                 //fwrite($myfilethumbnail, 'https://' . $_SERVER['SERVER_NAME'] . '/' . $array_source_location[1] . '/' . $image_split_name[1][0] . "-460x460." . $image_split_extension[1][0] . '||' . $array_source_location[0] . "\r\n");
                 $file_thumbnail_results[0] = str_replace(' ', '%20', $file_thumbnail_results[0]);
                 fwrite($myfilethumbnail, 'https://' . $_SERVER['SERVER_NAME'] . '/' . $file_thumbnail_results[0] . '||' . $array_source_location[0] . "\r\n");
+                //the lines of code used to display thumbnails ends here
                 $zipfile->addFile($new_location_file, basename($new_location_file));
             }
 
