@@ -7,6 +7,11 @@ $login_check = is_user_logged_in();
 error_log("The user logged in is ". $login_check);
 
 function display_photos_all($keys_of_division_unique, $sub_folder_current) {
+    if (sizeof($keys_of_division_unique) == 0) {
+        echo("no photos submitted for ." .$sub_folder_current);
+        return;
+    }
+    echo("<table>");
     foreach ($keys_of_division_unique as $item) {
         //echo("I am going to start readying the thumbnail files");
         $list_file_thumbnail = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/uploads/' . $sub_folder_current . '/photo_random/' . $item . '/' . $item . '_list_thumbnail.txt';
@@ -15,7 +20,6 @@ function display_photos_all($keys_of_division_unique, $sub_folder_current) {
         if (file_exists($list_file_thumbnail)) {
             //throw new Exception('File not found.');
             //return;
-            echo("<table>");
             echo("<tr>");
             echo("<td>".$item."</td>");
             echo("</tr>");
@@ -48,7 +52,7 @@ function display_photos_all($keys_of_division_unique, $sub_folder_current) {
                     $modulus_counter = $counter % 3;
                     //echo("modulus counter is ".$modulus_counter);
                     $small_photo =  $file_name[0][0];
-                    $large_photo = preg_replace("/-150x150/", "", $small_photo);
+                    $large_photo = preg_replace("/-460x460/", "", $small_photo);
                     if ($file_extension[0][0] == $file_extension_temp) {
                         $large_photo_with_extension = $large_photo.$file_extension[0][0];
                     }
@@ -73,12 +77,14 @@ function display_photos_all($keys_of_division_unique, $sub_folder_current) {
             if ($item != "") {
                 echo("<tr><td colspan='3'><a href='https://www.cpas-yyc.com/download/".$item.".zip'>Download ".$item."</a></td></tr>");
             }
+            if ($counter == 0) {
+                echo("<tr><td colspan='3'>There have been no photos submitted yet</td></tr>");
+            }
+            fclose($contents);
         }
-
-
     }
     echo("</table>");
-    fclose($contents);
+
 }
 function get_current_date() {
     $localtime_assoc = getdate();
@@ -429,7 +435,21 @@ if (($login_check) && isset($_POST['randomize'])) {
                 $array_source_location[0] = str_replace('&amp;', '&', $array_source_location[0]);
                 $array_source_location[0] = str_replace('%20', ' ', $array_source_location[0]);
                 fwrite($myfile, $counter . "__" . $array_source_location[0] . "__" . $array_source_location[3] . "__" . $array_source_location[4] . "________" . $counter . '_' . $array_source_location[0] . '.' . $image_split_extension[1][0] . "\r\n");
-                fwrite($myfilethumbnail, 'https://' . $_SERVER['SERVER_NAME'] . '/' . $array_source_location[1] . '/' . $image_split_name[1][0] . "-150x150." . $image_split_extension[1][0] . '||' . $array_source_location[0] . "\r\n");
+                $image_extension_lc = strtolower($image_split_extension[1][0]);
+                $file_thumbnail  = str_replace('%20', '\ ', $image_split_name[1][0]);
+
+                $file_thumbnail_wildcard = $array_source_location[1] . "/" .  $file_thumbnail . "-" . "460x*" . "." . strtolower($image_split_extension[1][0]);
+
+                $file_thumbnail_results  = glob($file_thumbnail_wildcard);
+                if (sizeof($file_thumbnail_results) == 0)
+                {
+                    $file_thumbnail_wildcard = $array_source_location[1] . "/" .  $file_thumbnail . "-" . "*x460" . "." . strtolower($image_split_extension[1][0]);
+                    $file_thumbnail_results  = glob($file_thumbnail_wildcard);
+                }
+
+                //fwrite($myfilethumbnail, 'https://' . $_SERVER['SERVER_NAME'] . '/' . $array_source_location[1] . '/' . $image_split_name[1][0] . "-460x460." . $image_split_extension[1][0] . '||' . $array_source_location[0] . "\r\n");
+                $file_thumbnail_results[0] = str_replace(' ', '%20', $file_thumbnail_results[0]);
+                fwrite($myfilethumbnail, 'https://' . $_SERVER['SERVER_NAME'] . '/' . $file_thumbnail_results[0] . '||' . $array_source_location[0] . "\r\n");
                 $zipfile->addFile($new_location_file, basename($new_location_file));
             }
 
