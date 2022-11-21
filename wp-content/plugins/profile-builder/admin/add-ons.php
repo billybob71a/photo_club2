@@ -1,4 +1,6 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 /**
  * Function that creates the "Add-Ons" submenu page
  *
@@ -225,7 +227,9 @@ function wppb_add_ons_content() {
 
                     // Check to see if add-on is in the plugins folder
                     foreach ($wppb_get_all_plugins as $wppb_plugin_key => $wppb_plugin) {
-                        if (strpos(strtolower($wppb_plugin['Name']), strtolower($wppb_add_on['name'])) !== false && strpos(strtolower($wppb_plugin['AuthorName']), strtolower('Cozmoslabs')) !== false) {
+                        if ( strpos( strtolower( $wppb_plugin['Name'] ), 'profile builder' ) !== false &&
+                             strpos( strtolower( $wppb_plugin['Name'] ), strtolower( $wppb_add_on['name'] ) ) !== false &&
+                             strpos( strtolower( $wppb_plugin['AuthorName'] ), strtolower('Cozmoslabs') ) !== false ) {
                             $wppb_add_on_exists = 1;
 
                             if (in_array($wppb_plugin_key, $wppb_get_active_plugins)) {
@@ -237,6 +241,7 @@ function wppb_add_ons_content() {
                                 $wppb_add_on_is_network_active = 1;
                                 $wppb_add_on_is_active = 1;
                             }
+
 
                             $wppb_add_on['plugin_file'] = $wppb_plugin_key;
                         }
@@ -256,10 +261,12 @@ function wppb_add_ons_content() {
                     echo '</h3>';
 
                     //echo '<h3 class="wppb-add-on-price">' . $wppb_add_on['price'] . '</h3>';
-                    if( $wppb_add_on['type'] == 'paid' )
-                        echo '<h3 class="wppb-add-on-price">' . __( 'Available in Hobbyist and Pro Versions', 'profile-builder' ) . '</h3>';
-                    else
-                        echo '<h3 class="wppb-add-on-price">' . __( 'Available in All Versions', 'profile-builder' ) . '</h3>';
+					if ( $wppb_add_on['product_version_type'][0] == 'free' )
+						echo '<h3 class="wppb-add-on-price">' . __( 'Available with All Versions', 'profile-builder' ) . '</h3>';
+					elseif ( $wppb_add_on['product_version_type'][0] == 'hobbyist' )
+						echo '<h3 class="wppb-add-on-price">' . __( 'Available with the Hobbyist and Pro Versions', 'profile-builder' ) . '</h3>';
+					elseif ( $wppb_add_on['product_version_type'][0] == 'pro' )
+						echo '<h3 class="wppb-add-on-price">' . __( 'Available with the Pro Version', 'profile-builder' ) . '</h3>';
 
                     echo '<p class="wppb-add-on-description">' . $wppb_add_on['description'] . '</p>';
 

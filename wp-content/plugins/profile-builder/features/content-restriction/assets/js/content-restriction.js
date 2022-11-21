@@ -26,7 +26,7 @@ jQuery( function(){
 
 
     /* Disable / Enable the user roles from the "Display for" field if the "Logged in Users" option is checked or not */
-    jQuery( document ).on( 'ready click', 'input[name="wppb-content-restrict-user-status"]', function() {
+    jQuery( document ).on( 'click', 'input[name="wppb-content-restrict-user-status"]', function() {
         wppb_disable_enable_user_roles( jQuery( this ) );
     } );
 

@@ -1,4 +1,7 @@
 <?php
+/**
+ * @package Polylang
+ */
 
 /**
  * Manages links filters on frontend
@@ -6,7 +9,26 @@
  * @since 1.8
  */
 class PLL_Frontend_Filters_Links extends PLL_Filters_Links {
-	public $cache; // Our internal non persistent cache object
+	/**
+	 * Our internal non persistent cache object
+	 *
+	 * @var PLL_Cache
+	 */
+	public $cache;
+
+	/**
+	 * Stores a list of files and functions that home_url() must not filter.
+	 *
+	 * @var array
+	 */
+	private $black_list = array();
+
+	/**
+	 * Stores a list of files and functions that home_url() must filter.
+	 *
+	 * @var array
+	 */
+	private $white_list = array();
 
 	/**
 	 * Constructor
@@ -39,6 +61,8 @@ class PLL_Frontend_Filters_Links extends PLL_Filters_Links {
 		if ( $this->options['force_lang'] > 1 ) {
 			// Rewrites next and previous post links when not automatically done by WordPress
 			add_filter( 'get_pagenum_link', array( $this, 'archive_link' ), 20 );
+
+			add_filter( 'get_shortlink', array( $this, 'shortlink' ), 20, 2 );
 
 			// Rewrites ajax url
 			add_filter( 'admin_url', array( $this, 'admin_url' ), 10, 2 );
@@ -148,6 +172,20 @@ class PLL_Frontend_Filters_Links extends PLL_Filters_Links {
 	}
 
 	/**
+	 * Modifies the post short link when using one domain or subdomain per language.
+	 *
+	 * @since 2.6.9
+	 *
+	 * @param string $link    Post permalink.
+	 * @param int    $post_id Post id.
+	 * @return Post permalink with the correct domain.
+	 */
+	public function shortlink( $link, $post_id ) {
+		$post_type = get_post_type( $post_id );
+		return $this->model->is_translated_post_type( $post_type ) ? $this->links_model->switch_language_in_link( $link, $this->model->post->get_language( $post_id ) ) : $link;
+	}
+
+	/**
 	 * Outputs references to translated pages ( if exists ) in the html head section
 	 *
 	 * @since 0.1
@@ -159,6 +197,8 @@ class PLL_Frontend_Filters_Links extends PLL_Filters_Links {
 			return;
 		}
 
+		$urls = array();
+
 		// Google recommends to include self link https://support.google.com/webmasters/answer/189077?hl=en
 		foreach ( $this->model->get_languages_list() as $language ) {
 			if ( $url = $this->links->get_translation_url( $language ) ) {
@@ -168,6 +208,8 @@ class PLL_Frontend_Filters_Links extends PLL_Filters_Links {
 
 		// Outputs the section only if there are translations ( $urls always contains self link )
 		if ( ! empty( $urls ) && count( $urls ) > 1 ) {
+			$languages = array();
+			$hreflangs = array();
 
 			// Prepare the list of languages to remove the country code
 			foreach ( array_keys( $urls ) as $locale ) {
@@ -217,10 +259,8 @@ class PLL_Frontend_Filters_Links extends PLL_Filters_Links {
 			return $url;
 		}
 
-		static $white_list, $black_list; // Avoid evaluating this at each function call
-
 		// We *want* to filter the home url in these cases
-		if ( empty( $white_list ) ) {
+		if ( empty( $this->white_list ) ) {
 			// On Windows get_theme_root() mixes / and \
 			// We want only \ for the comparison with debug_backtrace
 			$theme_root = get_theme_root();
@@ -236,7 +276,7 @@ class PLL_Frontend_Filters_Links extends PLL_Filters_Links {
 			 *
 			 * @param array $args
 			 */
-			$white_list = apply_filters(
+			$this->white_list = apply_filters(
 				'pll_home_url_white_list',
 				array(
 					array( 'file' => $theme_root ),
@@ -248,7 +288,7 @@ class PLL_Frontend_Filters_Links extends PLL_Filters_Links {
 		}
 
 		// We don't want to filter the home url in these cases
-		if ( empty( $black_list ) ) {
+		if ( empty( $this->black_list ) ) {
 
 			/**
 			 * Filter the black list of the Polylang 'home_url' filter
@@ -260,7 +300,7 @@ class PLL_Frontend_Filters_Links extends PLL_Filters_Links {
 			 *
 			 * @param array $args
 			 */
-			$black_list = apply_filters(
+			$this->black_list = apply_filters(
 				'pll_home_url_black_list',
 				array(
 					array( 'file' => 'searchform.php' ), // Since WP 3.6 searchform.php is passed through get_search_form
@@ -269,18 +309,18 @@ class PLL_Frontend_Filters_Links extends PLL_Filters_Links {
 			);
 		}
 
-		$traces = version_compare( PHP_VERSION, '5.2.5', '>=' ) ? debug_backtrace( false ) : debug_backtrace();
+		$traces = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
 		unset( $traces[0], $traces[1] ); // We don't need the last 2 calls: this function + call_user_func_array (or apply_filters on PHP7+)
 
 		foreach ( $traces as $trace ) {
 			// Black list first
-			foreach ( $black_list as $v ) {
+			foreach ( $this->black_list as $v ) {
 				if ( ( isset( $trace['file'], $v['file'] ) && false !== strpos( $trace['file'], $v['file'] ) ) || ( isset( $trace['function'], $v['function'] ) && $trace['function'] == $v['function'] ) ) {
 					return $url;
 				}
 			}
 
-			foreach ( $white_list as $v ) {
+			foreach ( $this->white_list as $v ) {
 				if ( ( isset( $trace['function'], $v['function'] ) && $trace['function'] == $v['function'] ) ||
 					( isset( $trace['file'], $v['file'] ) && false !== strpos( $trace['file'], $v['file'] ) && in_array( $trace['function'], array( 'home_url', 'get_home_url', 'bloginfo', 'get_bloginfo' ) ) ) ) {
 					$ok = true;
@@ -323,7 +363,7 @@ class PLL_Frontend_Filters_Links extends PLL_Filters_Links {
 		}
 
 		// Don't redirect mysite.com/?attachment_id= to mysite.com/en/?attachment_id=
-		if ( 1 == $this->options['force_lang'] && is_attachment() && isset( $_GET['attachment_id'] ) ) {
+		if ( 1 == $this->options['force_lang'] && is_attachment() && isset( $_GET['attachment_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			return;
 		}
 
@@ -334,7 +374,7 @@ class PLL_Frontend_Filters_Links extends PLL_Filters_Links {
 		}
 
 		if ( empty( $requested_url ) ) {
-			$requested_url = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+			$requested_url = pll_get_requested_url();
 		}
 
 		if ( is_single() || is_page() ) {
@@ -345,7 +385,7 @@ class PLL_Frontend_Filters_Links extends PLL_Filters_Links {
 
 		elseif ( is_category() || is_tag() || is_tax() ) {
 			$obj = $wp_query->get_queried_object();
-			if ( $this->model->is_translated_taxonomy( $obj->taxonomy ) ) {
+			if ( ! empty( $obj ) && $this->model->is_translated_taxonomy( $obj->taxonomy ) ) {
 				$language = $this->model->term->get_language( (int) $obj->term_id );
 			}
 		}
@@ -362,11 +402,12 @@ class PLL_Frontend_Filters_Links extends PLL_Filters_Links {
 		}
 
 		if ( 3 === $this->options['force_lang'] ) {
+			$requested_host = wp_parse_url( $requested_url, PHP_URL_HOST );
 			foreach ( $this->options['domains'] as $lang => $domain ) {
-				$host = parse_url( $domain, PHP_URL_HOST );
-				if ( 'www.' . $_SERVER['HTTP_HOST'] === $host || 'www.' . $host === $_SERVER['HTTP_HOST'] ) {
+				$host = wp_parse_url( $domain, PHP_URL_HOST );
+				if ( 'www.' . $requested_host === $host || 'www.' . $host === $requested_host ) {
 					$language = $this->model->get_language( $lang );
-					$redirect_url = str_replace( '://' . $_SERVER['HTTP_HOST'], '://' . $host, $requested_url );
+					$redirect_url = str_replace( '://' . $requested_host, '://' . $host, $requested_url );
 				}
 			}
 		}
@@ -398,7 +439,7 @@ class PLL_Frontend_Filters_Links extends PLL_Filters_Links {
 
 		// The language is not correctly set so let's redirect to the correct url for this object
 		if ( $do_redirect && $redirect_url && $requested_url != $redirect_url ) {
-			wp_redirect( $redirect_url, 301, POLYLANG );
+			wp_safe_redirect( $redirect_url, 301, POLYLANG );
 			exit;
 		}
 

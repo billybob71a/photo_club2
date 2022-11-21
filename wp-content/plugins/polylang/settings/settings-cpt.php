@@ -1,4 +1,7 @@
 <?php
+/**
+ * @package Polylang
+ */
 
 /**
  * Settings class for custom post types and taxonomies language and translation management
@@ -6,7 +9,40 @@
  * @since 1.8
  */
 class PLL_Settings_CPT extends PLL_Settings_Module {
-	private $post_types, $disabled_post_types, $taxonomies, $disabled_taxonomies;
+	/**
+	 * Stores the display order priority.
+	 *
+	 * @var int
+	 */
+	public $priority = 40;
+
+	/**
+	 * The list of post types to show in the form.
+	 *
+	 * @var array
+	 */
+	private $post_types;
+
+	/**
+	 * The list of post types to disable in the form.
+	 *
+	 * @var array
+	 */
+	private $disabled_post_types;
+
+	/**
+	 * The list of taxonomies to show in the form.
+	 *
+	 * @var array
+	 */
+	private $taxonomies;
+
+	/**
+	 * The list of taxonomies to disable in the form.
+	 *
+	 * @var array
+	 */
+	private $disabled_taxonomies;
 
 	/**
 	 * Constructor
@@ -21,7 +57,7 @@ class PLL_Settings_CPT extends PLL_Settings_Module {
 			array(
 				'module'      => 'cpt',
 				'title'       => __( 'Custom post types and Taxonomies', 'polylang' ),
-				'description' => __( 'Activate the languages and translations management for the custom post types and taxonomies.', 'polylang' ),
+				'description' => __( 'Activate languages and translations management for the custom post types and the taxonomies.', 'polylang' ),
 			)
 		);
 
@@ -29,8 +65,8 @@ class PLL_Settings_CPT extends PLL_Settings_Module {
 		/** This filter is documented in include/model.php */
 		$this->post_types = array_unique( apply_filters( 'pll_get_post_types', $public_post_types, true ) );
 
-		$programmatically_active_post_types = array_unique( apply_filters( 'pll_get_post_types', array(), false ) );
 		/** This filter is documented in include/model.php */
+		$programmatically_active_post_types = array_unique( apply_filters( 'pll_get_post_types', array(), false ) );
 		$this->disabled_post_types = array_intersect( $programmatically_active_post_types, $this->post_types );
 
 		$public_taxonomies = get_taxonomies( array( 'public' => true, '_builtin' => false ) );
@@ -38,8 +74,8 @@ class PLL_Settings_CPT extends PLL_Settings_Module {
 		/** This filter is documented in include/model.php */
 		$this->taxonomies = array_unique( apply_filters( 'pll_get_taxonomies', $public_taxonomies, true ) );
 
-		$programmatically_active_taxonomies = array_unique( apply_filters( 'pll_get_taxonomies', array(), false ) );
 		/** This filter is documented in include/model.php */
+		$programmatically_active_taxonomies = array_unique( apply_filters( 'pll_get_taxonomies', array(), false ) );
 		$this->disabled_taxonomies = array_intersect( $programmatically_active_taxonomies, $this->taxonomies );
 	}
 
@@ -71,8 +107,8 @@ class PLL_Settings_CPT extends PLL_Settings_Module {
 						printf(
 							'<li><label><input name="post_types[%s]" type="checkbox" value="1" %s %s/> %s</label></li>',
 							esc_attr( $post_type ),
-							in_array( $post_type, $this->options['post_types'] ) || $disabled ? 'checked="checked"' : '',
-							$disabled ? 'disabled="disabled"' : '',
+							checked( in_array( $post_type, $this->options['post_types'] ) || $disabled, true, false ),
+							disabled( $disabled, true, false ),
 							esc_html( $pt->labels->name )
 						);
 					}
@@ -95,8 +131,8 @@ class PLL_Settings_CPT extends PLL_Settings_Module {
 						printf(
 							'<li><label><input name="taxonomies[%s]" type="checkbox" value="1" %s %s/> %s</label></li>',
 							esc_attr( $taxonomy ),
-							in_array( $taxonomy, $this->options['taxonomies'] ) || $disabled ? 'checked="checked"' : '',
-							$disabled ? 'disabled="disabled"' : '',
+							checked( in_array( $taxonomy, $this->options['taxonomies'] ) || $disabled, true, false ),
+							disabled( $disabled, true, false ),
 							esc_html( $tax->labels->name )
 						);
 					}
@@ -116,6 +152,8 @@ class PLL_Settings_CPT extends PLL_Settings_Module {
 	 * @param array $options
 	 */
 	protected function update( $options ) {
+		$newoptions = array();
+
 		foreach ( array( 'post_types', 'taxonomies' ) as $key ) {
 			$newoptions[ $key ] = empty( $options[ $key ] ) ? array() : array_keys( $options[ $key ], 1 );
 		}

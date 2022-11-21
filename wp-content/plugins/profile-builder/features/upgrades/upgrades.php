@@ -1,4 +1,6 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 include_once ( WPPB_PLUGIN_DIR.'/features/upgrades/upgrades-functions.php' );
 
 /**

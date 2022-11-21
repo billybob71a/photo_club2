@@ -3,7 +3,7 @@
 Plugin Name: Profile Builder
 Plugin URI: https://www.cozmoslabs.com/wordpress-profile-builder/
 Description: Login, registration and edit profile shortcodes for the front-end. Also you can choose what fields should be displayed or add new (custom) ones both in the front-end and in the dashboard.
-Version: 2.8.9
+Version: 3.2.9
 Author: Cozmoslabs
 Author URI: https://www.cozmoslabs.com/
 Text Domain: profile-builder
@@ -25,6 +25,8 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 */
+
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 /* Check if another version of Profile Builder is activated, to prevent fatal errors*/
 function wppb_free_plugin_init() {
@@ -55,19 +57,7 @@ function wppb_free_plugin_init() {
          */
         function wppb_return_bytes($val)
         {
-            $val = trim($val);
-
-            switch (strtolower($val[strlen($val) - 1])) {
-                // The 'G' modifier is available since PHP 5.1.0
-                case 'g':
-                    $val = intval($val) * 1024;
-                case 'm':
-                    $val = intval($val) * 1024;
-                case 'k':
-                    $val = intval($val) * 1024;
-            }
-
-            return $val;
+            return wp_convert_hr_to_bytes($val);
         }
 
         /**
@@ -75,14 +65,10 @@ function wppb_free_plugin_init() {
          *
          *
          */
-        define('PROFILE_BUILDER_VERSION', '2.8.9' );
+        define('PROFILE_BUILDER_VERSION', '3.2.9' );
         define('WPPB_PLUGIN_DIR', plugin_dir_path(__FILE__));
         define('WPPB_PLUGIN_URL', plugin_dir_url(__FILE__));
         define('WPPB_PLUGIN_BASENAME', plugin_basename(__FILE__));
-        define('WPPB_SERVER_MAX_UPLOAD_SIZE_BYTE', apply_filters('wppb_server_max_upload_size_byte_constant', wppb_return_bytes(ini_get('upload_max_filesize'))));
-        define('WPPB_SERVER_MAX_UPLOAD_SIZE_MEGA', apply_filters('wppb_server_max_upload_size_mega_constant', ini_get('upload_max_filesize')));
-        define('WPPB_SERVER_MAX_POST_SIZE_BYTE', apply_filters('wppb_server_max_post_size_byte_constant', wppb_return_bytes(ini_get('post_max_size'))));
-        define('WPPB_SERVER_MAX_POST_SIZE_MEGA', apply_filters('wppb_server_max_post_size_mega_constant', ini_get('post_max_size')));
         define('WPPB_TRANSLATE_DIR', WPPB_PLUGIN_DIR . '/translation');
         define('WPPB_TRANSLATE_DOMAIN', 'profile-builder');
 
@@ -131,14 +117,14 @@ function wppb_free_plugin_init() {
         include_once(WPPB_PLUGIN_DIR . '/admin/private-website.php');
         include_once(WPPB_PLUGIN_DIR . '/admin/manage-fields.php');
         include_once(WPPB_PLUGIN_DIR . '/admin/pms-cross-promotion.php');
-        include_once(WPPB_PLUGIN_DIR . '/admin/feedback.php');
+        //include_once(WPPB_PLUGIN_DIR . '/admin/feedback.php');//removed in version 2.9.7
         include_once(WPPB_PLUGIN_DIR . '/features/email-confirmation/email-confirmation.php');
         include_once(WPPB_PLUGIN_DIR . '/features/email-confirmation/class-email-confirmation.php');
         if (file_exists(WPPB_PLUGIN_DIR . '/features/admin-approval/admin-approval.php')) {
             include_once(WPPB_PLUGIN_DIR . '/features/admin-approval/admin-approval.php');
             include_once(WPPB_PLUGIN_DIR . '/features/admin-approval/class-admin-approval.php');
         }
-        if (file_exists(WPPB_PLUGIN_DIR . '/features/conditional-fields/conditional-fields.php')) {
+        if ( wppb_conditional_fields_exists() ) {
             include_once(WPPB_PLUGIN_DIR . '/features/conditional-fields/conditional-fields.php');
         }
         include_once(WPPB_PLUGIN_DIR . '/features/login-widget/login-widget.php');
@@ -181,6 +167,12 @@ function wppb_free_plugin_init() {
         /* added recaptcha and user role field since version 2.6.2 */
         include_once(WPPB_PLUGIN_DIR . '/front-end/default-fields/recaptcha/recaptcha.php'); //need to load this here for displaying reCAPTCHA on Login and Recover Password forms
 
+        //Elementor Content Restriction
+        global $content_restriction_activated;
+        if ( $content_restriction_activated == 'yes' && did_action( 'elementor/loaded' ) ) {
+            if( file_exists( WPPB_PLUGIN_DIR . 'features/content-restriction/class-elementor-content-restriction.php' ) )
+                include_once WPPB_PLUGIN_DIR . 'features/content-restriction/class-elementor-content-restriction.php';
+        }
 
         /**
          * Check for updates

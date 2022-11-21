@@ -1,4 +1,6 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 /*
 	wp_update_user only attempts to clear and reset cookies if it's updating the password.
 	The php function setcookie(), used in both the cookie-clearing and cookie-resetting functions, 
@@ -8,8 +10,8 @@
 /* set action to login user after password changed in edit profile */
 add_action( 'init', 'wppb_autologin_after_password_changed' );
 function wppb_autologin_after_password_changed(){
-    if( isset( $_POST['action'] ) && $_POST['action'] == 'edit_profile' ){
-        if( isset( $_POST['passw1'] ) && !empty( $_POST['passw1'] ) && !empty( $_POST['form_name'] ) ){
+    if( isset( $_POST['action'] ) && $_POST['action'] === 'edit_profile' ){
+        if( isset( $_POST['passw1'] ) && !empty( $_POST['passw1'] ) && !empty( $_POST['form_name'] ) && isset(  $_POST['edit_profile_'. $_POST['form_name'] .'_nonce_field'] ) && wp_verify_nonce( $_POST['edit_profile_'. $_POST['form_name'] .'_nonce_field'], 'wppb_verify_form_submission' ) ){
 
             /* all the error checking filters are defined in each field file so we need them here */
             if ( file_exists ( WPPB_PLUGIN_DIR.'/front-end/default-fields/default-fields.php' ) )
@@ -21,10 +23,18 @@ function wppb_autologin_after_password_changed(){
             $form_fields = apply_filters( 'wppb_change_form_fields', get_option( 'wppb_manage_fields' ), array( 'form_type'=> 'edit_profile', 'form_fields' => array(), 'form_name' => sanitize_text_field( $_POST['form_name'] ), 'role' => '', 'ID' => Profile_Builder_Form_Creator::wppb_get_form_id_from_form_name( sanitize_text_field( $_POST['form_name'] ), 'edit_profile' ), 'context' => 'edit_profile_auto_login_after_password_change' ) );
             if( !empty( $form_fields ) ){
 
+                $edited_user_id = get_current_user_id();
+                if( ( !is_multisite() && current_user_can( 'edit_users' ) ) || ( is_multisite() && current_user_can( 'manage_network' ) ) ) {
+                    if( isset( $_GET['edit_user'] ) && ! empty( $_GET['edit_user'] ) ){
+                        $edited_user_id = absint( $_GET['edit_user'] );
+                    }
+                }   
+                
                 /* check for errors in the form through the filters */
                 $output_field_errors = array();
                 foreach( $form_fields as $field ){
-                    $error_for_field = apply_filters( 'wppb_check_form_field_'.Wordpress_Creation_Kit_PB::wck_generate_slug( $field['field'] ), '', $field, $_POST, 'edit_profile' );
+                    //this is not perfect because we don't know the role attribute for the form here so we send it as '' in the filter, but as of v 2.9.0 it is not needed anywhere so we're good
+                    $error_for_field = apply_filters( 'wppb_check_form_field_'.Wordpress_Creation_Kit_PB::wck_generate_slug( $field['field'] ), '', $field, $_POST, 'edit_profile', '', $edited_user_id );
                     if( !empty( $error_for_field ) )
                         $output_field_errors[$field['id']] = '<span class="wppb-form-error">' . $error_for_field  . '</span>';
                 }

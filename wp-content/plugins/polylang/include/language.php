@@ -1,4 +1,7 @@
 <?php
+/**
+ * @package Polylang
+ */
 
 /**
  * A language object is made of two terms in 'language' and 'term_language' taxonomies
@@ -81,7 +84,7 @@ class PLL_Language {
 
 			$this->mo_id = PLL_MO::get_id( $this );
 
-			include PLL_SETTINGS_INC . '/languages.php';
+			$languages = include POLYLANG_DIR . '/settings/languages.php';
 			$this->w3c = isset( $languages[ $this->locale ]['w3c'] ) ? $languages[ $this->locale ]['w3c'] : str_replace( '_', '-', $this->locale );
 			if ( isset( $languages[ $this->locale ]['facebook'] ) ) {
 				$this->facebook = $languages[ $this->locale ]['facebook'];
@@ -90,16 +93,23 @@ class PLL_Language {
 	}
 
 	/**
-	 * Sets flag_url and flag properties
+	 * Get the flag informations
+	 * 'url'    => Flag url
+	 * 'src'    => Optional, src attribute value if different of the url, for example if base64 encoded
+	 * 'width'  => Optional, flag width in pixels
+	 * 'height' => Optional, flag height in pixels
 	 *
-	 * @since 1.2
+	 * @since 2.6
+	 *
+	 * @param string $code Flag code.
+	 * @return array Flag informations.
 	 */
-	public function set_flag() {
-		$flags['flag']['url'] = '';
+	public static function get_flag_informations( $code ) {
+		$flag = array( 'url' => '' );
 
 		// Polylang builtin flags
-		if ( ! empty( $this->flag_code ) && file_exists( POLYLANG_DIR . ( $file = '/flags/' . $this->flag_code . '.png' ) ) ) {
-			$flags['flag']['url'] = $_url = plugins_url( $file, POLYLANG_FILE );
+		if ( ! empty( $code ) && file_exists( POLYLANG_DIR . ( $file = '/flags/' . $code . '.png' ) ) ) {
+			$flag['url'] = $_url = plugins_url( $file, POLYLANG_FILE );
 		}
 
 		/**
@@ -114,18 +124,31 @@ class PLL_Language {
 		 * @param array  $flag Information about the flag
 		 * @param string $code Flag code
 		 */
-		$flags['flag'] = apply_filters( 'pll_flag', $flags['flag'], $this->flag_code );
+		$flag = apply_filters( 'pll_flag', $flag, $code );
 
-		if ( empty( $flags['flag']['src'] ) ) {
+		if ( empty( $flag['src'] ) ) {
 			// If using predefined flags and base64 encoded flags are preferred
-			if ( $flags['flag']['url'] === $_url && ( ! defined( 'PLL_ENCODED_FLAGS' ) || PLL_ENCODED_FLAGS ) ) {
-				$flags['flag']['src'] = 'data:image/png;base64,' . base64_encode( file_get_contents( POLYLANG_DIR . $file ) );
+			if ( isset( $_url ) && $flag['url'] === $_url && ( ! defined( 'PLL_ENCODED_FLAGS' ) || PLL_ENCODED_FLAGS ) ) {
+				list( $flag['width'], $flag['height'] ) = getimagesize( POLYLANG_DIR . $file );
+				$file_contents = file_get_contents( POLYLANG_DIR . $file ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+				$flag['src'] = 'data:image/png;base64,' . base64_encode( $file_contents ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 			} else {
-				$flags['flag']['src'] = esc_url( set_url_scheme( $flags['flag']['url'], 'relative' ) );
+				$flag['src'] = esc_url( set_url_scheme( $flag['url'], 'relative' ) );
 			}
 		}
 
-		$flags['flag']['url'] = esc_url_raw( $flags['flag']['url'] );
+		$flag['url'] = esc_url_raw( $flag['url'] );
+
+		return $flag;
+	}
+
+	/**
+	 * Sets flag_url and flag properties
+	 *
+	 * @since 1.2
+	 */
+	public function set_flag() {
+		$flags = array( 'flag' => self::get_flag_informations( $this->flag_code ) );
 
 		// Custom flags ?
 		$directories = array(
@@ -136,7 +159,7 @@ class PLL_Language {
 
 		foreach ( $directories as $dir ) {
 			if ( file_exists( $file = "{$dir}/{$this->locale}.png" ) || file_exists( $file = "{$dir}/{$this->locale}.jpg" ) || file_exists( $file = "{$dir}/{$this->locale}.svg" ) ) {
-				$flags['custom_flag']['url'] = site_url( '/' . str_replace( ABSPATH, '', $file ) );
+				$flags['custom_flag']['url'] = content_url( '/' . str_replace( WP_CONTENT_DIR, '', $file ) );
 				break;
 			}
 		}
@@ -190,35 +213,71 @@ class PLL_Language {
 			 */
 			$this->{$key} = apply_filters(
 				'pll_get_flag',
-				empty( $flag['src'] ) ? '' : sprintf(
-					'<img src="%s" title="%s" alt="%s"%s%s />',
-					$flag['src'],
-					esc_attr( $title ),
-					esc_attr( $this->name ),
-					empty( $flag['width'] ) ? '' : sprintf( ' width="%s"', (int) $flag['width'] ),
-					empty( $flag['height'] ) ? '' : sprintf( ' height="%s"', (int) $flag['height'] )
-				),
+				self::get_flag_html( $flag, $title, $this->name ),
 				$this->slug
 			);
 		}
 	}
 
 	/**
-	 * Replace flag by custom flag
-	 * Takes care of url scheme
+	 * Get HTML code for flag
 	 *
-	 * @since 1.7
+	 * @since 2.7
+	 *
+	 * @param array  $flag  flag properties: src, width and height
+	 * @param string $title optional title attribute
+	 * @param string $alt   optional alt attribute
 	 */
-	public function set_custom_flag() {
-		// Overwrite with custom flags on frontend only
-		if ( ! empty( $this->custom_flag ) ) {
-			$this->flag = $this->custom_flag;
-			$this->flag_url = $this->custom_flag_url;
-			unset( $this->custom_flag, $this->custom_flag_url ); // hide this
+	public static function get_flag_html( $flag, $title = '', $alt = '' ) {
+		if ( empty( $flag['src'] ) ) {
+			return '';
 		}
 
-		// Set url scheme, also for default flags
-		$this->flag_url = set_url_scheme( $this->flag_url );
+		$title_attr  = empty( $title ) ? '' : sprintf( ' title="%s"', esc_attr( $title ) );
+		$alt_attr    = empty( $alt ) ? '' : sprintf( ' alt="%s"', esc_attr( $alt ) );
+		$width_attr  = empty( $flag['width'] ) ? '' : sprintf( ' width="%s"', (int) $flag['width'] );
+		$height_attr = empty( $flag['height'] ) ? '' : sprintf( ' height="%s"', (int) $flag['height'] );
+
+		$style = '';
+		$sizes = array_intersect_key( $flag, array_flip( array( 'width', 'height' ) ) );
+
+		if ( ! empty( $sizes ) ) {
+			array_walk(
+				$sizes,
+				function ( &$value, $key ) {
+					$value = sprintf( '%s: %dpx;', esc_attr( $key ), (int) $value );
+				}
+			);
+			$style = sprintf( ' style="%s"', implode( ' ', $sizes ) );
+		}
+
+		return sprintf(
+			'<img src="%s"%s%s%s%s%s />',
+			$flag['src'],
+			$title_attr,
+			$alt_attr,
+			$width_attr,
+			$height_attr,
+			$style
+		);
+	}
+
+	/**
+	 * Returns the html of the custom flag if any, or the default flag otherwise.
+	 *
+	 * @since 2.8
+	 */
+	public function get_display_flag() {
+		return empty( $this->custom_flag ) ? $this->flag : $this->custom_flag;
+	}
+
+	/**
+	 * Returns the url of the custom flag if any, or the default flag otherwise.
+	 *
+	 * @since 2.8
+	 */
+	public function get_display_flag_url() {
+		return empty( $this->custom_flag_url ) ? $this->flag_url : $this->custom_flag_url;
 	}
 
 	/**
@@ -245,14 +304,21 @@ class PLL_Language {
 	}
 
 	/**
-	 * Set home_url scheme
-	 * this can't be cached across pages
+	 * Sets the scheme of the home url and the flag urls
 	 *
-	 * @since 1.6.4
+	 * This can't be cached across pages.
+	 *
+	 * @since 2.8
 	 */
-	public function set_home_url_scheme() {
+	public function set_url_scheme() {
 		$this->home_url = set_url_scheme( $this->home_url );
 		$this->search_url = set_url_scheme( $this->search_url );
+
+		// Set url scheme, also for the flags.
+		$this->flag_url = set_url_scheme( $this->flag_url );
+		if ( ! empty( $this->custom_flag_url ) ) {
+			$this->custom_flag_url = set_url_scheme( $this->custom_flag_url );
+		}
 	}
 
 	/**

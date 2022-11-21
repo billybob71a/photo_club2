@@ -1,4 +1,6 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 /**
  * Functions Load
  *
@@ -40,7 +42,7 @@ function wppb_add_plugin_stylesheet() {
 	if ( ( file_exists( WPPB_PLUGIN_DIR . '/assets/css/style-front-end.css' ) ) && ( isset( $wppb_generalSettings['extraFieldsLayout'] ) && ( $wppb_generalSettings['extraFieldsLayout'] == 'default' ) ) ){
 		wp_register_style( 'wppb_stylesheet', WPPB_PLUGIN_URL . 'assets/css/style-front-end.css', array(), PROFILE_BUILDER_VERSION );
 		wp_enqueue_style( 'wppb_stylesheet' );
-	}
+    }
 	if( is_rtl() ) {
 		if ( ( file_exists( WPPB_PLUGIN_DIR . '/assets/css/rtl.css' ) ) && ( isset( $wppb_generalSettings['extraFieldsLayout'] ) && ( $wppb_generalSettings['extraFieldsLayout'] == 'default' ) ) ){
 			wp_register_style( 'wppb_stylesheet_rtl', WPPB_PLUGIN_URL . 'assets/css/rtl.css', array(), PROFILE_BUILDER_VERSION );
@@ -73,28 +75,63 @@ function wppb_show_admin_bar($content){
 
 
 if(!function_exists('wppb_curpageurl')){
-	function wppb_curpageurl() {
-		$pageURL = 'http';
-		
-		if ((isset($_SERVER["HTTPS"])) && ($_SERVER["HTTPS"] == "on"))
-			$pageURL .= "s";
-			
-		$pageURL .= "://";
+	function wppb_curpageurl(){
+        $req_uri = $_SERVER['REQUEST_URI'];
 
-        if( strpos( $_SERVER["HTTP_HOST"], $_SERVER["SERVER_NAME"] ) !== false ){
-            $pageURL .=$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
-        }
-        else {
-            if ($_SERVER["SERVER_PORT"] != "80")
-                $pageURL .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . $_SERVER["REQUEST_URI"];
-            else
-                $pageURL .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
-        }
-		
-		if ( function_exists('apply_filters') ) $pageURL = apply_filters('wppb_curpageurl', $pageURL);
+        if( function_exists('wppb_get_abs_home') ) {
+            $home_path = trim(parse_url(wppb_get_abs_home(), PHP_URL_PATH), '/');
+            $home_path_regex = sprintf('|^%s|i', preg_quote($home_path, '|'));
 
-        return $pageURL;
-	}
+            // Trim path info from the end and the leading home path from the front.
+            $req_uri = ltrim($req_uri, '/');
+            $req_uri = preg_replace($home_path_regex, '', $req_uri);
+            $req_uri = trim(wppb_get_abs_home(), '/') . '/' . ltrim($req_uri, '/');
+        }
+
+        if ( function_exists('apply_filters') ) $req_uri = apply_filters('wppb_curpageurl', $req_uri);
+
+        return $req_uri;
+    }
+}
+
+/**
+ * Return absolute home url as stored in database, unfiltered.
+ *
+ * @return string
+ */
+if(!function_exists('wppb_get_abs_home')) {
+    function wppb_get_abs_home(){
+        global $wpdb;
+
+        // returns the unfiltered home_url by directly retrieving it from wp_options.
+        $absolute_home = (!is_multisite() && defined('WP_HOME')
+            ? WP_HOME
+            : (is_multisite() && !is_main_site()
+                ? (preg_match('/^(https)/', get_option('home')) === 1 ? 'https://'
+                    : 'http://') . $wpdb->get_var("	SELECT CONCAT(b.domain, b.path)
+                                                FROM {$wpdb->blogs} b
+                                                WHERE blog_id = {$wpdb->blogid}
+                                                LIMIT 1")
+
+                : $wpdb->get_var("	SELECT option_value
+                                                FROM {$wpdb->options}
+                                                WHERE option_name = 'home'
+                                                LIMIT 1"))
+        );
+
+        if (empty($absolute_home)) {
+            $absolute_home = get_option("siteurl");
+        }
+
+        // always return absolute_home based on the http or https version of the current page request. This means no more redirects.
+        if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
+            $absolute_home = str_replace('http://', 'https://', $absolute_home);
+        } else {
+            $absolute_home = str_replace('https://', 'http://', $absolute_home);
+        }
+
+        return $absolute_home;
+    }
 }
 
 
@@ -115,6 +152,13 @@ if ( is_admin() ){
 		add_action( 'personal_options_update', 'save_profile_extra_fields_in_admin', 10 );
 		add_action( 'edit_user_profile_update', 'save_profile_extra_fields_in_admin', 10 );
 	}
+
+	/* we need to include the fields here for conditional fields when they run through ajax, the extra-fields were already included above for backend forms */
+    $wppb_generalSettings = get_option( 'wppb_general_settings' );
+	if( wp_doing_ajax() && wppb_conditional_fields_exists() && isset( $wppb_generalSettings['conditional_fields_ajax'] ) && $wppb_generalSettings['conditional_fields_ajax'] === 'yes' ) {
+        if (file_exists(WPPB_PLUGIN_DIR . '/front-end/default-fields/default-fields.php'))
+            require_once(WPPB_PLUGIN_DIR . '/front-end/default-fields/default-fields.php');
+    }
 
 }else if ( !is_admin() ){
 	// include the stylesheet
@@ -166,15 +210,13 @@ function wppb_mail( $to, $subject, $message, $message_from = null, $context = nu
 
 	$message = apply_filters( 'wppb_email_message', $message, $context );
 
+	$message = wppb_maybe_add_propper_html_tags_to_email( $message );
+
 	do_action( 'wppb_before_sending_email', $to, $subject, $message, $send_email, $context );
 	
 	if ( $send_email ) {
 		//we add this filter to enable html encoding
-		if ( version_compare( phpversion(), '5.4.0', '<' ) ) {
-			add_filter('wp_mail_content_type', create_function('', 'return "text/html"; '));
-		}else{
-			add_filter('wp_mail_content_type', function( $content_type ) { return 'text/html'; } );
-		}
+		add_filter('wp_mail_content_type', 'wppb_html_content_type' );
 
 		$atts = apply_filters( 'wppb_mail', compact( 'to', 'subject', 'message', 'headers' ), $context );
 
@@ -186,6 +228,26 @@ function wppb_mail( $to, $subject, $message, $message_from = null, $context = nu
 	}
 
 	return '';
+}
+
+/* return text/html as email content type. used in  wp_mail_content_type filter */
+function wppb_html_content_type( $content_type ){
+    return 'text/html';
+}
+
+/*
+ * function that adds proper html tags to a html email message if they are missing
+ */
+function wppb_maybe_add_propper_html_tags_to_email( $message ){
+
+    //check if we have html content
+    if( $message !== wp_strip_all_tags( $message ) ){
+        if( strpos( html_entity_decode( $message ), '<html' ) === false && strpos( html_entity_decode( $message ), '<body' ) === false ){
+            $message = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head><body>'. $message . '</body></html>';
+        }
+    }
+
+    return $message;
 }
 
 function wppb_activate_account_check(){
@@ -203,6 +265,7 @@ function wppb_activate_account_check(){
 
 		}elseif ( strpos( $post->post_content, '[wppb-register' ) === false ){
 			//no activation page was selected, and the sent link pointed to the home url
+            nocache_headers();
 			wp_redirect( apply_filters( 'wppb_activatate_account_redirect_url', WPPB_PLUGIN_URL.'assets/misc/fallback-page.php?activation_key='.urlencode( $activation_key ).'&site_name='.urlencode( get_bloginfo( 'name' ) ).'&site_url='.urlencode( get_bloginfo( 'url' ) ).'&message='.urlencode( $activation_message = wppb_activate_signup( $activation_key ) ), $activation_key, $activation_message ) );
 			exit;
 		}
@@ -283,7 +346,7 @@ function wppb_print_cpt_script( $hook ){
         ( $hook == 'profile-builder_page_user-email-customizer') ||
         ( $hook == 'profile-builder_page_profile-builder-content_restriction' ) ||
         ( strpos( $hook, 'profile-builder_page_' ) === 0 ) ||
-        ( $hook == 'edit.php' && ( isset( $_GET['post_type'] ) && $_GET['post_type'] == 'wppb-roles-editor' ) ) ||
+        ( $hook == 'edit.php' && ( isset( $_GET['post_type'] ) && $_GET['post_type'] === 'wppb-roles-editor' ) ) ||
 		( $hook == 'admin_page_profile-builder-pms-promo') ||
 		( $hook == 'admin_page_profile-builder-private-website') ) {
 			wp_enqueue_style( 'wppb-back-end-style', WPPB_PLUGIN_URL . 'assets/css/style-back-end.css', false, PROFILE_BUILDER_VERSION );
@@ -346,6 +409,10 @@ function wppb_changeDefaultAvatar( $avatar, $id_or_email, $size, $default, $alt 
 	/* Get user info. */
 	if(is_object($id_or_email)){
 		$my_user_id = $id_or_email->user_id;
+
+		if ($id_or_email instanceof WP_User){
+            $my_user_id = $id_or_email->ID;
+		}
 
 	}elseif(is_numeric($id_or_email)){
 		$my_user_id = $id_or_email;
@@ -411,6 +478,84 @@ function wppb_changeDefaultAvatar( $avatar, $id_or_email, $size, $default, $alt 
 	return $avatar;
 }
 add_filter( 'get_avatar', 'wppb_changeDefaultAvatar', 21, 5 );
+
+
+//the function used to overwrite the avatar across the wp installation
+function wppb_changeDefaultAvatarUrl( $url, $id_or_email, $args ){
+	/* Get user info. */
+	if(is_object($id_or_email)){
+		$my_user_id = $id_or_email->user_id;
+
+		if ($id_or_email instanceof WP_User){
+			$my_user_id = $id_or_email->ID;
+		}
+
+	}elseif(is_numeric($id_or_email)){
+		$my_user_id = $id_or_email;
+
+	}elseif(!is_integer($id_or_email)){
+		$user_info = get_user_by( 'email', $id_or_email );
+		$my_user_id = ( is_object( $user_info ) ? $user_info->ID : '' );
+	}else
+		$my_user_id = $id_or_email;
+
+	$wppb_manage_fields = get_option( 'wppb_manage_fields', 'not_found' );
+	if ( $wppb_manage_fields != 'not_found' ){
+		foreach( $wppb_manage_fields as $value ){
+			if ( $value['field'] == 'Avatar'){
+				$avatar_field = $value;
+			}
+		}
+	}
+
+	/* for multisite if we don't have an avatar try to get it from the main blog */
+	if( is_multisite() && empty( $avatar_field ) ){
+		switch_to_blog(1);
+		$wppb_switched_blog = true;
+		$wppb_manage_fields = get_option( 'wppb_manage_fields', 'not_found' );
+		if ( $wppb_manage_fields != 'not_found' ){
+			foreach( $wppb_manage_fields as $value ){
+				if ( $value['field'] == 'Avatar'){
+					$avatar_field = $value;
+				}
+			}
+		}
+	}
+
+	$avatar_url = $url;
+
+	if ( !empty( $avatar_field ) ){
+
+		$customUserAvatar = get_user_meta( $my_user_id, Wordpress_Creation_Kit_PB::wck_generate_slug( $avatar_field['meta-name'] ), true );
+		if( !empty( $customUserAvatar ) ){
+			if( is_numeric( $customUserAvatar ) ){
+				$img_attr = wp_get_attachment_image_src( $customUserAvatar, 'wppb-avatar-size-'.$args['size'] );
+				if( $img_attr[3] === false ){
+					$img_attr = wp_get_attachment_image_src( $customUserAvatar, 'thumbnail' );
+					$avatar_url = $img_attr[0];
+				}
+				else
+					$avatar_url = $img_attr[0];;
+			}
+			else {
+				$customUserAvatar = get_user_meta($my_user_id, 'resized_avatar_' . $avatar_field['id'], true);
+				$customUserAvatarRelativePath = get_user_meta($my_user_id, 'resized_avatar_' . $avatar_field['id'] . '_relative_path', true);
+
+				if ((($customUserAvatar != '') || ($customUserAvatar != null)) && file_exists($customUserAvatarRelativePath)) {
+					$avatar_url = $customUserAvatar;
+				}
+			}
+		}
+
+	}
+
+	/* if we switched the blog restore it */
+	if( is_multisite() && !empty( $wppb_switched_blog ) && $wppb_switched_blog )
+		restore_current_blog();
+
+	return $avatar_url;
+}
+add_filter( 'get_avatar_url', 'wppb_changeDefaultAvatarUrl', 21, 5 );
 
 
 //the function used to resize the avatar image; the new function uses a user ID as parameter to make pages load faster
@@ -553,7 +698,7 @@ add_action('admin_print_styles-users_page_ProfileBuilderOptionsAndSettings', 'wp
 function wppb_user_meta_exists( $id, $meta_name ){
 	global $wpdb;
 	
-	return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->usermeta WHERE user_id = %d AND meta_key = %s", $id, $meta_name ) );
+	return apply_filters( 'wppb_user_meta_exists_meta_name', $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->usermeta WHERE user_id = %d AND meta_key = %s", $id, $meta_name ) ), $id, $meta_name );
 }
 
 
@@ -631,7 +776,7 @@ function wppb_password_strength_description() {
 
 	if( ! empty( $wppb_generalSettings['minimum_password_strength'] ) ) {
 		$password_strength_text = array( 'short' => __( 'Very Weak', 'profile-builder' ), 'bad' => __( 'Weak', 'profile-builder' ), 'good' => __( 'Medium', 'profile-builder' ), 'strong' => __( 'Strong', 'profile-builder' ) );
-		$password_strength_description = '<br>'. sprintf( __( 'The password must have a minimum strength of %s.', 'profile-builder' ), $password_strength_text[$wppb_generalSettings['minimum_password_strength']] );
+		$password_strength_description = '<br>'. sprintf( __( 'The password must have a minimum strength of %s', 'profile-builder' ), $password_strength_text[$wppb_generalSettings['minimum_password_strength']] );
 
 		return $password_strength_description;
 	} else {
@@ -760,7 +905,31 @@ function wppb_phone_field_error( $field_title = '' ) {
 
 /* Create a wrapper function for get_query_var */
 function wppb_get_query_var( $varname ){
+    //if we want the userlisting on front page ( is_front_page() ) apparently the way we register query vars does not work so we will just use a simple GET var
+    if($varname === 'username' && !get_query_var( $varname ) && isset($_GET['wppb_username'])){
+        return apply_filters( 'wppb_get_query_var_'.$varname, sanitize_user( $_GET['wppb_username'] ) );
+    }
+
     return apply_filters( 'wppb_get_query_var_'.$varname, get_query_var( $varname ) );
+}
+
+/** @param string|array $key   Query key or keys to remove.
+ */
+function wppb_remove_query_arg( $key, $url = false ){
+    $striped_url = remove_query_arg( $key, $url);
+
+    //treat page key on frontpage case where it is transformed into a pretty permalink
+    if( ( is_array($key) && in_array('wppb_page', $key) ) || ( !is_array($key) && 'wppb_page' === $key ) ){
+        $striped_url = preg_replace( '/\/'.wppb_get_users_pagination_slug().'\/\d+\//', '/', $striped_url );
+        $striped_url = preg_replace( '/\/'.wppb_get_users_pagination_slug().'\//', '/', $striped_url );
+    }
+
+    return $striped_url;
+}
+
+//function that generates tha pagination slug for userlisting
+function wppb_get_users_pagination_slug(){
+    return apply_filters('wppb_users_pagination_slug', 'users-page');
 }
 
 /* Filter the "Save Changes" button text, to make it translatable */
@@ -822,6 +991,21 @@ function wppb_handle_meta_name( $meta_name ){
     return $meta_name;
 }
 
+/**
+ * Function that checks if a field type exists in a form
+ * @return bool
+ */
+function wppb_field_exists_in_form( $field_type, $form_args ){
+    if( !empty( $form_args ) && !empty( $form_args['form_fields'] ) ){
+        foreach( $form_args['form_fields'] as $field ){
+            if( $field['field'] === $field_type ){
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
 
 // change User Registered date and time according to timezone selected in WordPress settings
 function wppb_get_register_date() {
@@ -861,7 +1045,7 @@ function wppb_add_gmt_offset( $timestamp ) {
  * @param array $field Field description.
  * @return string $extra_attributes
  */
-function wppb_add_html_tag_required_to_fields( $extra_attributes, $field, $form_location ) {
+function wppb_add_html_tag_required_to_fields( $extra_attributes, $field, $form_location = '' ) {
 	if ( $field['field'] != "Checkbox" && isset( $field['required'] ) && $field['required'] == 'Yes' ){
 		if( !( ( $field['field'] == "Default - Password" || $field['field'] == "Default - Repeat Password" ) && $form_location == 'edit_profile' ) )
 			$extra_attributes .= ' required ';
@@ -950,7 +1134,7 @@ function wppb_manage_required_attribute() {
 		<?php
 	}
 }
-add_action( 'wp_footer', 'wppb_manage_required_attribute' );
+add_action( 'wp_footer', 'wppb_manage_required_attribute', 99 );
 
 function wpbb_specify_blog_details_on_signup_email( $message, $user_email, $user, $activation_key, $registration_page_url, $meta, $from_name, $context ){
 	$meta = unserialize($meta);
@@ -1098,7 +1282,7 @@ function wppb_get_role_name($role){
  * Functionality for Private Website start
  */
 add_action( 'template_redirect', 'wppb_private_website_functionality' );
-add_action( 'login_head', 'wppb_private_website_functionality', 1 );
+add_action( 'login_init', 'wppb_private_website_functionality', 1 );
 function wppb_private_website_functionality(){
 	$wppb_private_website_settings = get_option( 'wppb_private_website_settings', 'not_found' );
 	if( $wppb_private_website_settings != 'not_found' ){
@@ -1110,8 +1294,27 @@ function wppb_private_website_functionality(){
 				if( $pagenow === 'wp-login.php' && isset( $_GET['wppb_force_wp_login'] ) )
 					return;
 
+				//go through paths first if they are set
+                if( isset( $wppb_private_website_settings['allowed_paths'] ) && !empty( $wppb_private_website_settings['allowed_paths'] ) ){
+                    $allowed_paths = explode( "\r\n", $wppb_private_website_settings['allowed_paths'] );
+                    $parsed_url = wp_parse_url( wppb_curpageurl() );
+                    if( !empty( $parsed_url['path'] ) ) {
+                        $path = $parsed_url['path'];
 
-				global $post;
+                        foreach ($allowed_paths as $allowed_path) {
+                            if (strpos($allowed_path, '*') === false) {
+                                if (trim($path, "/") === trim($allowed_path, "/")) {
+                                    return;
+                                }
+                            } else {
+                                if (strpos(ltrim($path, "/"), trailingslashit(trim(str_replace('*', '', $allowed_path), "/"))) === 0) {
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+
 				if( isset( $wppb_private_website_settings['allowed_pages'] ) )
 					$allowed_pages = $wppb_private_website_settings['allowed_pages'];
 				else{
@@ -1135,14 +1338,44 @@ function wppb_private_website_functionality(){
 				$redirect_url = apply_filters( 'wppb_private_website_redirect_url', $redirect_url );
 				$allowed_pages = apply_filters( 'wppb_private_website_allowed_pages', $allowed_pages );
 
-				if( !in_array( $post->ID, $allowed_pages ) && ( $redirect_url !== wppb_curpageurl() ) ){
-					wp_safe_redirect( $redirect_url );
-					exit;
-				}
+                global $post;
+				if( !isset( $post ) || ( isset($post) && $post->ID == 0 ) ) {//added || ( isset($post) && $post->ID == 0 )  for a compatibility issue with BuddyPress where the ID was 0 for a page
+				    if( function_exists('url_to_postid') ) {
+                        $post_id = url_to_postid(wppb_curpageurl());//try to get the id from the actual url
+                    }else {
+                        $post_id = 0;
+                    }
+                }
+				else
+                    $post_id = $post->ID;
+
+                if( ( !in_array( $post_id, $allowed_pages ) && $redirect_url !== strtok( wppb_curpageurl(), '?' ) ) || is_search() ){
+                    nocache_headers();
+                    wp_safe_redirect( $redirect_url );
+                    exit;
+                }
 
 			}
 		}
 	}
+}
+
+//add classes on the body to know if we have enabled private website options
+add_filter( 'body_class', 'wppb_private_website_body_classes' );
+function wppb_private_website_body_classes( $classes ){
+    $wppb_private_website_settings = get_option( 'wppb_private_website_settings', 'not_found' );
+    if( $wppb_private_website_settings != 'not_found' ) {
+        if ($wppb_private_website_settings['private_website'] == 'yes') {
+            if (!is_user_logged_in()) {
+                $classes[] = 'wppb-private-website';
+                if ($wppb_private_website_settings['hide_menus'] == 'yes') {
+                    $classes[] = 'wppb-private-website-hide-menus';
+                }
+            }
+        }
+    }
+
+    return $classes;
 }
 
 
@@ -1171,12 +1404,15 @@ function wppb_disable_feed() {
 /**
  * Disable REST
  */
-add_filter('rest_enabled', 'wppb_disable_rest');
+//add_filter('rest_enabled', 'wppb_disable_rest'); // this is depracated
 add_filter('rest_jsonp_enabled', 'wppb_disable_rest');
 function wppb_disable_rest( $bool ){
 	$wppb_private_website_settings = get_option( 'wppb_private_website_settings', 'not_found' );
 	if( $wppb_private_website_settings != 'not_found' ) {
 		if ($wppb_private_website_settings['private_website'] == 'yes') {
+		    if ( isset( $wppb_private_website_settings[ 'disable_rest_api' ] ) && $wppb_private_website_settings[ 'disable_rest_api' ] == 'no' ) {
+		        return $bool;
+            }
 			if (!is_user_logged_in()) {
 				return false;
 			}
@@ -1185,6 +1421,27 @@ function wppb_disable_rest( $bool ){
 	return $bool;
 }
 
+/* I should test this to not create any problems */
+add_filter('rest_authentication_errors', 'wppb_disable_rest_api_authentication', 10, 1 );
+function wppb_disable_rest_api_authentication($result) {
+    if (!empty($result)) {
+        return $result;
+    }
+
+    $wppb_private_website_settings = get_option( 'wppb_private_website_settings', 'not_found' );
+    if( $wppb_private_website_settings != 'not_found' ) {
+        if ($wppb_private_website_settings['private_website'] == 'yes') {
+            if ( isset( $wppb_private_website_settings[ 'disable_rest_api' ] ) && $wppb_private_website_settings[ 'disable_rest_api' ] == 'no' ) {
+                return $result;
+            }
+            if (!is_user_logged_in() && $_SERVER['REQUEST_URI'] !== "/wp-json/jwt-auth/v1/token" && $_SERVER['REQUEST_URI'] !== "/wp-json/jwt-auth/v1/token/validate") {
+                return new WP_Error('rest_not_logged_in', __( 'You are not currently logged in.', 'profile-builder' ), array('status' => 401));
+            }
+        }
+    }
+
+    return $result;
+}
 
 /**
  * We can hide all menu items
@@ -1206,3 +1463,126 @@ function wppb_hide_menus( $menu ){
 /**
  * Functionality for Private Website end
  */
+
+/**
+ * Functionality GDPR compliance start
+ */
+
+//hook into the wp export compatibility
+add_filter( 'wp_privacy_personal_data_exporters', 'wppb_register_profile_builder_wp_exporter', 10 );
+function wppb_register_profile_builder_wp_exporter( $exporters ) {
+    $exporters['profile-builder'] = array(
+        'exporter_friendly_name' => __( 'Profile Builder' ),
+        'callback' => 'wppb_profile_builder_wp_exporter',
+    );
+    return $exporters;
+}
+/* function to add aour user meta to wp exporter */
+function wppb_profile_builder_wp_exporter( $email_address, $page = 1 ) {
+
+    $export_items = array();
+
+    $form_fields = get_option( 'wppb_manage_fields' );
+
+    if( !empty( $form_fields ) ) {
+        $user = get_user_by( 'email', $email_address );
+        if( $user ) {
+
+            $item_id = "user-meta-{$user->ID}";
+            $group_id = 'user-meta';
+            $group_label = __('User Meta');
+            $data = array();
+
+            $all_meta_for_user = get_user_meta( $user->ID );
+            if( !empty( $all_meta_for_user ) ) {
+                foreach ($form_fields as $form_field) {
+
+                    if (!empty($form_field['meta-name']) && strpos($form_field['field'], 'Default') === false) {
+                        $user_meta_value = $all_meta_for_user[$form_field['meta-name']][0];
+                        if( !empty( $user_meta_value ) ){
+
+
+                            $data[] = array(
+                                        'name' => $form_field['field-title'],
+                                        'value' => $user_meta_value
+                                      );
+                        }
+                    }
+                }
+
+                $export_items[] = array(
+                    'group_id' => $group_id,
+                    'group_label' => $group_label,
+                    'item_id' => $item_id,
+                    'data' => $data,
+                );
+
+            }
+        }
+    }
+
+
+    return array(
+        'data' => $export_items,
+        'done' => true,
+    );
+}
+
+/**
+ * Hook to delete a user through the GDPR Delete button
+ */
+add_action( 'template_redirect', 'wppb_gdpr_delete_user') ;
+function wppb_gdpr_delete_user() {
+
+    if( isset( $_GET['wppb_user'] ) && ! empty( $_GET['wppb_user'] ) ) {
+
+        $edited_user_id = get_current_user_id();
+        if ( ( !is_multisite() && current_user_can('edit_users') ) || ( is_multisite() && current_user_can('manage_network') ) ) {
+                $edited_user_id = absint($_GET['wppb_user']);
+        }
+
+        if (isset($_REQUEST['wppb_action']) && $_REQUEST['wppb_action'] == 'wppb_delete_user' && wp_verify_nonce($_REQUEST['wppb_nonce'], 'wppb-user-own-account-deletion') && isset($_REQUEST['wppb_user']) && $edited_user_id == $_REQUEST['wppb_user']) {
+            require_once(ABSPATH . 'wp-admin/includes/user.php');
+            $user = new WP_User( absint( $_REQUEST['wppb_user'] ) );
+
+            if (!empty($user->roles)) {
+                foreach ($user->roles as $role) {
+                    if ($role != 'administrator') {
+                        wp_delete_user( absint( $_REQUEST['wppb_user'] ) );
+                    }
+                }
+            }
+
+            $args = array('wppb_user', 'wppb_action', 'wppb_nonce');
+            nocache_headers();
+            wp_redirect(remove_query_arg($args));
+        }
+    }
+}
+
+
+/**
+ * Functionality GDPR compliance end
+ */
+
+/**
+ * Function that checks if Admin Approval is enabled
+ */
+function wppb_get_admin_approval_option_value(){
+    $wppb_general_settings = get_option( 'wppb_general_settings', 'not_found' );
+    if( file_exists(WPPB_PLUGIN_DIR . '/features/admin-approval/admin-approval.php') && $wppb_general_settings != 'not_found' && !empty( $wppb_general_settings['adminApproval'] ) &&  $wppb_general_settings['adminApproval'] === 'yes' )
+        return 'yes';
+    else
+        return 'no';
+}
+
+/**
+ * Function that checks if conditional fields feature exists
+ * @return bool
+ */
+function wppb_conditional_fields_exists(){
+    if (file_exists(WPPB_PLUGIN_DIR . '/features/conditional-fields/conditional-fields.php'))
+        return true;
+    else
+        return false;
+}

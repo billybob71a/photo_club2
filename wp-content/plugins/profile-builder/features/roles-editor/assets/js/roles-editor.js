@@ -7,6 +7,10 @@ var wppb_re_capabilities_to_delete = {};
 jQuery( document ).ready( function() {
     // Disable Enter key
     jQuery( window ).keydown( function( e ) {
+
+        if( typeof e.target.id !== "undefined" && e.target.id === 'post-search-input' )
+            return true;
+
         if( e.keyCode == 13 ) {
             event.preventDefault();
             return false;

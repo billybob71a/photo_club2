@@ -1,4 +1,5 @@
 <?php
+    if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
     /*
      * Function that returns a front-end logout message from the wppb-logout shortcode

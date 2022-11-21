@@ -1,4 +1,5 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 /* Verifies whether the current post or the post with the provided id has any restrictions in place */
 function wppb_content_restriction_is_post_restricted( $post_id = null ) {
@@ -106,7 +107,9 @@ function wppb_content_restriction_get_post_message( $post_id = 0 ) {
 
 /* Checks to see if the current post is restricted and if any redirect URLs are in place the user is redirected to the URL with the highest priority */
 function wppb_content_restriction_post_redirect() {
+    // try not to overwrite $post. Can have side-effects with other plugins.
     global $post;
+    $woo_shop_or_post = $post;
 
     if( function_exists( 'wc_get_page_id' ) ) {//redirect restriction for woocommerce shop page
         if ( !is_singular() && !( is_post_type_archive('product') || is_page(wc_get_page_id('shop')) ) ){
@@ -114,7 +117,7 @@ function wppb_content_restriction_post_redirect() {
         }
 
         if( is_post_type_archive('product') || is_page(wc_get_page_id('shop')) ){
-            $post = get_post( wc_get_page_id('shop') );
+            $woo_shop_or_post = get_post( wc_get_page_id('shop') );
         }
     }
     else {
@@ -123,10 +126,12 @@ function wppb_content_restriction_post_redirect() {
         }
     }
 
-
+    if ( !($woo_shop_or_post instanceof WP_Post) ){
+        return;
+    }
 
     $redirect_url             = '';
-    $post_restriction_type    = get_post_meta( $post->ID, 'wppb-content-restrict-type', true );
+    $post_restriction_type    = get_post_meta( $woo_shop_or_post->ID, 'wppb-content-restrict-type', true );
     $settings                 = get_option( 'wppb_content_restriction_settings', array() );
     $general_restriction_type = ( ! empty( $settings['restrict_type'] ) ? $settings['restrict_type'] : 'message' );
 
@@ -138,14 +143,14 @@ function wppb_content_restriction_post_redirect() {
         return;
     }
 
-    if( ! wppb_content_restriction_is_post_restricted( $post->ID ) ) {
+    if( ! wppb_content_restriction_is_post_restricted( $woo_shop_or_post->ID ) ) {
         return;
     }
 
     // Get the redirect URL from the post meta if enabled
     if( $post_restriction_type === 'redirect' ) {
-        $post_redirect_url_enabled = get_post_meta( $post->ID, 'wppb-content-restrict-custom-redirect-url-enabled', true );
-        $post_redirect_url         = get_post_meta( $post->ID, 'wppb-content-restrict-custom-redirect-url', true );
+        $post_redirect_url_enabled = get_post_meta( $woo_shop_or_post->ID, 'wppb-content-restrict-custom-redirect-url-enabled', true );
+        $post_redirect_url         = get_post_meta( $woo_shop_or_post->ID, 'wppb-content-restrict-custom-redirect-url', true );
 
         $redirect_url = ( ! empty( $post_redirect_url_enabled ) && ! empty( $post_redirect_url ) ? $post_redirect_url : '' );
     }
@@ -168,11 +173,12 @@ function wppb_content_restriction_post_redirect() {
     }
 
     // Redirect
+    nocache_headers();
     wp_redirect( wppb_add_missing_http( $redirect_url ) );
     exit;
 
 }
-add_action( 'wp', 'wppb_content_restriction_post_redirect' );
+add_action( 'template_redirect', 'wppb_content_restriction_post_redirect' );
 
 /* Function that searches and replaces merge tags with their values */
 function wppb_content_restriction_merge_tags( $text, $user_info, $post_id = 0 ) {
@@ -303,3 +309,4 @@ function wppb_content_restriction_shortcode( $atts, $content = null ) {
 
 }
 add_shortcode( 'wppb-restrict', 'wppb_content_restriction_shortcode' );
+

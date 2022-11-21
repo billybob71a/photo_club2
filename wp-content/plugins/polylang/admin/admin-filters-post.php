@@ -1,4 +1,7 @@
 <?php
+/**
+ * @package Polylang
+ */
 
 /**
  * Manages filters and actions related to posts on admin side
@@ -47,6 +50,7 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 		// Hierarchical taxonomies
 		if ( 'edit' == $screen->base && $taxonomies = get_object_taxonomies( $screen->post_type, 'object' ) ) {
 			// Get translated hierarchical taxonomies
+			$hierarchical_taxonomies = array();
 			foreach ( $taxonomies as $taxonomy ) {
 				if ( $taxonomy->hierarchical && $taxonomy->show_in_quick_edit && $this->model->is_translated_taxonomy( $taxonomy->name ) ) {
 					$hierarchical_taxonomies[] = $taxonomy->name;
@@ -54,7 +58,8 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 			}
 
 			if ( ! empty( $hierarchical_taxonomies ) ) {
-				$terms = get_terms( $hierarchical_taxonomies, array( 'get' => 'all' ) );
+				$terms          = get_terms( $hierarchical_taxonomies, array( 'get' => 'all' ) );
+				$term_languages = array();
 
 				foreach ( $terms as $term ) {
 					if ( $lang = $this->model->term->get_language( $term->term_id ) ) {
@@ -71,7 +76,10 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 
 		// Hierarchical post types
 		if ( 'edit' == $screen->base && is_post_type_hierarchical( $screen->post_type ) ) {
-			$pages = get_pages();
+			$pages = get_pages( array( 'sort_column' => 'menu_order, post_title' ) ); // Same arguments as the parent pages dropdown to avoid an extra query.
+			update_post_caches( $pages, $screen->post_type );
+
+			$page_languages = array();
 
 			foreach ( $pages as $page ) {
 				if ( $lang = $this->model->post->get_language( $page->ID ) ) {
@@ -104,17 +112,17 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 	 * @since 2.3
 	 */
 	public function edit_post() {
-		if ( isset( $_POST['post_lang_choice'], $_POST['post_ID'] ) && $post_id = (int) $_POST['post_ID'] ) {
+		if ( isset( $_POST['post_lang_choice'], $_POST['post_ID'] ) && $post_id = (int) $_POST['post_ID'] ) { // phpcs:ignore WordPress.Security.NonceVerification
 			check_admin_referer( 'pll_language', '_pll_nonce' );
 
 			$post = get_post( $post_id );
 			$post_type_object = get_post_type_object( $post->post_type );
 
 			if ( current_user_can( $post_type_object->cap->edit_post, $post_id ) ) {
-				$this->model->post->set_language( $post_id, $this->model->get_language( $_POST['post_lang_choice'] ) );
+				$this->model->post->set_language( $post_id, $this->model->get_language( sanitize_key( $_POST['post_lang_choice'] ) ) );
 
 				if ( isset( $_POST['post_tr_lang'] ) ) {
-					$this->save_translations( $post_id, $_POST['post_tr_lang'] );
+					$this->save_translations( $post_id, array_map( 'absint', $_POST['post_tr_lang'] ) );
 				}
 			}
 		}
@@ -160,10 +168,10 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 	 * @since 2.3
 	 */
 	public function bulk_edit_posts() {
-		if ( isset( $_GET['bulk_edit'], $_GET['inline_lang_choice'] ) && -1 !== $_GET['inline_lang_choice'] ) {
+		if ( isset( $_GET['bulk_edit'], $_GET['inline_lang_choice'], $_REQUEST['post'] ) && -1 !== $_GET['inline_lang_choice'] ) { // phpcs:ignore WordPress.Security.NonceVerification
 			check_admin_referer( 'bulk-posts' );
 
-			if ( $lang = $this->model->get_language( $_GET['inline_lang_choice'] ) ) {
+			if ( $lang = $this->model->get_language( sanitize_key( $_GET['inline_lang_choice'] ) ) ) {
 				$post_ids = array_map( 'intval', (array) $_REQUEST['post'] );
 				foreach ( $post_ids as $post_id ) {
 					$this->inline_save_language( $post_id, $lang );
@@ -182,7 +190,7 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 
 		if ( isset( $_POST['post_ID'], $_POST['inline_lang_choice'] ) ) {
 			$post_id = (int) $_POST['post_ID'];
-			$lang = $this->model->get_language( $_POST['inline_lang_choice'] );
+			$lang = $this->model->get_language( sanitize_key( $_POST['inline_lang_choice'] ) );
 			if ( $post_id && $lang ) {
 				$this->inline_save_language( $post_id, $lang );
 			}
