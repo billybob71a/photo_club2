@@ -1,4 +1,5 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 class WPPB_Roles_Editor {
 
@@ -59,7 +60,7 @@ class WPPB_Roles_Editor {
 
         if( $post_type == 'wppb-roles-editor' ) {
             $wp_default_scripts = $this->wp_default_scripts();
-            $scripts_exceptions = array( 'wppb-sitewide', 'acf-field-group', 'acf-pro-field-group', 'acf-input', 'acf-pro-input' );
+            $scripts_exceptions = array( 'wppb-sitewide', 'acf-field-group', 'acf-pro-field-group', 'acf-input', 'acf-pro-input', 'query-monitor' );
             foreach( $wp_scripts->registered as $key => $value ) {
                 if( ! in_array( $key, $wp_default_scripts ) && ! in_array( $key, $scripts_exceptions ) ) {
                     wp_deregister_script( $key );
@@ -67,7 +68,7 @@ class WPPB_Roles_Editor {
             }
 
             $wp_default_styles = $this->wp_default_styles();
-            $styles_exceptions = array( 'wppb-serial-notice-css', 'acf-global', 'wppb-back-end-style' );
+            $styles_exceptions = array( 'wppb-serial-notice-css', 'acf-global', 'wppb-back-end-style', 'query-monitor' );
             foreach( $wp_styles->registered as $key => $value ) {
                 if( ! in_array( $key, $wp_default_styles ) && ! in_array( $key, $styles_exceptions ) ) {
                     wp_deregister_style( $key );
@@ -297,7 +298,7 @@ class WPPB_Roles_Editor {
             2  => esc_html__( 'Custom field updated.', 'profile-builder' ),
             3  => esc_html__( 'Custom field deleted.', 'profile-builder' ),
             4  => esc_html__( 'Role updated.', 'profile-builder' ),
-            5  => isset( $_GET['revision'] ) ? sprintf( esc_html__( 'Role restored to revision from %s' ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+            5  => isset( $_GET['revision'] ) ? sprintf( esc_html__( 'Role restored to revision from %s' ), wp_post_revision_title( (int) sanitize_text_field( $_GET['revision'] ), false ) ) : false,
             6  => esc_html__( 'Role created.', 'profile-builder' ),
             7  => esc_html__( 'Role saved.', 'profile-builder' ),
             8  => esc_html__( 'Role submitted.', 'profile-builder' ),
@@ -578,8 +579,7 @@ class WPPB_Roles_Editor {
         }
 
         if( isset( $_POST['wppb-role-slug-hidden'] ) ) {
-            $role_slug = trim( $_POST['wppb-role-slug-hidden'] );
-            $role_slug = $this->sanitize_role( $role_slug );
+            $role_slug = $this->sanitize_role( trim( $_POST['wppb-role-slug-hidden'] ) );
 
             update_post_meta( $post_id, 'wppb_role_slug', $role_slug );
         }
@@ -918,6 +918,7 @@ class WPPB_Roles_Editor {
         $role = wp_strip_all_tags( $role );
         $role = preg_replace( '/[^a-z0-9_\-\s]/', '', $role );
         $role = str_replace( ' ', '_', $role );
+        $role = sanitize_text_field( $role );
 
         return $role;
 
@@ -1108,7 +1109,7 @@ class WPPB_Roles_Editor {
     // Output roles edit checkboxes
     function roles_field_display( $user_roles ) {
 
-        global $wp_roles;
+        $wppb_roles = get_editable_roles();
 
         ?>
         <table class="form-table">
@@ -1118,11 +1119,11 @@ class WPPB_Roles_Editor {
                 <td>
                     <div>
                         <ul style="margin: 5px 0;">
-                            <?php foreach( $wp_roles->role_names as $role_slug => $role_display_name ) { ?>
+                            <?php foreach( $wppb_roles as $role_slug => $role_details ) { ?>
                                 <li>
                                     <label>
                                         <input type="checkbox" name="wppb_re_user_roles[]" value="<?php echo esc_attr( $role_slug ); ?>" <?php checked( in_array( $role_slug, $user_roles ) ); ?> />
-                                        <?php echo esc_html( $role_display_name ); ?>
+                                        <?php echo esc_html( translate_user_role( $role_details['name'] ) ); ?>
                                     </label>
                                 </li>
                             <?php } ?>

@@ -1,4 +1,6 @@
-<?php 
+<?php
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 // include individual modules
 function wppb_include_default_fields_files() {
     $wppb_generalSettings = get_option('wppb_general_settings', 'not_found' );
@@ -44,5 +46,6 @@ function wppb_include_default_fields_files() {
 
     /* added recaptcha and user role field since version 2.8.2 */
     include_once( WPPB_PLUGIN_DIR.'/front-end/default-fields/gdpr/gdpr.php' );
+    include_once( WPPB_PLUGIN_DIR.'/front-end/default-fields/gdpr-delete/gdpr-delete.php' );
 }
 wppb_include_default_fields_files();

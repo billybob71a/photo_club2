@@ -1,4 +1,6 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 global $gf_feedback_custom_poll_id;
 global $gf_feedback_custom_poll_action_link;
 $gf_feedback_custom_poll_id = '14';

@@ -1,4 +1,5 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 /**
  * Function that returns an array with the settings tabs(pages) and subtabs(subpages)
  * @return array with the tabs
@@ -53,7 +54,7 @@ function wppb_generate_settings_tabs(){
 		$active_subpage = sanitize_text_field($_GET['page']);
 		echo '<ul class="wppb-subtabs subsubsub">';
 		foreach ($pages['subpages'] as $parent_slug => $subpages) {
-			if (array_key_exists($_GET['page'], $subpages)) {
+			if (array_key_exists( sanitize_text_field( $_GET['page'] ), $subpages)) {
 				foreach ($subpages as $subpage_slug => $subpage_name) {
 					echo '<li><a href="' . admin_url(add_query_arg(array('page' => $subpage_slug), 'admin.php')) . '"  class="nav-sub-tab ' . ($active_subpage == $subpage_slug ? 'current' : '') . '">' . $subpage_name . '</a></li>';
 				}
@@ -79,7 +80,7 @@ add_action( 'admin_menu', 'wppb_register_general_settings_submenu_page', 3 );
 
 
 function wppb_generate_default_settings_defaults(){
-	add_option( 'wppb_general_settings', array( 'extraFieldsLayout' => 'default', 'emailConfirmation' => 'no', 'activationLandingPage' => '', 'adminApproval' => 'no', 'loginWith' => 'usernameemail', 'rolesEditor' => 'no' ) );
+	add_option( 'wppb_general_settings', array( 'extraFieldsLayout' => 'default', 'automaticallyLogIn' => 'No', 'emailConfirmation' => 'no', 'activationLandingPage' => '', 'adminApproval' => 'no', 'loginWith' => 'usernameemail', 'rolesEditor' => 'no', 'conditional_fields_ajax' => 'no' ) );
 }
 
 
@@ -95,6 +96,8 @@ function wppb_general_settings_content() {
 ?>	
 	<div class="wrap wppb-wrap">
 		<h2><?php _e( 'Profile Builder Settings', 'profile-builder' ); ?></h2>
+
+        <?php settings_errors(); ?>
 
 		<?php wppb_generate_settings_tabs() ?>
 
@@ -115,14 +118,29 @@ function wppb_general_settings_content() {
 				</td>
 			</tr>
 
+            <tr>
+                <th scope="row">
+                    <?php _e( 'Automatically Log In:', 'profile-builder' );?>
+                </th>
+                <td>
+                    <select name="wppb_general_settings[automaticallyLogIn]" class="wppb-select" id="wppb_settings_automatically_log_in" onchange="wppb_display_page_select(this.value)">
+                        <option value="Yes" <?php if ( !empty( $wppb_generalSettings['automaticallyLogIn'] ) && $wppb_generalSettings['automaticallyLogIn'] === 'Yes' ) echo 'selected'; ?>><?php _e( 'Yes', 'profile-builder' ); ?></option>
+                        <option value="No" <?php if ( empty( $wppb_generalSettings['automaticallyLogIn'] ) || ( !empty( $wppb_generalSettings['automaticallyLogIn'] ) && $wppb_generalSettings['automaticallyLogIn'] === 'No' ) ) echo 'selected'; ?>><?php _e( 'No', 'profile-builder' ); ?></option>
+                    </select>
+                    <ul>
+                        <li class="description"><?php _e( 'Select "Yes" to automatically log in new users after successful registration.', 'profile-builder' ); ?></li>
+                    </ul>
+                </td>
+            </tr>
+
 			<tr>
 				<th scope="row">
 					<?php _e( '"Email Confirmation" Activated:', 'profile-builder' );?>
 				</th>
 				<td>
 					<select name="wppb_general_settings[emailConfirmation]" class="wppb-select" id="wppb_settings_email_confirmation" onchange="wppb_display_page_select(this.value)">
-						<option value="yes" <?php if ( $wppb_generalSettings['emailConfirmation'] == 'yes' ) echo 'selected'; ?>><?php _e( 'Yes', 'profile-builder' ); ?></option>
-						<option value="no" <?php if ( $wppb_generalSettings['emailConfirmation'] == 'no' ) echo 'selected'; ?>><?php _e( 'No', 'profile-builder' ); ?></option>
+						<option value="yes" <?php if ( !empty( $wppb_generalSettings['emailConfirmation'] ) && $wppb_generalSettings['emailConfirmation'] === 'yes' ) echo 'selected'; ?>><?php _e( 'Yes', 'profile-builder' ); ?></option>
+						<option value="no" <?php if ( empty( $wppb_generalSettings['emailConfirmation'] ) || ( !empty( $wppb_generalSettings['emailConfirmation'] ) && $wppb_generalSettings['emailConfirmation'] === 'no' ) ) echo 'selected'; ?>><?php _e( 'No', 'profile-builder' ); ?></option>
 					</select>
 					<ul>
 						<li class="description"><?php _e( 'This works with front-end forms only. Recommended to redirect WP default registration to a Profile Builder one using "Custom Redirects" module.', 'profile-builder' ); ?></li>
@@ -171,7 +189,7 @@ function wppb_general_settings_content() {
 				<td>
 					<select id="adminApprovalSelect" name="wppb_general_settings[adminApproval]" class="wppb-select" onchange="wppb_display_page_select_aa(this.value)">
 						<option value="yes" <?php if( !empty( $wppb_generalSettings['adminApproval'] ) && $wppb_generalSettings['adminApproval'] == 'yes' ) echo 'selected'; ?>><?php _e( 'Yes', 'profile-builder' ); ?></option>
-						<option value="no" <?php if( !empty( $wppb_generalSettings['adminApproval'] ) && $wppb_generalSettings['adminApproval'] == 'no' ) echo 'selected'; ?>><?php _e( 'No', 'profile-builder' ); ?></option>
+                        <option value="no" <?php if( empty( $wppb_generalSettings['adminApproval'] ) || ( !empty( $wppb_generalSettings['adminApproval'] ) && $wppb_generalSettings['adminApproval'] == 'no' ) ) echo 'selected'; ?>><?php _e( 'No', 'profile-builder' ); ?></option>
 					</select>
 					<ul>
 						<li class="description dynamic2"><?php printf( __( 'You can find a list of users at %1$sUsers > All Users > Admin Approval%2$s.', 'profile-builder' ), '<a href="'.get_bloginfo( 'url' ).'/wp-admin/users.php?page=admin_approval&orderby=registered&order=desc">', '</a>' )?></li>
@@ -283,6 +301,22 @@ function wppb_general_settings_content() {
 					</select>
 				</td>
 			</tr>
+			<?php if( wppb_conditional_fields_exists() && apply_filters( 'wppb_allow_conditional_fields_ajax', false ) ): ?>
+			<tr>
+				<th scope="row">
+					<?php _e( 'Use ajax on conditional fields:', 'profile-builder' );?>
+				</th>
+				<td>
+					<select name="wppb_general_settings[conditional_fields_ajax]" class="wppb-select" id="wppb_settings_conditional_fields_ajax" onchange="wppb_display_page_select(this.value)">
+                        <option value="no" <?php if ( $wppb_generalSettings['conditional_fields_ajax'] === 'no' ) echo 'selected'; ?>><?php _e( 'No', 'profile-builder' ); ?></option>
+                        <option value="yes" <?php if ( $wppb_generalSettings['conditional_fields_ajax'] === 'yes' ) echo 'selected'; ?>><?php _e( 'Yes', 'profile-builder' ); ?></option>
+					</select>
+                    <ul>
+                        <li class="description"><?php _e( 'For large conditional forms select "Yes" for an improved page performance', 'profile-builder' ); ?> </li>
+                    </ul>
+				</td>
+			</tr>
+            <?php endif; ?>
 
 			<?php do_action( 'wppb_extra_general_settings', $wppb_generalSettings ); ?>
 		</table>

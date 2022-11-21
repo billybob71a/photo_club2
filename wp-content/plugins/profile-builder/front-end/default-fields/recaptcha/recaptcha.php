@@ -1,4 +1,6 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 /**
  * Encodes the given data into a query string format
  * @param $data - array of string elements to be encoded
@@ -73,11 +75,23 @@ function wppb_recaptcha_script_footer(){
     if( empty( $field ) )
         return;
 
+    //do not add script if there is no shortcode
+    global $wppb_shortcode_on_front;
+    if( current_filter() == 'wp_footer' && ( !isset( $wppb_shortcode_on_front ) || $wppb_shortcode_on_front === false ) )
+        return;
+
+    //do not add script if the html for the field has not been added
+    global $wppb_recaptcha_present;
+    if( !isset( $wppb_recaptcha_present ) || $wppb_recaptcha_present === false )
+        return;
+
     //we don't have jquery on the backend
     if( current_filter() != 'wp_footer' ) {
         wp_print_scripts('jquery');
+    }else if(!wp_script_is('jquery')){
+        wp_print_scripts('jquery');
     }
-    
+
     //get site key
     $pubkey = '';
     if( isset( $field['public-key'] ) ) {
@@ -87,8 +101,8 @@ function wppb_recaptcha_script_footer(){
     // Check if we have a reCAPTCHA type
     if ( !isset($field['recaptcha-type']) )
         $field['recaptcha-type'] = 'v2' ;
-    
-    /*for invisible recaptcha we have extra parameters and the selector is different. v2 is initialized on the id of the div 
+
+    /*for invisible recaptcha we have extra parameters and the selector is different. v2 is initialized on the id of the div
     that must be unique and invisible is on the submit button of the forms that have the div */
     if( $field['recaptcha-type'] === 'invisible' ) {
         $callback_conditions = 'jQuery("input[type=\'submit\']", jQuery( ".wppb-recaptcha-element" ).closest("form") )';
@@ -98,28 +112,28 @@ function wppb_recaptcha_script_footer(){
         $invisible_parameters = '';
     }
 
-    echo '<script>        
+    echo '<script>
         var wppbRecaptchaCallback = function() {
             if( typeof window.wppbRecaptchaCallbackExecuted == "undefined" ){//see if we executed this before
                 '.$callback_conditions.'.each(function(){
                     recID = grecaptcha.render( jQuery(this).attr("id"), {
-                        "sitekey" : "' . $pubkey . '",                        
+                        "sitekey" : "' . $pubkey . '",
                         "error-callback": wppbRecaptchaInitializationError,
-                        '.$invisible_parameters.'                        
-                     });                 
+                        '.$invisible_parameters.'
+                     });
                 });
                 window.wppbRecaptchaCallbackExecuted = true;//we use this to make sure we only run the callback once
             }
         };
-        
+
         /* the callback function for when the captcha does not load propperly, maybe network problem or wrong keys  */
-        function wppbRecaptchaInitializationError(){            
+        function wppbRecaptchaInitializationError(){
             window.wppbRecaptchaInitError = true;
             //add a captcha field so we do not just let the form submit if we do not have a captcha response
             jQuery( ".wppb-recaptcha-element" ).after(\''. wp_nonce_field( 'wppb_recaptcha_init_error', 'wppb_recaptcha_load_error', false, false ) .'\');
         }
-        
-        /* compatibility with other plugins that may include recaptcha with an onload callback. if their script loads first then our callback will not execute so call it explicitly  */        
+
+        /* compatibility with other plugins that may include recaptcha with an onload callback. if their script loads first then our callback will not execute so call it explicitly  */
         jQuery( window ).on( "load", function() {
             wppbRecaptchaCallback();
         });
@@ -128,14 +142,31 @@ function wppb_recaptcha_script_footer(){
     if( $field['recaptcha-type'] === 'invisible' ) {
         echo '<script>
             /* success callback for invisible recaptcha. it submits the form that contains the right token response */
-            function wppbInvisibleRecaptchaOnSubmit(token){            
+            function wppbInvisibleRecaptchaOnSubmit(token){
                 var elem = jQuery(".g-recaptcha-response").filter(function(){
                     return jQuery(this).val() === token;
-                 });            
-                var form = elem.closest("form");            
-                form.submit();
+                });
+
+                var submitForm = true
+
+                /* dont submit form if PMS gateway is Stripe */
+                if( jQuery(".pms_pay_gate").length > 0 ){
+                    jQuery(".pms_pay_gate").each( function(){
+                        if( jQuery(this).val() == "stripe_intents" || jQuery(this).val() == "stripe" )
+                            submitForm = false
+                    })
+                }
+
+                if( submitForm ){
+                    var form = elem.closest("form");
+                    form.submit();
+                } else {
+                    jQuery(document).trigger( "wppb_invisible_recaptcha_success" )
+
+                }
+
             }
-            
+
             /* make sure if the invisible recaptcha did not load properly ( network error or wrong keys ) we can still submit the form */
             jQuery(document).ready(function(){
                 if( window.wppbRecaptchaInitError === true ){
@@ -147,9 +178,16 @@ function wppb_recaptcha_script_footer(){
         </script>';
     }
 
-    echo '<script src="https://www.google.com/recaptcha/api.js?onload=wppbRecaptchaCallback&render=explicit" async defer></script>';
+	$lang = '&hl=en';
+    $locale = get_locale();
+    if(!empty($locale)) {
+        $locale_parts = explode('_',$locale);
+	    $lang = '&hl='.urlencode($locale_parts[0]);
+    }
+
+	echo '<script src="https://www.google.com/recaptcha/api.js?onload=wppbRecaptchaCallback&render=explicit'.$lang.'" async defer></script>';
 }
-add_action('wp_footer', 'wppb_recaptcha_script_footer', 999);
+add_action('wp_footer', 'wppb_recaptcha_script_footer', 9999);
 add_action('login_footer', 'wppb_recaptcha_script_footer');
 add_action('register_form', 'wppb_recaptcha_script_footer');
 add_action('lost_password', 'wppb_recaptcha_script_footer');
@@ -209,7 +247,7 @@ function wppb_recaptcha_check_answer ( $privkey, $remoteip, $response ){
 /* the function to display error message on the registration page */
 function wppb_validate_captcha_response( $publickey, $privatekey ){
     if (isset($_POST['g-recaptcha-response'])){
-        $recaptcha_response_field = $_POST['g-recaptcha-response'];
+        $recaptcha_response_field = sanitize_textarea_field( $_POST['g-recaptcha-response'] );
     }
     else {
         $recaptcha_response_field = '';
@@ -230,6 +268,9 @@ function wppb_recaptcha_handler ( $output, $form_location, $field, $user_id, $fi
         wppb_recaptcha_set_default_values();
         if ( ($form_location == 'register') && ( isset($field['captcha-pb-forms']) ) && (strpos($field['captcha-pb-forms'],'pb_register') !== false) ) {
             $error_mark = ( ( $field['required'] == 'Yes' ) ? '<span class="wppb-required" title="'.wppb_required_field_error($field["field-title"]).'">*</span>' : '' );
+
+            global $wppb_recaptcha_present;
+            $wppb_recaptcha_present = true;
 
             if ( array_key_exists( $field['id'], $field_check_errors ) )
                 $error_mark = '<img src="'.WPPB_PLUGIN_URL.'assets/images/pencil_delete.png" title="'.wppb_required_field_error($field["field-title"]).'"/>';
@@ -304,6 +345,9 @@ function wppb_display_recaptcha_recover_password( $output ){
         // check where reCAPTCHA should display and add reCAPTCHA html
         if ( isset($field['captcha-pb-forms']) && ( strpos( $field['captcha-pb-forms'],'pb_recover_password' ) !== false ) ) {
 
+            global $wppb_recaptcha_present;
+            $wppb_recaptcha_present = true;
+
             if ( empty($field['recaptcha-type']) || ($field['recaptcha-type'] == 'v2') ) {
                 $recaptcha_output = '<label for="recaptcha_response_field">' . $item_title . '</label>' . wppb_recaptcha_get_html($publickey, 'pb_recover_password');
                 if (!empty($item_description))
@@ -324,7 +368,7 @@ add_filter('wppb_recover_password_generate_password_input','wppb_display_recaptc
 /*  Function that changes the messageNo from the Recover Password form  */
 function wppb_recaptcha_change_recover_password_message_no($messageNo) {
 
-        if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'recover_password') {
+        if (isset($_REQUEST['action']) && $_REQUEST['action'] === 'recover_password') {
             $field = wppb_get_recaptcha_field();
             if (!empty($field)) {
 
@@ -370,7 +414,7 @@ add_filter('wppb_recover_password_displayed_message1', 'wppb_recaptcha_recover_p
     so that we can change the message displayed with the wppb_recover_password_displayed_message1 filter  */
 function wppb_recaptcha_recover_password_sent_message_1($message) {
 
-        if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'recover_password') {
+        if (isset($_REQUEST['action']) && $_REQUEST['action'] === 'recover_password') {
             $field = wppb_get_recaptcha_field();
 
             if (!empty($field)) {
@@ -390,6 +434,10 @@ add_filter('wppb_recover_password_sent_message1', 'wppb_recaptcha_recover_passwo
 
 /* Display reCAPTCHA html on PB Login form */
 function wppb_display_recaptcha_login_form($form_part, $args) {
+
+    if( !isset( $args['form_id'] ) || $args['form_id'] != 'wppb-loginform' )
+        return $form_part;
+
     $field = wppb_get_recaptcha_field();
 
     if ( !empty($field) ) {
@@ -397,6 +445,9 @@ function wppb_display_recaptcha_login_form($form_part, $args) {
         $item_description = wppb_icl_t('plugin profile-builder-pro', 'custom_field_' . $field['id'] . '_description_translation', $field['description']);
 
         if ( isset($field['captcha-pb-forms']) && ( strpos( $field['captcha-pb-forms'],'pb_login' ) !== false ) ) { // check where reCAPTCHA should display and add reCAPTCHA html
+
+            global $wppb_recaptcha_present;
+            $wppb_recaptcha_present = true;
 
             if ( empty($field['recaptcha-type']) || ($field['recaptcha-type'] == 'v2') ) {
                 $recaptcha_output = '<label for="recaptcha_response_field">' . $item_title . '</label>' . wppb_recaptcha_get_html(trim($field['public-key']), 'pb_login');
@@ -426,6 +477,9 @@ function wppb_display_recaptcha_wp_login_form(){
 
         if ( isset($field['captcha-wp-forms']) && (strpos( $field['captcha-wp-forms'],'default_wp_login' ) !== false) ) { // check where reCAPTCHA should display and add reCAPTCHA html
 
+            global $wppb_recaptcha_present;
+            $wppb_recaptcha_present = true;
+
             if ( empty($field['recaptcha-type']) || ($field['recaptcha-type'] == 'v2') ) {
                 $recaptcha_output = '<label for="recaptcha_response_field" style="padding-left:15px; padding-bottom:7px;">' . $item_title . '</label>' . wppb_recaptcha_get_html(trim($field['public-key']));
                 if (!empty($item_description))
@@ -445,7 +499,7 @@ add_action( 'login_form', 'wppb_display_recaptcha_wp_login_form' );
 //Show reCAPTCHA error on Login form (both default and PB one)
 function wppb_recaptcha_login_wp_error_message($user){
     //make sure you're on a Login form (WP or PB)
-    if ( (isset($_POST['wp-submit'])) && (!is_wp_error($user)) ) {
+    if ( isset( $_POST['wp-submit'] ) && !is_wp_error($user) && !isset( $_POST['pms_login'] ) ) {
 
         $field = wppb_get_recaptcha_field();
         if ( !empty($field) ){
@@ -490,6 +544,9 @@ function wppb_display_recaptcha_default_wp_recover_password() {
 
         if ( isset($field['captcha-wp-forms']) && (strpos( $field['captcha-wp-forms'], 'default_wp_recover_password') !== false) ) { // check where reCAPTCHA should display and add reCAPTCHA html
 
+            global $wppb_recaptcha_present;
+            $wppb_recaptcha_present = true;
+
             if ( empty($field['recaptcha-type']) || ($field['recaptcha-type'] == 'v2') ){
                 $recaptcha_output = '<label for="recaptcha_response_field" style="padding-left:15px; padding-bottom:7px;">' . $item_title . '</label>' . wppb_recaptcha_get_html($publickey);
                 if (!empty($item_description))
@@ -510,7 +567,7 @@ add_action('lostpassword_form','wppb_display_recaptcha_default_wp_recover_passwo
 function wppb_verify_recaptcha_default_wp_recover_password(){
 
     // If field 'username or email' is empty - return
-    if( isset( $_REQUEST['user_login'] ) && "" == $_REQUEST['user_login'] )
+    if( isset( $_REQUEST['user_login'] ) && "" === $_REQUEST['user_login'] )
         return;
 
     $field = wppb_get_recaptcha_field();
@@ -519,7 +576,7 @@ function wppb_verify_recaptcha_default_wp_recover_password(){
         if (!isset($wppb_recaptcha_response)) $wppb_recaptcha_response = wppb_validate_captcha_response( trim( $field['public-key'] ), trim( $field['private-key'] ) );
 
     // If reCAPTCHA not entered or incorrect reCAPTCHA answer
-        if ( isset( $_REQUEST['g-recaptcha-response'] ) && ( ( "" ==  $_REQUEST['g-recaptcha-response'] )  || ( $wppb_recaptcha_response == false ) ) ) {
+        if ( isset( $_REQUEST['g-recaptcha-response'] ) && ( ( "" ===  $_REQUEST['g-recaptcha-response'] )  || ( $wppb_recaptcha_response == false ) ) ) {
             wp_die( __('Please enter a (valid) reCAPTCHA value','profile-builder') . '<br />' . __( "Click the BACK button on your browser, and try again.", 'profile-builder' ) ) ;
         }
     }
@@ -538,6 +595,9 @@ function wppb_display_recaptcha_default_wp_register(){
 
             wppb_recaptcha_set_default_values();
             if (isset($field['captcha-wp-forms']) && (strpos($field['captcha-wp-forms'], 'default_wp_register') !== false)) { // check where reCAPTCHA should display and add reCAPTCHA html
+
+                global $wppb_recaptcha_present;
+                $wppb_recaptcha_present = true;
 
                 if ( empty($field['recaptcha-type']) || ($field['recaptcha-type'] == 'v2') ) {
                     $recaptcha_output = '<label for="recaptcha_response_field" style="padding-left:15px; padding-bottom:7px;">' . $item_title . '</label>' . wppb_recaptcha_get_html($publickey);
@@ -564,7 +624,7 @@ function wppb_verify_recaptcha_default_wp_register( $errors ){
         if (!isset($wppb_recaptcha_response)) $wppb_recaptcha_response = wppb_validate_captcha_response( trim( $field['public-key'] ), trim( $field['private-key'] ) );
 
         // If reCAPTCHA not entered or incorrect reCAPTCHA answer
-        if ( isset( $_REQUEST['g-recaptcha-response'] ) && ( ( "" ==  $_REQUEST['g-recaptcha-response'] )  || ( $wppb_recaptcha_response == false ) ) ) {
+        if ( isset( $_REQUEST['g-recaptcha-response'] ) && ( ( "" ===  $_REQUEST['g-recaptcha-response'] )  || ( $wppb_recaptcha_response == false ) ) ) {
             $errors->add( 'wppb_recaptcha_error', __('Please enter a (valid) reCAPTCHA value','profile-builder') );
         }
     }

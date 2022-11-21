@@ -1,4 +1,7 @@
 <?php
+/**
+ * @package Polylang
+ */
 
 /**
  * Manages copy and synchronization of terms and post metas
@@ -18,7 +21,9 @@ class PLL_Admin_Sync extends PLL_Sync {
 		parent::__construct( $polylang );
 
 		add_filter( 'wp_insert_post_parent', array( $this, 'wp_insert_post_parent' ), 10, 3 );
-		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 5, 2 ); // Before Types which populates custom fields in same hook with priority 10
+		add_filter( 'wp_insert_post_data', array( $this, 'wp_insert_post_data' ) );
+		add_action( 'rest_api_init', array( $this, 'new_post_translation' ) ); // Block editor
+		add_action( 'add_meta_boxes', array( $this, 'new_post_translation' ), 5 ); // Classic editor, before Types which populates custom fields in same hook with priority 10
 	}
 
 	/**
@@ -32,42 +37,69 @@ class PLL_Admin_Sync extends PLL_Sync {
 	 * @return int
 	 */
 	public function wp_insert_post_parent( $post_parent, $post_id, $postarr ) {
-		// Make sure not to impact media translations created at the same time
-		return isset( $_GET['from_post'], $_GET['new_lang'], $_GET['post_type'] ) && $_GET['post_type'] === $postarr['post_type'] && ( $id = wp_get_post_parent_id( (int) $_GET['from_post'] ) ) && ( $parent = $this->model->post->get_translation( $id, $_GET['new_lang'] ) ) ? $parent : $post_parent;
+		if ( isset( $_GET['from_post'], $_GET['new_lang'], $_GET['post_type'] ) ) {
+			check_admin_referer( 'new-post-translation' );
+			// Make sure not to impact media translations created at the same time
+			if ( $_GET['post_type'] === $postarr['post_type'] && ( $id = wp_get_post_parent_id( (int) $_GET['from_post'] ) ) && $parent = $this->model->post->get_translation( $id, sanitize_key( $_GET['new_lang'] ) ) ) {
+				$post_parent = $parent;
+			}
+		}
+		return $post_parent;
 	}
 
 	/**
-	 * Copy post metas, menu order, comment and ping status when using "Add new" ( translation )
-	 * formerly used dbx_post_advanced deprecated in WP 3.7
+	 * Copy menu order, comment, ping status and optionally the date when creating a new tanslation
 	 *
-	 * @since 1.2
+	 * @since 2.5
 	 *
-	 * @param string $post_type unused
-	 * @param object $post      current post object
+	 * @param array $data An array of slashed post data.
+	 * @return array
 	 */
-	public function add_meta_boxes( $post_type, $post ) {
-		if ( 'post-new.php' == $GLOBALS['pagenow'] && isset( $_GET['from_post'], $_GET['new_lang'] ) && $this->model->is_translated_post_type( $post->post_type ) ) {
-			// Capability check already done in post-new.php
+	public function wp_insert_post_data( $data ) {
+		if ( isset( $GLOBALS['pagenow'], $_GET['from_post'], $_GET['new_lang'] ) && 'post-new.php' === $GLOBALS['pagenow'] && $this->model->is_translated_post_type( $data['post_type'] ) ) {
+			check_admin_referer( 'new-post-translation' );
+
 			$from_post_id = (int) $_GET['from_post'];
-			$from_post = get_post( $from_post_id );
-			$lang = $this->model->get_language( $_GET['new_lang'] );
-
-			if ( ! $from_post || ! $lang ) {
-				return;
-			}
-
-			$this->taxonomies->copy( $from_post_id, $post->ID, $lang->slug );
-			$this->post_metas->copy( $from_post_id, $post->ID, $lang->slug );
+			$from_post    = get_post( $from_post_id );
 
 			foreach ( array( 'menu_order', 'comment_status', 'ping_status' ) as $property ) {
-				$post->$property = $from_post->$property;
+				$data[ $property ] = $from_post->$property;
 			}
 
 			// Copy the date only if the synchronization is activated
 			if ( in_array( 'post_date', $this->options['sync'] ) ) {
-				$post->post_date = $from_post->post_date;
-				$post->post_date_gmt = $from_post->post_date_gmt;
+				$data['post_date']     = $from_post->post_date;
+				$data['post_date_gmt'] = $from_post->post_date_gmt;
 			}
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Copy post metas, and taxonomies when using "Add new" ( translation )
+	 *
+	 * @since 2.5
+	 */
+	public function new_post_translation() {
+		global $post;
+		static $done = array();
+
+		if ( isset( $GLOBALS['pagenow'], $_GET['from_post'], $_GET['new_lang'] ) && 'post-new.php' === $GLOBALS['pagenow'] && $this->model->is_translated_post_type( $post->post_type ) ) {
+			check_admin_referer( 'new-post-translation' );
+
+			// Capability check already done in post-new.php
+			$from_post_id = (int) $_GET['from_post'];
+			$lang         = $this->model->get_language( sanitize_key( $_GET['new_lang'] ) );
+
+			if ( ! $from_post_id || ! $lang || ! empty( $done[ $from_post_id ] ) ) {
+				return;
+			}
+
+			$done[ $from_post_id ] = true; // Avoid a second duplication in the block editor. Using an array only to allow multiple phpunit tests.
+
+			$this->taxonomies->copy( $from_post_id, $post->ID, $lang->slug );
+			$this->post_metas->copy( $from_post_id, $post->ID, $lang->slug );
 
 			if ( is_sticky( $from_post_id ) ) {
 				stick_post( $post->ID );
@@ -76,7 +108,7 @@ class PLL_Admin_Sync extends PLL_Sync {
 	}
 
 	/**
-	 * Get post fields to synchornize
+	 * Get post fields to synchronize
 	 *
 	 * @since 2.4
 	 *
@@ -89,7 +121,9 @@ class PLL_Admin_Sync extends PLL_Sync {
 		$postarr = parent::get_fields_to_sync( $post );
 
 		// For new drafts, save the date now otherwise it is overriden by WP. Thanks to JoryHogeveen. See #32.
-		if ( in_array( 'post_date', $this->options['sync'] ) && 'post-new.php' === $GLOBALS['pagenow'] && isset( $_GET['from_post'], $_GET['new_lang'] ) ) {
+		if ( in_array( 'post_date', $this->options['sync'] ) && isset( $GLOBALS['pagenow'], $_GET['from_post'], $_GET['new_lang'] ) && 'post-new.php' === $GLOBALS['pagenow'] ) {
+			check_admin_referer( 'new-post-translation' );
+
 			unset( $postarr['post_date'] );
 			unset( $postarr['post_date_gmt'] );
 
@@ -107,7 +141,7 @@ class PLL_Admin_Sync extends PLL_Sync {
 		if ( isset( $GLOBALS['post_type'] ) ) {
 			$post_type = $GLOBALS['post_type'];
 		} elseif ( isset( $_REQUEST['post_type'] ) ) {
-			$post_type = $_REQUEST['post_type']; // 2nd case for quick edit
+			$post_type = sanitize_key( $_REQUEST['post_type'] ); // 2nd case for quick edit
 		}
 
 		// Make sure not to impact media translations when creating them at the same time as post
@@ -133,7 +167,7 @@ class PLL_Admin_Sync extends PLL_Sync {
 		// Sticky posts
 		if ( in_array( 'sticky_posts', $this->options['sync'] ) ) {
 			$stickies = get_option( 'sticky_posts' );
-			if ( isset( $_REQUEST['sticky'] ) && 'sticky' === $_REQUEST['sticky'] ) {
+			if ( isset( $_REQUEST['sticky'] ) && 'sticky' === $_REQUEST['sticky'] ) { // phpcs:ignore WordPress.Security.NonceVerification
 				$stickies = array_merge( $stickies, array_values( $translations ) );
 			} else {
 				$stickies = array_diff( $stickies, array_values( $translations ) );
@@ -158,23 +192,31 @@ class PLL_Admin_Sync extends PLL_Sync {
 
 		if ( is_object( $this->$obj ) && method_exists( $this->$obj, 'copy' ) ) {
 			if ( WP_DEBUG ) {
-				$debug = debug_backtrace();
+				$debug = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
 				$i = 1 + empty( $debug[1]['line'] ); // The file and line are in $debug[2] if the function was called using call_user_func
 
-				trigger_error(
+				trigger_error( // phpcs:ignore WordPress.PHP.DevelopmentFunctions
 					sprintf(
 						'%1$s was called incorrectly in %3$s on line %4$s: the call to PLL()->sync->%1$s() has been deprecated in Polylang 2.3, use PLL()->sync->%2$s->copy() instead.' . "\nError handler",
-						$func,
-						$obj,
-						$debug[ $i ]['file'],
-						$debug[ $i ]['line']
+						esc_html( $func ),
+						esc_html( $obj ),
+						esc_html( $debug[ $i ]['file'] ),
+						absint( $debug[ $i ]['line'] )
 					)
 				);
 			}
 			return call_user_func_array( array( $this->$obj, 'copy' ), $args );
 		}
 
-		$debug = debug_backtrace();
-		trigger_error( sprintf( 'Call to undefined function PLL()->sync->%1$s() in %2$s on line %3$s' . "\nError handler", $func, $debug[0]['file'], $debug[0]['line'] ), E_USER_ERROR );
+		$debug = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
+		trigger_error( // phpcs:ignore WordPress.PHP.DevelopmentFunctions
+			sprintf(
+				'Call to undefined function PLL()->sync->%1$s() in %2$s on line %3$s' . "\nError handler",
+				esc_html( $func ),
+				esc_html( $debug[0]['file'] ),
+				absint( $debug[0]['line'] )
+			),
+			E_USER_ERROR
+		);
 	}
 }

@@ -1,4 +1,7 @@
 <?php
+/**
+ * @package Polylang
+ */
 
 /**
  * Filters content by language on frontend
@@ -48,7 +51,7 @@ class PLL_Frontend_Filters extends PLL_Filters {
 
 		// Support theme customizer
 		// FIXME of course does not work if 'transport' is set to 'postMessage'
-		if ( isset( $_POST['wp_customize'], $_POST['customized'] ) ) {
+		if ( isset( $_POST['wp_customize'], $_POST['customized'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			add_filter( 'pre_option_blogname', 'pll__', 20 );
 			add_filter( 'pre_option_blogdescription', 'pll__', 20 );
 		}
@@ -82,7 +85,8 @@ class PLL_Frontend_Filters extends PLL_Filters {
 	public function option_sticky_posts( $posts ) {
 		global $wpdb;
 
-		if ( $this->curlang && ! empty( $posts ) ) {
+		// Do not filter sticky posts on REST requests as $this->curlang is *not* the 'lang' parameter set in the request
+		if ( ! defined( 'REST_REQUEST' ) && $this->curlang && ! empty( $posts ) ) {
 			$_posts = wp_cache_get( 'sticky_posts', 'options' ); // This option is usually cached in 'all_options' by WP
 
 			if ( empty( $_posts ) || ! is_array( $_posts[ $this->curlang->term_taxonomy_id ] ) ) {
@@ -93,11 +97,11 @@ class PLL_Frontend_Filters extends PLL_Filters {
 				$_posts = array_fill_keys( $languages, array() ); // Init with empty arrays
 				$languages = implode( ',', $languages );
 
-				// PHPCS:ignore WordPress.DB.PreparedSQL.NotPrepared
+				// PHPCS:ignore WordPress.DB.PreparedSQL
 				$relations = $wpdb->get_results( "SELECT object_id, term_taxonomy_id FROM {$wpdb->term_relationships} WHERE object_id IN ({$posts}) AND term_taxonomy_id IN ({$languages})" );
 
 				foreach ( $relations as $relation ) {
-					$_posts[ $relation->term_taxonomy_id ][] = $relation->object_id;
+					$_posts[ $relation->term_taxonomy_id ][] = (int) $relation->object_id;
 				}
 				wp_cache_add( 'sticky_posts', $_posts, 'options' );
 			}
@@ -145,6 +149,7 @@ class PLL_Frontend_Filters extends PLL_Filters {
 	 * @return bool|array false if we hide the widget, unmodified $instance otherwise
 	 */
 	public function widget_display_callback( $instance, $widget ) {
+		// FIXME it looks like this filter is useless, now the we use the filter sidebars_widgets
 		return ! empty( $instance['pll_lang'] ) && $instance['pll_lang'] != $this->curlang->slug ? false : $instance;
 	}
 
@@ -161,7 +166,12 @@ class PLL_Frontend_Filters extends PLL_Filters {
 	public function sidebars_widgets( $sidebars_widgets ) {
 		global $wp_registered_widgets;
 
-		$_sidebars_widgets = $this->cache->get( 'sidebars_widgets' );
+		if ( empty( $wp_registered_widgets ) ) {
+			return $sidebars_widgets;
+		}
+
+		$cache_key         = md5( maybe_serialize( $sidebars_widgets ) );
+		$_sidebars_widgets = $this->cache->get( "sidebars_widgets_{$cache_key}" );
 
 		if ( false !== $_sidebars_widgets ) {
 			return $_sidebars_widgets;
@@ -189,7 +199,7 @@ class PLL_Frontend_Filters extends PLL_Filters {
 			}
 		}
 
-		$this->cache->set( 'sidebars_widgets', $sidebars_widgets );
+		$this->cache->set( "sidebars_widgets_{$cache_key}", $sidebars_widgets );
 
 		return $sidebars_widgets;
 	}

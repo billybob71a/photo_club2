@@ -1,4 +1,7 @@
 <?php
+/**
+ * @package Polylang
+ */
 
 /**
  * Filters search forms when using permalinks
@@ -70,8 +73,8 @@ class PLL_Frontend_Filters_Search {
 	}
 
 	/**
-	 * Rewrites the admin bar search form to pass our get_search form filter. See #21342
-	 * Code base last checked with WP 4.9.7
+	 * Rewrites the admin bar search form to pass our get_search_form filter. See #21342.
+	 * Code last checked: WP 5.4.1.
 	 *
 	 * @since 0.9
 	 *
@@ -80,15 +83,15 @@ class PLL_Frontend_Filters_Search {
 	public function admin_bar_search_menu( $wp_admin_bar ) {
 		$form  = '<form action="' . esc_url( home_url( '/' ) ) . '" method="get" id="adminbarsearch">';
 		$form .= '<input class="adminbar-input" name="s" id="adminbar-search" type="text" value="" maxlength="150" />';
-		$form .= '<label for="adminbar-search" class="screen-reader-text">' . esc_html__( 'Search' ) . '</label>';
-		$form .= '<input type="submit" class="adminbar-button" value="' . esc_attr__( 'Search' ) . '"/>';
+		$form .= '<label for="adminbar-search" class="screen-reader-text">' . esc_html__( 'Search', 'polylang' ) . '</label>';
+		$form .= '<input type="submit" class="adminbar-button" value="' . esc_attr__( 'Search', 'polylang' ) . '"/>';
 		$form .= '</form>';
 
-		$wp_admin_bar->add_menu(
+		$wp_admin_bar->add_node(
 			array(
 				'parent' => 'top-secondary',
 				'id'     => 'search',
-				'title'  => $this->get_search_form( $form ), // Pass the get_search_form filter
+				'title'  => $this->get_search_form( $form ), // Pass the get_search_form filter.
 				'meta'   => array(
 					'class'    => 'admin-bar-search',
 					'tabindex' => -1,
@@ -129,6 +132,6 @@ class PLL_Frontend_Filters_Search {
 			}
 		}
 		//]]>";
-		echo '<script type="text/javascript">' . $js . '</script>';
+		echo '<script type="text/javascript">' . $js . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput
 	}
 }
