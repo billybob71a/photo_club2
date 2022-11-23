@@ -49,7 +49,7 @@ function display_photos_all($keys_of_division_unique, $sub_folder_current) {
                     if ($modulus_counter != 0) {
                         echo("<td class='widecell'>");
                         echo("<div class='cellwidener'> <a href='" . $large_photo_with_extension ."' rel='prettyPhoto[Gallery1]'><img src='" . $file_name[0][0].$file_extension[0][0]."'></a><br>" . $line_split[1] . "</div>");
-                        echo("<li><a href=\"https://www.cpas-yyc.com/wp-content/themes/hitchcock-child/images/fullscreen/3.jpg\" rel=\"prettyPhoto[gallery1]\"><img src=\"images/thumbnails/t_3.jpg\" width=\"60\" height=\"60\" alt=\"Fire!\" /></a></li>");
+                        echo("<li><a href=\"http://63.142.254.125/wp-content/themes/hitchcock-child/images/fullscreen/3.jpg\" rel=\"prettyPhoto[gallery1]\"><img src=\"images/thumbnails/t_3.jpg\" width=\"60\" height=\"60\" alt=\"Fire!\" /></a></li>");
                         echo("</td>");
                     } else {
                         echo("<td class='widecell'>");
@@ -379,10 +379,10 @@ else if ($login_check) {
     echo("<html>");
     echo("<head>");
     echo("<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>");
-    echo("<!--<script src='https://www.cpas-yyc.com/wp-content/themes/hitchcock-child/js/jquery-1.7.2.min.js'></script>-->");
+    echo("<!--<script src='http://63.142.254.125/wp-content/themes/hitchcock-child/js/jquery-1.7.2.min.js'></script>-->");
     echo("<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'></script>");
-    echo("<script src='https://www.cpas-yyc.com/wp-content/themes/hitchcock-child/js/jquery.prettyPhoto.js' type='text/javascript' charset='utf-8'></script>");
-    echo("<link rel='stylesheet' href='https://www.cpas-yyc.com/wp-content/themes/hitchcock-child/css/prettyPhoto.css' media='screen' title='prettyPhoto main stylesheet' type='text/css' />");
+    echo("<script src='http://63.142.254.125/wp-content/themes/hitchcock-child/js/jquery.prettyPhoto.js' type='text/javascript' charset='utf-8'></script>");
+    echo("<link rel='stylesheet' href='http://63.142.254.125/wp-content/themes/hitchcock-child/css/prettyPhoto.css' media='screen' title='prettyPhoto main stylesheet' type='text/css' />");
     echo("		<style type=\"text/css\" media=\"screen\">
 			* { margin: 0; padding: 0; }
 			
@@ -442,7 +442,7 @@ else if ($login_check) {
 else {
 }
 echo("<br><br><br>");
-// echo("<link href='https://www.cpas-yyc.com/wp-content/themes/hitchcock-child/css/style.css' rel='stylesheet' type='text/css'>");
+// echo("<link href='http://63.142.254.125/wp-content/themes/hitchcock-child/css/style.css' rel='stylesheet' type='text/css'>");
 ?>
 
 <?php get_footer(); ?>
