@@ -1,4 +1,4 @@
 <?php
-$server_name = $_ENV["SCRIPT_URI"];
+$server_name = apache_getenv("SCRIPT_URI");
 echo($server_name)
 ?>
