@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Autoloader. We needs it being separate and not using Composer autoloader because of the Gmail libs,
+ * Autoloader. We need it being separate and not using Composer autoloader because of the Gmail libs,
  * which are huge and not needed for most users.
  * Inspired by PSR-4 examples: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader-examples.md
  *
@@ -20,35 +20,19 @@ spl_autoload_register( function ( $class ) {
 		return;
 	}
 
-	$plugin_folder = 'wp-mail-smtp';
+	/*
+	 * This folder can be both "wp-mail-smtp" and "wp-mail-smtp-pro".
+	 */
+	$plugin_dir = basename( __DIR__ );
 
 	// Default directory for all code is plugin's /src/.
-	$base_dir = plugin_dir_path( __DIR__ ) . '/' . $plugin_folder . '/src/';
+	$base_dir = plugin_dir_path( __DIR__ ) . '/' . $plugin_dir . '/src/';
 
 	// Get the relative class name.
 	$relative_class = substr( $class, strlen( $plugin_space ) + 1 );
 
-	/**
-	 * Normalize a filesystem path.
-	 * Copy of the `wp_normalize_path()` from WordPress 3.9.
-	 *
-	 * @since 1.2.0
-	 *
-	 * @param string $path
-	 *
-	 * @return string
-	 */
-	$normalize = function( $path ) {
-		$path = str_replace( '\\', '/', $path );
-		$path = preg_replace( '|(?<=.)/+|', '/', $path );
-		if ( ':' === substr( $path, 1, 1 ) ) {
-			$path = ucfirst( $path );
-		}
-		return $path;
-	};
-
 	// Prepare a path to a file.
-	$file = $normalize( $base_dir . $relative_class . '.php' );
+	$file = wp_normalize_path( $base_dir . $relative_class . '.php' );
 
 	// If the file exists, require it.
 	if ( is_readable( $file ) ) {
