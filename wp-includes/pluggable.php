@@ -245,7 +245,7 @@ if ( ! function_exists( 'wp_mail' ) ) :
 			$attachments = explode( "\n", str_replace( "\r\n", "\n", $attachments ) );
 		}
 		global $phpmailer;
-        //PeterY added line below because for some reason SMTP was not in the PHPMailer namespace
+        //PeterY added line below because for some reason SMTP was not in the PHPMailer namespace , adding comment to test GIT
         require_once ABSPATH . WPINC . '/PHPMailer/SMTP.php';
         //End of line added by PeterY
 		// (Re)create it, if it's gone missing.
