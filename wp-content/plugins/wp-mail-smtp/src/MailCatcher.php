@@ -13,9 +13,7 @@ if ( ! class_exists( 'PHPMailer', false ) ) {
  *
  * @since 1.0.0
  */
-class MailCatcher extends \PHPMailer implements MailCatcherInterface {
-
-	use MailCatcherTrait;
+class MailCatcher extends \PHPMailer {
 
 	/**
 	 * Callback Action function name.
@@ -30,28 +28,57 @@ class MailCatcher extends \PHPMailer implements MailCatcherInterface {
 	public $action_function = '\WPMailSMTP\Processor::send_callback';
 
 	/**
-	 * Returns all custom headers.
-	 * In older versions of \PHPMailer class this method didn't exist.
-	 * As we support WordPress 3.6+ - we need to make sure this method is always present.
+	 * Modify the default send() behaviour.
+	 * For those mailers, that relies on PHPMailer class - call it directly.
+	 * For others - init the correct provider and process it.
 	 *
-	 * @since 1.5.0
+	 * @since 1.0.0
 	 *
-	 * @return array
+	 * @throws \phpmailerException Throws when sending via PhpMailer fails for some reason.
+	 *
+	 * @return bool
 	 */
-	public function getCustomHeaders() {
+	public function send() {
 
-		return $this->CustomHeader; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-	}
+		$options     = new Options();
+		$mail_mailer = $options->get( 'mail', 'mailer' );
 
-	/**
-	 * Get the PHPMailer line ending.
-	 *
-	 * @since 2.2.0
-	 *
-	 * @return string
-	 */
-	public function get_line_ending() {
+		// Define a custom header, that will be used in Gmail/SMTP mailers.
+		$this->XMailer = 'WPMailSMTP/Mailer/' . sanitize_key( $mail_mailer ) . ' ' . WPMS_PLUGIN_VER;
 
-		return $this->LE; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+		// Use the default PHPMailer, as we inject our settings there for certain providers.
+		if (
+			$mail_mailer === 'mail' ||
+			$mail_mailer === 'smtp' ||
+			$mail_mailer === 'pepipost'
+		) {
+			return parent::send();
+		}
+
+		// We need this so that the \PHPMailer class will correctly prepare all the headers.
+		$this->Mailer = 'mail';
+
+		// Prepare everything (including the message) for sending.
+		if ( ! $this->preSend() ) {
+			return false;
+		}
+
+		$mailer = wp_mail_smtp()->get_providers()->get_mailer( $mail_mailer, $this );
+
+		if ( ! $mailer ) {
+			return false;
+		}
+
+		if ( ! $mailer->is_php_compatible() ) {
+			return false;
+		}
+
+		/*
+		 * Send the actual email.
+		 * We reuse everything, that was preprocessed for usage in \PHPMailer.
+		 */
+		$mailer->send();
+
+		return $mailer->is_email_sent();
 	}
 }
