@@ -61,13 +61,11 @@ class Upgrade {
 	 */
 	public function v110_upgrade() {
 
-		// Enable SMTPAutoTLS option.
-		$values = [
-			'smtp' => [
-				'autotls' => true,
-			],
-		];
+		$values = Options::init()->get_all();
 
-		Options::init()->set( $values, false, false );
+		// Enable SMTPAutoTLS option.
+		$values['smtp']['autotls'] = true;
+
+		Options::init()->set( $values );
 	}
 }
