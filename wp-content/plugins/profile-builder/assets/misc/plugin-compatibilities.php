@@ -229,7 +229,7 @@
 			$wppb_generalSettings = get_option('wppb_general_settings', 'not_found');
 
 			if( $wppb_generalSettings != 'not_found' ) {
-				if( ! empty( $wppb_generalSettings['adminApproval'] ) && ( $wppb_generalSettings['adminApproval'] == 'yes' ) ) {
+				if( wppb_get_admin_approval_option_value() === 'yes' ) {
 					if( isset( $_REQUEST['edd_login_nonce'] ) ) {
 						if( wp_get_object_terms( $user_id, 'user_status' ) ) {
 							if( isset( $_REQUEST['edd_redirect'] ) ) {
@@ -333,3 +333,30 @@
             remove_action('secure_auth_redirect', 'secupress_move_login_maybe_deny_login_page', 0);
         }
 
+
+        /****************************************************
+         * Divi Pagebuilder Compatibility
+         * Compatibility with Divi Pagebuilder and content restriction. Basically we try to force a restricted page that was created with the pagebuilder to display as a normal page
+         ****************************************************/
+        if( function_exists('et_setup_theme') ) {
+            add_filter('get_post_metadata', 'wppb_divi_page_builder_compatibility', 100, 4);
+            function wppb_divi_page_builder_compatibility( $metadata, $object_id, $meta_key, $single ){
+                if (!is_admin()) {
+                    if (isset($meta_key) && '_et_pb_use_builder' == $meta_key) {
+                        if (wppb_content_restriction_filter_content('not_restricted', get_post($object_id)) != 'not_restricted') {
+                            return 'off';
+                        }
+                    }
+
+                    if (isset($meta_key) && '_wp_page_template' == $meta_key) {
+                        if (wppb_content_restriction_filter_content('not_restricted', get_post($object_id)) != 'not_restricted') {
+                            return 'default';
+                        }
+                    }
+                }
+
+                // Return original if the check does not pass
+                return $metadata;
+
+            }
+        }

@@ -1,5 +1,5 @@
 <?php
-
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 /**
  * Function that creates the "Private Website" submenu page
  *
@@ -24,6 +24,7 @@ function wppb_private_website_settings_defaults() {
             'redirect_to'           =>  '',
             'allowed_pages'         =>  array(),
             'hide_menus'            =>  'no',
+            'disable_rest_api'      =>  'yes',
         )
     );
 
@@ -37,10 +38,18 @@ function wppb_private_website_content() {
     wppb_private_website_settings_defaults();
 
     $wppb_private_website_settings = get_option( 'wppb_private_website_settings', 'not_found' );
-    $all_pages = get_pages();
+
+    $args = array(
+        'post_type'         => 'page',
+        'posts_per_page'    => -1
+    );
+
+    $all_pages = get_posts( $args );
     ?>
     <div class="wrap wppb-wrap wppb-private-website">
         <h2><?php _e( 'Private Website Settings', 'profile-builder' );?></h2>
+
+        <?php settings_errors(); ?>
 
         <?php wppb_generate_settings_tabs() ?>
 
@@ -72,7 +81,7 @@ function wppb_private_website_content() {
                                 if( !empty( $all_pages ) ){
                                     foreach ($all_pages as $page){
                                         ?>
-                                        <option value="<?php echo $page->ID ?>" <?php echo ( ( $wppb_private_website_settings != 'not_found' && isset( $wppb_private_website_settings['allowed_pages'] ) && $wppb_private_website_settings['redirect_to'] == $page->ID ) ? 'selected' : '' ); ?>><?php echo $page->post_title ?></option>
+                                        <option value="<?php echo $page->ID ?>" <?php echo ( ( $wppb_private_website_settings != 'not_found' && isset( $wppb_private_website_settings['redirect_to'] ) && $wppb_private_website_settings['redirect_to'] == $page->ID ) ? 'selected' : '' ); ?>><?php echo $page->post_title ?></option>
                                         <?php
                                     }
                                 }
@@ -108,6 +117,16 @@ function wppb_private_website_content() {
                     </tr>
 
                     <tr>
+                        <th><?php _e( 'Allowed Paths', 'profile-builder' ); ?></th>
+                        <td>
+                            <textarea id="private-website-allowed-paths" class="wppb-textarea" name="wppb_private_website_settings[allowed_paths]"><?php echo ( ( $wppb_private_website_settings != 'not_found' && !empty($wppb_private_website_settings['allowed_paths']) ) ? $wppb_private_website_settings['allowed_paths'] : '' ); ?></textarea>
+                            <ul>
+                                <li class="description"><?php _e( 'Allow these paths to be accessed even if you are not logged in (supports wildcard at the end of the path). For example to exclude https://example.com/some/path/ you can either use the rule /some/path/ or /some/* Enter each rule on it\'s own line', 'profile-builder' ); ?></li>
+                            </ul>
+                        </td>
+                    </tr>
+
+                    <tr>
                         <th><?php _e( 'Hide all Menus', 'profile-builder' ); ?></th>
                         <td>
                             <select id="private-website-menu-hide" class="wppb-select" name="wppb_private_website_settings[hide_menus]">
@@ -117,6 +136,19 @@ function wppb_private_website_content() {
                             <ul>
                                 <li class="description"><?php _e( 'Hide all menu items if you are not logged in.', 'profile-builder' ); ?></li>
                                 <li class="description"><?php printf( __( 'We recommend "<a href="%s" target="_blank">Custom Profile Menus</a>" addon if you need different menu items for logged in / logged out users.', 'profile-builder' ), 'https://www.cozmoslabs.com/add-ons/custom-profile-menus/' ); ?></li>
+                            </ul>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th><?php _e( 'Disable REST-API', 'profile-builder' ); ?></th>
+                        <td>
+                            <select id="private-website-disable-rest-api" class="wppb-select" name="wppb_private_website_settings[disable_rest_api]">
+                                <option value="yes" <?php selected ( ( $wppb_private_website_settings != 'not_found' && ( !isset( $wppb_private_website_settings[ 'disable_rest_api' ] ) || ( isset( $wppb_private_website_settings[ 'disable_rest_api' ] ) && $wppb_private_website_settings[ 'disable_rest_api' ] == 'yes' ) ) ), true ); ?>><?php _e( 'Yes', 'profile-builder' ); ?></option>
+                                <option value="no" <?php selected ( ( $wppb_private_website_settings != 'not_found' && isset( $wppb_private_website_settings[ 'disable_rest_api' ] ) && $wppb_private_website_settings[ 'disable_rest_api' ] == 'no' ), true ); ?>><?php _e( 'No', 'profile-builder' ); ?></option>
+                            </select>
+                            <ul>
+                                <li class="description"><?php _e( 'Disable the WordPress REST-API for non-logged in users when Private Website is enabled', 'profile-builder' ); ?></li>
                             </ul>
                         </td>
                     </tr>

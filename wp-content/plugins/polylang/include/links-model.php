@@ -1,4 +1,7 @@
 <?php
+/**
+ * @package Polylang
+ */
 
 /**
  * Links model abstract class
@@ -52,7 +55,7 @@ abstract class PLL_Links_Model {
 	 * @return array list of hosts
 	 */
 	public function get_hosts() {
-		return array( parse_url( $this->home, PHP_URL_HOST ) );
+		return array( wp_parse_url( $this->home, PHP_URL_HOST ) );
 	}
 
 	/**
@@ -76,9 +79,12 @@ abstract class PLL_Links_Model {
 	 * @param object $language
 	 */
 	protected function set_home_url( $language ) {
-		$search_url = $this->home_url( $language );
-		$home_url = empty( $language->page_on_front ) || $this->options['redirect_lang'] ? $search_url : $this->front_page_url( $language );
-		$language->set_home_url( $search_url, $home_url );
+		// We should always have a default language here, except, temporarily, in PHPUnit tests. The test here protects against PHP notices.
+		if ( isset( $this->options['default_lang'] ) ) {
+			$search_url = $this->home_url( $language );
+			$home_url = empty( $language->page_on_front ) || $this->options['redirect_lang'] ? $search_url : $this->front_page_url( $language );
+			$language->set_home_url( $search_url, $home_url );
+		}
 	}
 
 	/**
@@ -113,8 +119,8 @@ abstract class PLL_Links_Model {
 				$this->set_home_url( $language );
 			}
 
-			// Ensures that the ( possibly cached ) home url uses the right scheme http or https
-			$language->set_home_url_scheme();
+			// Ensures that the ( possibly cached ) home and flag urls use the right scheme http or https.
+			$language->set_url_scheme();
 		}
 		return $languages;
 	}

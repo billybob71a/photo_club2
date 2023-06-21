@@ -155,12 +155,31 @@ jQuery( function() {
                 jQuery('#private-website-redirect-to-login').closest('tr').addClass("wppb-disabled");
                 jQuery('#private-website-allowed-pages').closest('tr').addClass("wppb-disabled");
                 jQuery('#private-website-menu-hide').addClass("wppb-disabled");
+                jQuery('#private-website-disable-rest-api').addClass("wppb-disabled");
+                jQuery('#private-website-allowed-paths').addClass("wppb-disabled");
             }
             else if (value == 'yes') {
                 jQuery('#private-website-redirect-to-login').closest('tr').removeClass("wppb-disabled");
                 jQuery('#private-website-allowed-pages').closest('tr').removeClass("wppb-disabled");
                 jQuery('#private-website-menu-hide').removeClass("wppb-disabled");
+                jQuery('#private-website-disable-rest-api').removeClass("wppb-disabled");
+                jQuery('#private-website-allowed-paths').removeClass("wppb-disabled");
             }
         }
+    }
+});
+
+/*
+ * Login Widget trigger html validation
+ */
+jQuery( function() {
+    if( jQuery( ".widgets-php" ).length != 0 ){//should be in the admin widgets page
+        jQuery("#wpbody").on("click", ".widget-control-save", function () {
+            if (jQuery('.wppb-widget-url-field', jQuery(this).closest('form')).length != 0) {//we are in the PB widget
+                jQuery('.wppb-widget-url-field', jQuery(this).closest('form')).each(function () {
+                    jQuery(this)[0].reportValidity();//reportValidity is the function that triggers the default html validation
+                });
+            }
+        });
     }
 });

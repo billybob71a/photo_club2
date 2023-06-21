@@ -1,4 +1,6 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 /* handle field output */
 function wppb_blog_details_handler( $output, $form_location, $field, $user_id, $field_check_errors, $request_data ){
 
@@ -91,7 +93,7 @@ function wppb_blog_details_handler( $output, $form_location, $field, $user_id, $
     $output .= '
         <li class=" wppb-form-field wppb-blog-url ' . $error_class . '">
         <label for="blog-url">' .  __( 'Site URL slug', 'profile-builder' ) . $error_mark.'</label>
-        <input class="text-input default_field_blog_url" name="wppb_blog_url" maxlength="'. apply_filters( 'wppb_maximum_character_length', 70 ) .'" type="text" id="wppb_blog_url" value="'. esc_attr( wp_unslash( $blog_url_input_value ) ) .'" '. $extra_attr .' />';
+        <input class="text-input default_field_blog_url" name="wppb_blog_url" maxlength="'. apply_filters( 'wppb_maximum_character_length', 70, $field ) .'" type="text" id="wppb_blog_url" value="'. esc_attr( wp_unslash( $blog_url_input_value ) ) .'" '. $extra_attr .' />';
     $output .= '<span class="wppb-description-delimiter">'. $item_description . $domain . '</span>';
     $output .= $is_error .'</li>';
 
@@ -114,7 +116,7 @@ function wppb_blog_details_handler( $output, $form_location, $field, $user_id, $
     $output .= '
         <li class=" wppb-form-field wppb-blog-title ' . $error_class . '">
         <label for="blog-title">' .  __( 'Site Title', 'profile-builder' ) . $error_mark.'</label>
-        <input class="text-input default_field_blog_title" name="wppb_blog_title" maxlength="'. apply_filters( 'wppb_maximum_character_length', 70 ) .'" type="text" id="wppb_blog_title" value="'. esc_attr( wp_unslash( $blog_title_input_value ) ) .'" '. $extra_attr .' />' .
+        <input class="text-input default_field_blog_title" name="wppb_blog_title" maxlength="'. apply_filters( 'wppb_maximum_character_length', 70, $field ) .'" type="text" id="wppb_blog_title" value="'. esc_attr( wp_unslash( $blog_title_input_value ) ) .'" '. $extra_attr .' />' .
         $is_error . '</li>';
 
 

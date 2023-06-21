@@ -1,0 +1,6 @@
+[30-Nov-2022 17:46:58 America/Edmonton] PHP Notice:  Undefined index: SCRIPT_URI in /var/www/html/www.cpas-yyc.com/wp-includes/environment.php on line 2
+[30-Nov-2022 17:46:58 America/Edmonton] PHP Stack trace:
+[30-Nov-2022 17:46:58 America/Edmonton] PHP   1. {main}() /var/www/html/www.cpas-yyc.com/wp-includes/environment.php:0
+[30-Nov-2022 17:47:15 America/Edmonton] PHP Notice:  Undefined index: SCRIPT_URI in /var/www/html/www.cpas-yyc.com/wp-includes/environment.php on line 2
+[30-Nov-2022 17:47:15 America/Edmonton] PHP Stack trace:
+[30-Nov-2022 17:47:15 America/Edmonton] PHP   1. {main}() /var/www/html/www.cpas-yyc.com/wp-includes/environment.php:0

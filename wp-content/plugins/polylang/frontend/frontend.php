@@ -1,4 +1,7 @@
 <?php
+/**
+ * @package Polylang
+ */
 
 /**
  * Frontend controller
@@ -10,7 +13,7 @@
  * links_model    => inherited, reference to PLL_Links_Model object
  * links          => reference to PLL_Links object
  * static_pages   => reference to PLL_Frontend_Static_Pages object
- * choose_lang    => reference to PLL_Choose_lang object
+ * choose_lang    => reference to PLL_Choose_Lang object
  * curlang        => current language
  * filters        => reference to PLL_Frontend_Filters object
  * filters_links  => reference to PLL_Frontend_Filters_Links object
@@ -18,7 +21,6 @@
  * posts          => reference to PLL_CRUD_Posts object
  * terms          => reference to PLL_CRUD_Terms object
  * nav_menu       => reference to PLL_Frontend_Nav_Menu object
- * sync           => reference to PLL_Sync object
  * auto_translate => optional, reference to PLL_Auto_Translate object
  *
  * @since 1.2
@@ -57,27 +59,23 @@ class PLL_Frontend extends PLL_Base {
 	 * @since 1.2
 	 */
 	public function init() {
+		parent::init();
+
 		$this->links = new PLL_Frontend_Links( $this );
 
-		// Don't set any language for REST requests when Polylang Pro is not active
-		if ( ! class_exists( 'PLL_REST_Translated_Object' ) && 0 === strpos( str_replace( 'index.php', '', $_SERVER['REQUEST_URI'] ), '/' . rest_get_url_prefix() . '/' ) ) {
-			/** This action is documented in include/class-polylang.php */
-			do_action( 'pll_no_language_defined' );
-		} else {
-			// Static front page and page for posts
-			if ( 'page' === get_option( 'show_on_front' ) ) {
-				$this->static_pages = new PLL_Frontend_Static_Pages( $this );
-			}
-
-			// Setup the language chooser
-			$c = array( 'Content', 'Url', 'Url', 'Domain' );
-			$class = 'PLL_Choose_Lang_' . $c[ $this->options['force_lang'] ];
-			$this->choose_lang = new $class( $this );
-			$this->choose_lang->init();
-
-			// Need to load nav menu class early to correctly define the locations in the customizer when the language is set from the content
-			$this->nav_menu = new PLL_Frontend_Nav_Menu( $this );
+		// Static front page and page for posts
+		if ( 'page' === get_option( 'show_on_front' ) ) {
+			$this->static_pages = new PLL_Frontend_Static_Pages( $this );
 		}
+
+		// Setup the language chooser
+		$c = array( 'Content', 'Url', 'Url', 'Domain' );
+		$class = 'PLL_Choose_Lang_' . $c[ $this->options['force_lang'] ];
+		$this->choose_lang = new $class( $this );
+		$this->choose_lang->init();
+
+		// Need to load nav menu class early to correctly define the locations in the customizer when the language is set from the content
+		$this->nav_menu = new PLL_Frontend_Nav_Menu( $this );
 	}
 
 	/**
@@ -90,10 +88,6 @@ class PLL_Frontend extends PLL_Base {
 		$this->filters_links = new PLL_Frontend_Filters_Links( $this );
 		$this->filters = new PLL_Frontend_Filters( $this );
 		$this->filters_search = new PLL_Frontend_Filters_Search( $this );
-		$this->posts = new PLL_CRUD_Posts( $this );
-		$this->terms = new PLL_CRUD_Terms( $this );
-
-		$this->sync = new PLL_Sync( $this );
 
 		// Auto translate for Ajax
 		if ( ( ! defined( 'PLL_AUTO_TRANSLATE' ) || PLL_AUTO_TRANSLATE ) && wp_doing_ajax() ) {
@@ -141,7 +135,7 @@ class PLL_Frontend extends PLL_Base {
 
 			// Remove pages query when the language is set unless we do a search
 			// Take care not to break the single page, attachment and taxonomies queries!
-			if ( empty( $qv['post_type'] ) && ! $query->is_search && ! $query->is_page && ! $query->is_attachment && empty( $taxonomies ) ) {
+			if ( empty( $qv['post_type'] ) && ! $query->is_search && ! $query->is_singular && empty( $taxonomies ) && ! $query->is_category && ! $query->is_tag ) {
 				$query->set( 'post_type', 'post' );
 			}
 

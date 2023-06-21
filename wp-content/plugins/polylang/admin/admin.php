@@ -1,4 +1,7 @@
 <?php
+/**
+ * @package Polylang
+ */
 
 /**
  * Admin side controller
@@ -21,14 +24,14 @@
  * filters_post    => reference to PLL_Admin_Filters_Post object
  * filters_term    => reference to PLL_Admin_filters_Term object
  * nav_menu        => reference to PLL_Admin_Nav_Menu object
- * sync            => reference to PLL_Admin_Sync object
+ * block_editor    => reference to PLL_Admin_Block_Editor object
  * classic_editor  => reference to PLL_Admin_Classic_Editor object
  * filters_media   => optional, reference to PLL_Admin_Filters_Media object
  *
  * @since 1.2
  */
 class PLL_Admin extends PLL_Admin_Base {
-	public $filters, $filters_columns, $filters_post, $filters_term, $nav_menu, $sync, $filters_media;
+	public $filters, $filters_columns, $filters_post, $filters_term, $nav_menu, $filters_media;
 
 	/**
 	 * Loads the polylang text domain
@@ -47,7 +50,7 @@ class PLL_Admin extends PLL_Admin_Base {
 	}
 
 	/**
-	 * Aetups filters and action needed on all admin pages and on plugins page
+	 * Setups filters and action needed on all admin pages and on plugins page
 	 * Loads the settings pages or the filters base on the request
 	 *
 	 * @since 1.2
@@ -93,10 +96,11 @@ class PLL_Admin extends PLL_Admin_Base {
 	 * Setup filters for admin pages
 	 *
 	 * @since 1.2
+	 * @since 2.7 instantiate a PLL_Bulk_Translate instance.
 	 */
 	public function add_filters() {
 		// All these are separated just for convenience and maintainability
-		$classes = array( 'Filters', 'Filters_Columns', 'Filters_Post', 'Filters_Term', 'Nav_Menu', 'Sync', 'Classic_Editor' );
+		$classes = array( 'Filters', 'Filters_Columns', 'Filters_Post', 'Filters_Term', 'Nav_Menu', 'Classic_Editor', 'Block_Editor' );
 
 		// Don't load media filters if option is disabled or if user has no right
 		if ( $this->options['media_support'] && ( $obj = get_post_type_object( 'attachment' ) ) && ( current_user_can( $obj->cap->edit_posts ) || current_user_can( $obj->cap->create_posts ) ) ) {
@@ -116,8 +120,5 @@ class PLL_Admin extends PLL_Admin_Base {
 			$class = apply_filters( 'pll_' . $obj, 'PLL_Admin_' . $class );
 			$this->$obj = new $class( $this );
 		}
-
-		$this->posts = new PLL_CRUD_Posts( $this );
-		$this->terms = new PLL_CRUD_Terms( $this );
 	}
 }

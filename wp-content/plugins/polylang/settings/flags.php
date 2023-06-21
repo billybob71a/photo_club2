@@ -1,4 +1,7 @@
 <?php
+/**
+ * @package Polylang
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Don't access directly
@@ -153,7 +156,7 @@ $flags = array(
 	'me'        => __( 'Montenegro', 'polylang' ),
 	'mg'        => __( 'Madagascar', 'polylang' ),
 	'mh'        => __( 'Marshall Islands', 'polylang' ),
-	'mk'        => __( 'Macedonia', 'polylang' ),
+	'mk'        => __( 'North Macedonia', 'polylang' ),
 	'ml'        => __( 'Mali', 'polylang' ),
 	'mm'        => __( 'Myanmar', 'polylang' ),
 	'mn'        => __( 'Mongolia', 'polylang' ),
@@ -270,4 +273,4 @@ $flags = array(
  *
  * @param array $flags
  */
-$flags = apply_filters( 'pll_predefined_flags', $flags );
+return apply_filters( 'pll_predefined_flags', $flags );
