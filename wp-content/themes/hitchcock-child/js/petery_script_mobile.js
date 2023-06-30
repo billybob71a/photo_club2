@@ -13,7 +13,7 @@ if (x=='即將擧行 – CPAS' || x=='Upcoming Activities – CPAS') {jQuery("di
 jQuery('a[href="#pll_switcher"]').click(function(){$(this).next().hide().slideDown();});
 jQuery('li.item_welcome').css('color','white');
 jQuery('a[href="' + competition_url +'"]').attr('href', '#competition_placeholder');
-jQuery('a[href="http://63.142.254.125/about-us/"]').attr('href', '#about_us_placeholder');
+jQuery('a[href="' + current_url_http + '//' + current_url_servername + '/about-us/' + '"]').attr('href', '#about_us_placeholder');
 jQuery('a[href="http://63.142.254.125/activities/"]').attr('href', '#activities_placeholder');
 jQuery('a[href="http://63.142.254.125/zh/%e9%97%9c%e6%96%bc%e6%88%91%e5%80%91/"]').attr('href','#about_us_placeholder');
 jQuery('a[href="http://63.142.254.125/zh/%e6%af%94%e8%b3%bd/"]').attr('href','#competition_placeholder');
