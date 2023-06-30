@@ -14,10 +14,10 @@ jQuery('a[href="#pll_switcher"]').click(function(){$(this).next().hide().slideDo
 jQuery('li.item_welcome').css('color','white');
 jQuery('a[href="' + competition_url +'"]').attr('href', '#competition_placeholder');
 jQuery('a[href="' + current_url_http + '//' + current_url_servername + '/about-us/' + '"]').attr('href', '#about_us_placeholder');
-jQuery('a[href="http://63.142.254.125/activities/"]').attr('href', '#activities_placeholder');
-jQuery('a[href="http://63.142.254.125/zh/%e9%97%9c%e6%96%bc%e6%88%91%e5%80%91/"]').attr('href','#about_us_placeholder');
-jQuery('a[href="http://63.142.254.125/zh/%e6%af%94%e8%b3%bd/"]').attr('href','#competition_placeholder');
-jQuery('a[href="http://63.142.254.125/zh/%e6%b4%bb%e5%8b%95/"]').attr('href','#activities_placeholder');
+jQuery('a[href="' + current_url_http + '//' + current_url_servername + '/activities/' + '"]').attr('href', '#activities_placeholder');
+//jQuery('a[href="http://63.142.254.125/zh/%e9%97%9c%e6%96%bc%e6%88%91%e5%80%91/"]').attr('href','#about_us_placeholder');
+//jQuery('a[href="http://63.142.254.125/zh/%e6%af%94%e8%b3%bd/"]').attr('href','#competition_placeholder');
+//jQuery('a[href="http://63.142.254.125/zh/%e6%b4%bb%e5%8b%95/"]').attr('href','#activities_placeholder');
 jQuery('a[href="#pll_switcher"]').append('&nbsp;&nbsp;<i class="fas fa-caret-down fa-xs"></i>');
 jQuery('a[href="#competition_placeholder"]').append('&nbsp;&nbsp;<i class="fas fa-caret-down fa-xs"></i>');
 jQuery('a[href="#about_us_placeholder"]').append('&nbsp; &nbsp;<i class="fas fa-caret-down fa-xs"></i>');
