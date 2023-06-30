@@ -1,2 +1,4 @@
 wp-config.php
-wp-content/uploads
+download/
+wp-content/debug.log
+wp-content/uploads/[:digit:]
