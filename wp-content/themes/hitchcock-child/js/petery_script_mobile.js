@@ -23,7 +23,7 @@ jQuery('a[href="#competition_placeholder"]').append('&nbsp;&nbsp;<i class="fas f
 jQuery('a[href="#about_us_placeholder"]').append('&nbsp; &nbsp;<i class="fas fa-caret-down fa-xs"></i>');
 jQuery('a[href="#activities_placeholder"]').append('&nbsp; &nbsp;<i class="fas fa-caret-down fa-xs"></i>');
 jQuery('a[href="#Members_corner"]').append('&nbsp; &nbsp;<i class="fas fa-caret-down fa-xs"></i>');
-jQuery('a[href="#2021_competitions"]').append('&nbsp; &nbsp;<i class="fas fa-caret-down fa-xs"></i>');
+jQuery('a[href="#2022_competitions"]').append('&nbsp; &nbsp;<i class="fas fa-caret-down fa-xs"></i>');
 jQuery('a[href="#2021_competitions"]').append('&nbsp; &nbsp;<i class="fas fa-caret-down fa-xs"></i>');
 jQuery('a[href="#2020_competitions"]').append('&nbsp; &nbsp;<i class="fas fa-caret-down fa-xs"></i>');
 jQuery('a[href="#2019_competitions"]').append('&nbsp; &nbsp;<i class="fas fa-caret-down fa-xs"></i>');
@@ -41,6 +41,7 @@ jQuery('a[href="#competition_placeholder"]').click(function(){$(this).next().sli
 jQuery('a[href="#about_us_placeholder"]').click(function(){$(this).next().slideToggle();});
 jQuery('a[href="#activities_placeholder"]').click(function(){$(this).next().slideToggle();});
 jQuery('a[href="#Members_corner"]').click(function(){$(this).next().slideToggle();});
+jQuery('a[href="#2022_competitions"]').click(function(){$(this).next().slideToggle();});
 jQuery('a[href="#2021_competitions"]').click(function(){$(this).next().slideToggle();});
 jQuery('a[href="#2020_competitions"]').click(function(){$(this).next().slideToggle();});
 jQuery('a[href="#2019_competitions"]').click(function(){$(this).next().slideToggle();});
