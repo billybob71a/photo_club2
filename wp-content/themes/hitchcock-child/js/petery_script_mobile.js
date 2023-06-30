@@ -1,3 +1,4 @@
+// PeterY script to add caret to menu items in mobile view
 jQuery(document).ready(function(){
 $ = jQuery.noConflict();
 var bodyClasses = jQuery('body').attr('class');
