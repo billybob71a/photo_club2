@@ -62,7 +62,7 @@ $j(".post-container").on('click','#delete_button', function(){
 			$j.ajax({ url: 'http://63.142.254.125/wp-content/themes/hitchcock-child/delete_post.php',
 				data: {delete_var: post_number},
 				type: 'post',
-				success: function(output) {
+				success: function() {
 					location.reload();
 				}});
 		}
