@@ -1,6 +1,6 @@
 // PeterY script to add caret to menu items in mobile view
 jQuery(document).ready(function(){
-$ = jQuery.noConflict();
+var $j = jQuery.noConflict();
 var bodyClasses = jQuery('body').attr('class');
 jQuery('#usp-success-message').css('color','white');
 var x = jQuery('title').text();
@@ -40,22 +40,22 @@ jQuery('a[href="#2009_competitions"]').append('&nbsp; &nbsp;<i class="fas fa-car
 jQuery('a[href="#competition_placeholder"]').click(function(){$(this).next().slideToggle();});
 jQuery('a[href="#about_us_placeholder"]').click(function(){$(this).next().slideToggle();});
 jQuery('a[href="#activities_placeholder"]').click(function(){$(this).next().slideToggle();});
-jQuery('a[href="#Members_corner"]').click(function(){$(this).next().slideToggle();});
-jQuery('a[href="#2022_competitions"]').click(function(){$(this).next().slideToggle();});
-jQuery('a[href="#2021_competitions"]').click(function(){$(this).next().slideToggle();});
-jQuery('a[href="#2020_competitions"]').click(function(){$(this).next().slideToggle();});
-jQuery('a[href="#2019_competitions"]').click(function(){$(this).next().slideToggle();});
-jQuery('a[href="#2018_competitions"]').click(function(){$(this).next().slideToggle();});
-jQuery('a[href="#2017_competitions"]').click(function(){$(this).next().slideToggle();});
-jQuery('a[href="#2016_competitions"]').click(function(){$(this).next().slideToggle();});
-jQuery('a[href="#2015_competitions"]').click(function(){$(this).next().slideToggle();});
-jQuery('a[href="#2014_competitions"]').click(function(){$(this).next().slideToggle();});
-jQuery('a[href="#2013_competitions"]').click(function(){$(this).next().slideToggle();});
-jQuery('a[href="#2012_competitions"]').click(function(){$(this).next().slideToggle();});
-jQuery('a[href="#2011_competitions"]').click(function(){$(this).next().slideToggle();});
-jQuery('a[href="#2010_competitions"]').click(function(){$(this).next().slideToggle();});
-jQuery('a[href="#2009_competitions"]').click(function(){$(this).next().slideToggle();});
-$(".post-container").on('click','#delete_button', function(){
+jQuery('a[href="#Members_corner"]').click(function(){$j(this).next().slideToggle();});
+jQuery('a[href="#2022_competitions"]').click(function(){$j(this).next().slideToggle();});
+jQuery('a[href="#2021_competitions"]').click(function(){$j(this).next().slideToggle();});
+jQuery('a[href="#2020_competitions"]').click(function(){$j(this).next().slideToggle();});
+jQuery('a[href="#2019_competitions"]').click(function(){$j(this).next().slideToggle();});
+jQuery('a[href="#2018_competitions"]').click(function(){$j(this).next().slideToggle();});
+jQuery('a[href="#2017_competitions"]').click(function(){$j(this).next().slideToggle();});
+jQuery('a[href="#2016_competitions"]').click(function(){$j(this).next().slideToggle();});
+jQuery('a[href="#2015_competitions"]').click(function(){$j(this).next().slideToggle();});
+jQuery('a[href="#2014_competitions"]').click(function(){$j(this).next().slideToggle();});
+jQuery('a[href="#2013_competitions"]').click(function(){$j(this).next().slideToggle();});
+jQuery('a[href="#2012_competitions"]').click(function(){$j(this).next().slideToggle();});
+jQuery('a[href="#2011_competitions"]').click(function(){$j(this).next().slideToggle();});
+jQuery('a[href="#2010_competitions"]').click(function(){$j(this).next().slideToggle();});
+jQuery('a[href="#2009_competitions"]').click(function(){$j(this).next().slideToggle();});
+$j(".post-container").on('click','#delete_button', function(){
 		var isGood = confirm('Are you sure you want delete this photo?');
 		var post_number = $(this).attr('name');
 		if (isGood) {
