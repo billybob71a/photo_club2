@@ -23,6 +23,7 @@ $j('a[href="#competition_placeholder"]').append('&nbsp;&nbsp;<i class="fas fa-ca
 $j('a[href="#about_us_placeholder"]').append('&nbsp; &nbsp;<i class="fas fa-caret-down fa-xs"></i>');
 $j('a[href="#activities_placeholder"]').append('&nbsp; &nbsp;<i class="fas fa-caret-down fa-xs"></i>');
 $j('a[href="#Members_corner"]').append('&nbsp; &nbsp;<i class="fas fa-caret-down fa-xs"></i>');
+$j('a[href="#2023_competitions"]').append('&nbsp; &nbsp;<i class="fas fa-caret-down fa-xs"></i>');
 $j('a[href="#2022_competitions"]').append('&nbsp; &nbsp;<i class="fas fa-caret-down fa-xs"></i>');
 $j('a[href="#2021_competitions"]').append('&nbsp; &nbsp;<i class="fas fa-caret-down fa-xs"></i>');
 $j('a[href="#2020_competitions"]').append('&nbsp; &nbsp;<i class="fas fa-caret-down fa-xs"></i>');
@@ -41,6 +42,7 @@ $j('a[href="#competition_placeholder"]').click(function(){$j(this).next().slideT
 $j('a[href="#about_us_placeholder"]').click(function(){$j(this).next().slideToggle();});
 $j('a[href="#activities_placeholder"]').click(function(){$j(this).next().slideToggle();});
 $j('a[href="#Members_corner"]').click(function(){$j(this).next().slideToggle();});
+$j('a[href="#2023_competitions"]').click(function(){$j(this).next().slideToggle();});
 $j('a[href="#2022_competitions"]').click(function(){$j(this).next().slideToggle();});
 $j('a[href="#2021_competitions"]').click(function(){$j(this).next().slideToggle();});
 $j('a[href="#2020_competitions"]').click(function(){$j(this).next().slideToggle();});
