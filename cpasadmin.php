@@ -2,7 +2,7 @@
 /**
  * Custom Page Template
  */
-require( '/var/www/html/www.cpas-yyc.com/wp-load.php' );
+require( './wp-load.php' );
 $login_check = is_user_logged_in();
 error_log("The user logged in is ". $login_check);
 
