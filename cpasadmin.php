@@ -6,7 +6,22 @@ require( './wp-load.php' );
 $login_check = is_user_logged_in();
 error_log("The user logged in is ". $login_check);
 
+function urlServerName(): string
+{
+    $url = $_SERVER['HTTP_REFERER'];
+    $regex_pattern = '((^[h].*?[:]).*(\/))';
+    preg_match_all($regex_pattern, $url, $matches);
+    echo("<br>");
+    # a var_dump using localhost shows the following:
+    # array(3) { [0]=> array(1) { [0]=> string(17) "http://localhost/" } [1]=> array(1) { [0]=> string(5) "http:" }
+    #  [2]=> array(1) { [0]=> string(1) "/" } }
+    # this means this is a 2D array first index has one value in its first index called 'http://localhost/'
+    # the second index has a value in its first index as the value 'http'
+    $server_name = $matches[1][0];
+    return $server_name;
+    }
 function display_photos_all($keys_of_division_unique, $sub_folder_current) {
+    $server_name = urlServerName();
     if (sizeof($keys_of_division_unique) == 0) {
         echo("no photos submitted for ." .$sub_folder_current);
         return;
@@ -74,8 +89,10 @@ function display_photos_all($keys_of_division_unique, $sub_folder_current) {
                 }
 
             }
+            # need to change this url below to dynamic one based on the URL location on the browser to be
+            # compatible with both qa environment that uses localhost and prod env that uses cpas-yyc.com
             if ($item != "") {
-                echo("<tr><td colspan='3'><a href='https://www.cpas-yyc.com/download/".$item.".zip'>Download ".$item."</a></td></tr>");
+                echo("<tr><td colspan='3'><a href=".$server_name."download/".$item.".zip'>Download ".$item."</a></td></tr>");
             }
             if ($counter == 0) {
                 echo("<tr><td colspan='3'>There have been no photos submitted yet</td></tr>");
@@ -192,8 +209,6 @@ function html_prettyphoto() {
         });
     </script>
     <?php
-    $https_http = $_SERVER['HTTPS'];
-    echo("Hello ".$https_http);
     echo("</head><body><div id=\"main\">
 			<h1>prettyPhoto</h1>");
 }
@@ -452,7 +467,8 @@ if (($login_check) && isset($_POST['randomize'])) {
 
                 //fwrite($myfilethumbnail, 'https://' . $_SERVER['SERVER_NAME'] . '/' . $array_source_location[1] . '/' . $image_split_name[1][0] . "-460x460." . $image_split_extension[1][0] . '||' . $array_source_location[0] . "\r\n");
                 $file_thumbnail_results[0] = str_replace(' ', '%20', $file_thumbnail_results[0]);
-                fwrite($myfilethumbnail, 'https://' . $_SERVER['SERVER_NAME'] . '/' . $file_thumbnail_results[0] . '||' . $array_source_location[0] . "\r\n");
+                $server_name = urlServerName();
+                fwrite($myfilethumbnail, $server_name . '/' . $file_thumbnail_results[0] . '||' . $array_source_location[0] . "\r\n");
                 //the lines of code used to display thumbnails ends here
                 $zipfile->addFile($new_location_file, basename($new_location_file));
             }
