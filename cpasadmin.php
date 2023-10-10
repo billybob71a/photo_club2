@@ -192,6 +192,8 @@ function html_prettyphoto() {
         });
     </script>
     <?php
+    $https_http = $_SERVER['HTTPS'];
+    echo("Hello ".$https_http);
     echo("</head><body><div id=\"main\">
 			<h1>prettyPhoto</h1>");
 }
