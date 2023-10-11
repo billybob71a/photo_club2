@@ -2,23 +2,28 @@
 /**
  * Custom Page Template
  */
-require( './wp-load.php' );
+require( 'wp-load.php' );
 $login_check = is_user_logged_in();
 error_log("The user logged in is ". $login_check);
 
 function urlServerName(): string
 {
-    $url = $_SERVER['HTTP_REFERER'];
-    $regex_pattern = '((^[h].*?[:]).*(\/))';
-    preg_match_all($regex_pattern, $url, $matches);
-    echo("<br>");
+    #$url = $_SERVER['SERVER_NAME'];
+    #$regex_pattern = '((^[h].*?[:]).*(\/))';
+    #preg_match_all($regex_pattern, $url, $matches);
+    #echo("<br>");
     # a var_dump using localhost shows the following:
     # array(3) { [0]=> array(1) { [0]=> string(17) "http://localhost/" } [1]=> array(1) { [0]=> string(5) "http:" }
     #  [2]=> array(1) { [0]=> string(1) "/" } }
     # this means this is a 2D array first index has one value in its first index called 'http://localhost/'
     # the second index has a value in its first index as the value 'http'
-    $server_name = $matches[1][0];
-    return $server_name;
+    #$server_name = $matches[1][0];
+    $http = 'http://';
+    if(isset($_SERVER['HTTPS']) && $_SERVER['SERVER_NAME'] == 'on') {
+        $http = 'https://';
+    }
+    $urlServerName = $http . $_SERVER['HTTP_HOST'] . $_SERVER['SERVER_NAME'];
+    return $urlServerName;
     }
 function display_photos_all($keys_of_division_unique, $sub_folder_current) {
     $server_name = urlServerName();
