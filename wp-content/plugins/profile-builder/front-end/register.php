@@ -1,17 +1,17 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 /**
  * Function that changes the auto generated password with the one selected by the user.
  */
 function wppb_signup_password_random_password_filter( $password ) {
 	global $wpdb;
 
-	$key = ( !empty( $_GET['key'] ) ? $_GET['key'] : null );
-	$key = ( !empty( $_POST['key'] ) ? $_POST['key'] : $key );
-	if( !empty( $key ) )
-		$key = sanitize_text_field( $key );
+	$key = ( !empty( $_GET['key'] ) ? sanitize_text_field( $_GET['key'] ) : null );
+	$key = ( !empty( $_POST['key'] ) ? sanitize_text_field( $_POST['key'] ) : $key );
 
-	if ( !empty( $_POST['user_pass'] ) )
-		$password = $_POST['user_pass'];
+	if ( !empty( $_POST['user_pass'] ) )// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		$password = $_POST['user_pass'];// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 	elseif ( !is_null( $key ) ) {
 		$signup = ( is_multisite() ? $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . $wpdb->signups . " WHERE activation_key = %s", $key ) ) : $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . $wpdb->base_prefix . "signups WHERE activation_key = %s", $key ) ) );
 		
@@ -80,7 +80,7 @@ function wppb_activate_signup( $key ) {
 		
 		// if admin approval is activated, then block the user untill he gets approved
 		$wppb_generalSettings = get_option('wppb_general_settings');
-		if( isset( $wppb_generalSettings['adminApproval'] ) && ( $wppb_generalSettings['adminApproval'] == 'yes' ) ){
+		if( wppb_get_admin_approval_option_value() === 'yes' ){
 			$user_data = get_userdata( $user_id );
 
 			if( $wppb_generalSettings != 'not_found' && ! empty( $wppb_generalSettings['adminApprovalOnUserRole'] ) ) {
@@ -111,7 +111,7 @@ function wppb_activate_signup( $key ) {
 			wp_cache_delete( $user_id, 'users' );
         }
 
-		wppb_notify_user_registration_email($bloginfo, $user_login, $user_email, 'sending', $password, $wppb_generalSettings['adminApproval']);
+		wppb_notify_user_registration_email($bloginfo, $user_login, $user_email, 'sending', $password, wppb_get_admin_approval_option_value() );
 
 		do_action( 'wppb_activate_user', $user_id, $password, $meta );
 
@@ -126,7 +126,7 @@ function wppb_activate_signup( $key ) {
 
             $wppb_general_settings = get_option( 'wppb_general_settings', 'false' );
 
-            if ( !empty( $wppb_general_settings['adminApproval'] ) && $wppb_general_settings['adminApproval'] == 'yes' ){
+            if ( wppb_get_admin_approval_option_value() === 'yes' ){
 				$user_data = get_userdata( $user_id );
 
 				if( $wppb_general_settings != 'not_found' && ! empty( $wppb_general_settings['adminApprovalOnUserRole'] ) ) {
@@ -166,7 +166,6 @@ function wppb_front_end_register( $atts ){
 
 // function to choose whether to display the registration page or the validation message
 function wppb_front_end_register_handler( $atts ){
-
 	return ( isset( $_GET['activation_key'] ) ? wppb_activate_signup ( sanitize_text_field( $_GET['activation_key'] ) ) : wppb_front_end_register( $atts ) );
 }
 
@@ -199,8 +198,7 @@ function wppb_default_registration_redirect( $user_id ) {
     $user_data = get_userdata( $user_id );
 
     // CHECK FOR REDIRECT
-    $_POST['redirect_to'] = wppb_get_redirect_url( 'normal', 'after_registration', $_POST['redirect_to'], $user_data );
-    $_POST['redirect_to'] = apply_filters( 'wppb_after_registration_redirect_url', $_POST['redirect_to'] );
+    $_POST['redirect_to'] = apply_filters( 'wppb_after_registration_redirect_url', wppb_get_redirect_url( 'normal', 'after_registration', esc_url( $_POST['redirect_to'] ), $user_data ) );
 
 }
 add_action( 'register_new_user', 'wppb_default_registration_redirect' );

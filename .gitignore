@@ -1,4 +1,7 @@
 wp-config.php
+download/
+wp-content/debug.log
+wp-content/uploads/[:digit:]
 /images/
 /download/
 /.jshintrc

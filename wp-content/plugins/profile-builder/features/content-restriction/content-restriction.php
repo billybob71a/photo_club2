@@ -1,4 +1,5 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 $wppb_generalSettings = get_option( 'wppb_general_settings', 'not_found' );
 $wppb_content_restriction_settings = get_option( 'wppb_content_restriction_settings', 'not_found' );
@@ -60,6 +61,8 @@ function wppb_content_restriction_content() {
     ?>
     <div class="wrap wppb-content-restriction-wrap">
         <h2><?php _e( 'Content Restriction Settings', 'profile-builder' ); ?></h2>
+
+        <?php settings_errors(); ?>
 
         <?php wppb_generate_settings_tabs() ?>
 

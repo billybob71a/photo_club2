@@ -1,4 +1,7 @@
 <?php
+/**
+ * @package Polylang
+ */
 
 /**
  * Base class for both admin and frontend
@@ -6,7 +9,40 @@
  * @since 1.2
  */
 abstract class PLL_Base {
-	public $links_model, $model, $options;
+	/**
+	 * Stores the plugin options.
+	 *
+	 * @var array
+	 */
+	public $options;
+
+	/**
+	 * Instance of PLL_Model.
+	 *
+	 * @var PLL_Model
+	 */
+	public $model;
+
+	/**
+	 * Instance of a child class of PLL_Links_Model.
+	 *
+	 * @var PLL_Links_Model
+	 */
+	public $links_model;
+
+	/**
+	 * Registers hooks on insert / update post related actions and filters.
+	 *
+	 * @var PLL_CRUD_Posts
+	 */
+	public $posts;
+
+	/**
+	 * Registers hooks on insert / update term related action and filters.
+	 *
+	 * @var PLL_CRUD_Terms
+	 */
+	public $terms;
 
 	/**
 	 * Constructor
@@ -30,6 +66,19 @@ abstract class PLL_Base {
 
 		// Switch_to_blog
 		add_action( 'switch_blog', array( $this, 'switch_blog' ), 10, 2 );
+	}
+
+	/**
+	 * Instantiates classes reacting to CRUD operations on posts and terms,
+	 * only when at least one language is defined.
+	 *
+	 * @since 2.6
+	 */
+	public function init() {
+		if ( $this->model->get_languages_list() ) {
+			$this->posts = new PLL_CRUD_Posts( $this );
+			$this->terms = new PLL_CRUD_Terms( $this );
+		}
 	}
 
 	/**
@@ -110,15 +159,15 @@ abstract class PLL_Base {
 		foreach ( $this as $prop => &$obj ) {
 			if ( is_object( $obj ) && method_exists( $obj, $func ) ) {
 				if ( WP_DEBUG ) {
-					$debug = debug_backtrace();
+					$debug = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
 					$i = 1 + empty( $debug[1]['line'] ); // The file and line are in $debug[2] if the function was called using call_user_func
-					trigger_error(
+					trigger_error( // phpcs:ignore WordPress.PHP.DevelopmentFunctions
 						sprintf(
 							'%1$s was called incorrectly in %3$s on line %4$s: the call to $polylang->%1$s() has been deprecated in Polylang 1.2, use PLL()->%2$s->%1$s() instead.' . "\nError handler",
-							$func,
-							$prop,
-							$debug[ $i ]['file'],
-							$debug[ $i ]['line']
+							esc_html( $func ),
+							esc_html( $prop ),
+							esc_html( $debug[ $i ]['file'] ),
+							absint( $debug[ $i ]['line'] )
 						)
 					);
 				}
@@ -126,7 +175,15 @@ abstract class PLL_Base {
 			}
 		}
 
-		$debug = debug_backtrace();
-		trigger_error( sprintf( 'Call to undefined function PLL()->%1$s() in %2$s on line %3$s' . "\nError handler", $func, $debug[0]['file'], $debug[0]['line'] ), E_USER_ERROR );
+		$debug = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
+		trigger_error( // phpcs:ignore WordPress.PHP.DevelopmentFunctions
+			sprintf(
+				'Call to undefined function PLL()->%1$s() in %2$s on line %3$s' . "\nError handler",
+				esc_html( $func ),
+				esc_html( $debug[0]['file'] ),
+				absint( $debug[0]['line'] )
+			),
+			E_USER_ERROR
+		);
 	}
 }

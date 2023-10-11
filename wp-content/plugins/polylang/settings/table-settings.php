@@ -1,4 +1,7 @@
 <?php
+/**
+ * @package Polylang
+ */
 
 if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php'; // since WP 3.1
@@ -59,7 +62,7 @@ class PLL_Table_Settings extends WP_List_Table {
 				'<tr class="plugin-update-tr">
 					<td colspan="3" class="plugin-update colspanchange">%s</td>
 				</tr>',
-				sprintf( '<div class="update-message notice inline notice-warning notice-alt"><p>%s</p></div>', $message )
+				sprintf( '<div class="update-message notice inline notice-warning notice-alt"><p>%s</p></div>', $message ) // phpcs:ignore WordPress.Security.EscapeOutput
 			);
 		}
 
@@ -78,8 +81,8 @@ class PLL_Table_Settings extends WP_List_Table {
 				</tr>',
 				esc_attr( $item->module ),
 				esc_html( $item->title ),
-				$form,
-				implode( $item->get_buttons() )
+				$form, // phpcs:ignore
+				implode( $item->get_buttons() ) // phpcs:ignore
 			);
 		}
 	}
@@ -92,26 +95,23 @@ class PLL_Table_Settings extends WP_List_Table {
 	 * @param object $item The current item
 	 */
 	protected function single_row_columns( $item ) {
-		list( $columns, $hidden, $sortable, $primary ) = $this->get_column_info();
+		$column_info = $this->get_column_info();
+		$columns     = $column_info[0];
+		$primary     = $column_info[3];
 
-		foreach ( $columns as $column_name => $column_display_name ) {
+		foreach ( array_keys( $columns ) as $column_name ) {
 			$classes = "$column_name column-$column_name";
 			if ( $primary === $column_name ) {
 				$classes .= ' column-primary';
 			}
 
-			if ( in_array( $column_name, $hidden ) ) {
-				$classes .= ' hidden';
-			}
-
 			if ( 'cb' == $column_name ) {
 				echo '<th scope="row" class="check-column">';
-				echo $this->column_cb( $item );
+				echo $this->column_cb( $item ); // phpcs:ignore WordPress.Security.EscapeOutput
 				echo '</th>';
-			}
-			else {
+			} else {
 				printf( '<td class="%s">', esc_attr( $classes ) );
-				echo $this->column_default( $item, $column_name );
+				echo $this->column_default( $item, $column_name ); // phpcs:ignore WordPress.Security.EscapeOutput
 				echo '</td>';
 			}
 		}
@@ -168,6 +168,14 @@ class PLL_Table_Settings extends WP_List_Table {
 	 */
 	public function prepare_items( $items = array() ) {
 		$this->_column_headers = array( $this->get_columns(), array(), $this->get_sortable_columns(), $this->get_primary_column_name() );
+
+		// Sort rows, lowest priority on top.
+		usort(
+			$items,
+			function( $a, $b ) {
+				return $a->priority > $b->priority ? 1 : -1;
+			}
+		);
 		$this->items = $items;
 	}
 

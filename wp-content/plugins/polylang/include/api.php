@@ -1,4 +1,7 @@
 <?php
+/**
+ * @package Polylang
+ */
 
 /**
  * Template tag: displays the language switcher
@@ -18,6 +21,7 @@
  * raw                    => set this to true to build your own custom language switcher, defaults to 0
  * item_spacing           => whether to preserve or discard whitespace between list items, valid options are 'preserve' and 'discard', defaults to preserve
  *
+ * @api
  * @since 0.5
  *
  * @param array $args optional
@@ -35,30 +39,45 @@ function pll_the_languages( $args = '' ) {
  * Returns the current language on frontend
  * Returns the language set in admin language filter on backend ( false if set to all languages )
  *
+ * @api
  * @since 0.8.1
  *
- * @param string $field Optional, the language field to return ( see PLL_Language ), defaults to 'slug'
- * @return string|bool The requested field for the current language
+ * @param string $field Optional, the language field to return ( see PLL_Language ), defaults to 'slug', pass OBJECT constant to get the language object.
+ * @return string|PLL_Language|bool The requested field for the current language
  */
 function pll_current_language( $field = 'slug' ) {
+	if ( OBJECT === $field ) {
+		return PLL()->curlang;
+	}
 	return isset( PLL()->curlang->$field ) ? PLL()->curlang->$field : false;
 }
 
 /**
  * Returns the default language
  *
+ * @api
  * @since 1.0
  *
- * @param string $field Optional, the language field to return ( see PLL_Language ), defaults to 'slug'
- * @return string The requested field for the default language
+ * @param string $field Optional, the language field to return ( see PLL_Language ), defaults to 'slug', pass OBJECT constant to get the language object.
+ * @return string|PLL_Language|bool The requested field for the default language
  */
 function pll_default_language( $field = 'slug' ) {
-	return isset( PLL()->options['default_lang'] ) && ( $lang = PLL()->model->get_language( PLL()->options['default_lang'] ) ) && isset( $lang->$field ) ? $lang->$field : false;
+	if ( isset( PLL()->options['default_lang'] ) ) {
+		$lang = PLL()->model->get_language( PLL()->options['default_lang'] );
+		if ( $lang ) {
+			if ( OBJECT === $field ) {
+				return $lang;
+			}
+			return isset( $lang->$field ) ? $lang->$field : false;
+		}
+	}
+	return false;
 }
 
 /**
  * Among the post and its translations, returns the id of the post which is in the language represented by $slug
  *
+ * @api
  * @since 0.5
  *
  * @param int    $post_id post id
@@ -72,6 +91,7 @@ function pll_get_post( $post_id, $slug = '' ) {
 /**
  * Among the term and its translations, returns the id of the term which is in the language represented by $slug
  *
+ * @api
  * @since 0.5
  *
  * @param int    $term_id term id
@@ -85,6 +105,7 @@ function pll_get_term( $term_id, $slug = '' ) {
 /**
  * Returns the home url in the current language
  *
+ * @api
  * @since 0.8
  *
  * @param string $lang language code ( optional on frontend )
@@ -101,6 +122,7 @@ function pll_home_url( $lang = '' ) {
 /**
  * Registers a string for translation in the "strings translation" panel
  *
+ * @api
  * @since 0.6
  *
  * @param string $name      a unique name for the string
@@ -117,18 +139,20 @@ function pll_register_string( $name, $string, $context = 'polylang', $multiline 
 /**
  * Translates a string ( previously registered with pll_register_string )
  *
+ * @api
  * @since 0.6
  *
  * @param string $string the string to translate
  * @return string the string translation in the current language
  */
 function pll__( $string ) {
-	return is_scalar( $string ) ? __( $string, 'pll_string' ) : $string; // PHPCS:ignore WordPress.WP.I18n.NonSingularStringLiteralText
+	return is_scalar( $string ) ? __( $string, 'pll_string' ) : $string; // PHPCS:ignore WordPress.WP.I18n
 }
 
 /**
  * Translates a string ( previously registered with pll_register_string ) and escapes it for safe use in HTML output.
  *
+ * @api
  * @since 2.1
  *
  * @param string $string the string to translate
@@ -141,6 +165,7 @@ function pll_esc_html__( $string ) {
 /**
  * Translates a string ( previously registered with pll_register_string ) and escapes it for safe use in HTML attributes.
  *
+ * @api
  * @since 2.1
  *
  * @param string $string The string to translate
@@ -152,40 +177,45 @@ function pll_esc_attr__( $string ) {
 
 /**
  * Echoes a translated string ( previously registered with pll_register_string )
+ * It is an equivalent of _e() and is not escaped.
  *
+ * @api
  * @since 0.6
  *
  * @param string $string The string to translate
  */
 function pll_e( $string ) {
-	echo pll__( $string );
+	echo pll__( $string ); // phpcs:ignore
 }
 
 /**
  * Echoes a translated string ( previously registered with pll_register_string ) and escapes it for safe use in HTML output.
  *
+ * @api
  * @since 2.1
  *
  * @param string $string The string to translate
  */
 function pll_esc_html_e( $string ) {
-	echo pll_esc_html__( $string );
+	echo pll_esc_html__( $string ); // phpcs:ignore WordPress.Security.EscapeOutput
 }
 
 /**
  * Echoes a translated a string ( previously registered with pll_register_string ) and escapes it for safe use in HTML attributes.
  *
+ * @api
  * @since 2.1
  *
  * @param string $string The string to translate
  */
 function pll_esc_attr_e( $string ) {
-	echo pll_esc_attr__( $string );
+	echo pll_esc_attr__( $string ); // phpcs:ignore WordPress.Security.EscapeOutput
 }
 
 /**
  * Translates a string ( previously registered with pll_register_string )
  *
+ * @api
  * @since 1.5.4
  *
  * @param string $string the string to translate
@@ -219,6 +249,7 @@ function pll_translate_string( $string, $lang ) {
 /**
  * Returns true if Polylang manages languages and translations for this post type
  *
+ * @api
  * @since 1.0.1
  *
  * @param string $post_type Post type name
@@ -231,6 +262,7 @@ function pll_is_translated_post_type( $post_type ) {
 /**
  * Returns true if Polylang manages languages and translations for this taxonomy
  *
+ * @api
  * @since 1.0.1
  *
  * @param string $tax Taxonomy name
@@ -248,6 +280,7 @@ function pll_is_translated_taxonomy( $tax ) {
  * hide_empty => hides languages with no posts if set to true ( defaults to false )
  * fields     => return only that field if set ( see PLL_Language for a list of fields )
  *
+ * @api
  * @since 1.5
  *
  * @param array $args list of parameters
@@ -261,6 +294,7 @@ function pll_languages_list( $args = array() ) {
 /**
  * Set the post language
  *
+ * @api
  * @since 1.5
  *
  * @param int    $id   post id
@@ -273,6 +307,7 @@ function pll_set_post_language( $id, $lang ) {
 /**
  * Set the term language
  *
+ * @api
  * @since 1.5
  *
  * @param int    $id   term id
@@ -285,6 +320,7 @@ function pll_set_term_language( $id, $lang ) {
 /**
  * Save posts translations
  *
+ * @api
  * @since 1.5
  *
  * @param array $arr an associative array of translations with language code as key and post id as value
@@ -296,6 +332,7 @@ function pll_save_post_translations( $arr ) {
 /**
  * Save terms translations
  *
+ * @api
  * @since 1.5
  *
  * @param array $arr an associative array of translations with language code as key and term id as value
@@ -307,6 +344,7 @@ function pll_save_term_translations( $arr ) {
 /**
  * Returns the post language
  *
+ * @api
  * @since 1.5.4
  *
  * @param int    $post_id
@@ -320,6 +358,7 @@ function pll_get_post_language( $post_id, $field = 'slug' ) {
 /**
  * Returns the term language
  *
+ * @api
  * @since 1.5.4
  *
  * @param int    $term_id
@@ -333,6 +372,7 @@ function pll_get_term_language( $term_id, $field = 'slug' ) {
 /**
  * Returns an array of translations of a post
  *
+ * @api
  * @since 1.8
  *
  * @param int $post_id
@@ -345,6 +385,7 @@ function pll_get_post_translations( $post_id ) {
 /**
  * Returns an array of translations of a term
  *
+ * @api
  * @since 1.8
  *
  * @param int $term_id
@@ -357,11 +398,12 @@ function pll_get_term_translations( $term_id ) {
 /**
  * Count posts in a language
  *
+ * @api
  * @since 1.5
  *
- * @param string $lang language code
- * @param array  $args ( accepted keys: post_type, m, year, monthnum, day, author, author_name, post_format )
- * @return int posts count
+ * @param string $lang Language code.
+ * @param array  $args WP_Query arguments ( accepted keys: post_type, m, year, monthnum, day, author, author_name, post_format, post_status ).
+ * @return int Posts count.
  */
 function pll_count_posts( $lang, $args = array() ) {
 	return PLL()->model->count_posts( PLL()->model->get_language( $lang ), $args );

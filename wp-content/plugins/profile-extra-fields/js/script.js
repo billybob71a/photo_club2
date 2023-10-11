@@ -26,21 +26,25 @@
 		/* Show fields for diffrent field type */
 		$( '#prflxtrflds-select-type' ).on( 'change', function() {
 			type_value = $( this ).val();
-			$( '.prflxtrflds-fields-container, .prflxtrflds-pattern, .prflxtrflds-time-format, .prflxtrflds-date-format, .prflxtrflds-maxlength' ).hide();
+			$( '.prflxtrflds-fields-container, .prflxtrflds-pattern, .prflxtrflds-time-format, .prflxtrflds-date-format, .prflxtrflds-maxlength, .prflxtrflds-rows, .prflxtrflds-cols' ).hide();
 
-			if ( '2' == type_value || '3' == type_value || '4' == type_value ) {
+			if ( '3' == type_value || '4' == type_value || '5' == type_value ) {
 				$( '.prflxtrflds-fields-container' ).show();
-			} else if ( '9' == type_value ) {
+			} else if ( '10' == type_value ) {
 				$( '.prflxtrflds-pattern' ).show();
 			} else {
-				if ( '5' == type_value || '7' == type_value )
+				if ( '6' == type_value || '8' == type_value ) {
 					$( '.prflxtrflds-date-format' ).show();
-
-				if ( '6' == type_value || '7' == type_value )
+				}
+				if ( '7' == type_value || '8' == type_value ) {
 					$( '.prflxtrflds-time-format' ).show();
-
-				if ( '1' == type_value || '8' == type_value )
+				}
+				if ( '1' == type_value || '9' == type_value || '11' == type_value ) {
 					$( '.prflxtrflds-maxlength' ).show();
+				}
+				if ( '2' == type_value ) {
+					$( '.prflxtrflds-rows, .prflxtrflds-cols, .prflxtrflds-maxlength' ).show();
+				}
 			}
 		} ).trigger( 'change' );
 
@@ -127,14 +131,41 @@
 			}
 		} );
 
+		$( '[id*=prflxtrflds-show-in-]' ).on( 'click', function() {
+			if ( $( this ).is( ':checked' ) ) {
+				$( '.' + this.id ).show();
+			} else {
+				$( '.' + this.id ).hide().find( '[type="checkbox"]' ).prop( 'checked', false );
+			}
+		} );
+
+		$( '[id*=prflxtrflds-show-in-]' ).each(function() {
+			if ( $( this ).is( ':checked' ) ) {
+				$( '.' + this.id ).show();
+			} else {
+				$( '.' + this.id ).hide();
+			}
+		} );
+		
+		/* Make inputs always send value */
+		$( '.prflxtrflds-hidden-checkbox' ).each( function( i, e ) {
+			e.disabled = $( '[type="checkbox"][name="' + e.name + '"]' ).prop( 'checked' );
+
+			$( '[name="' + e.name + '"]' ).change( function( e ) {
+				$( '[type="hidden"][name="' + e.target.name + '"]' ).prop( 'disabled', e.target.checked );
+			} );
+		} );
+
 		/* Show 'select all' checkbox if js enabled */
 		$( '#prflxtrflds-div-select-all' ).show();
 
 		$( '.prflxtrflds-checkboxes-select-all-in-roles' ).on( 'click', function() {
 			var $parent = $( this ).closest( 'td' ),
-				$child_cb = $parent.find( '.prflxtrflds-checkboxes-in-roles' );
+				$child_cb = $parent.find( '.prflxtrflds-checkboxes-in-roles' ),
+				$child_cb_disabled = $parent.find( '.prflxtrflds-checkboxes-in-roles' ).filter( ':disabled' );
 			if ( $( this ).is( ':checked' ) ) {
-				$child_cb.attr( 'checked', 'checked' ).trigger( 'change' );
+				$child_cb.prop( 'checked', true ).trigger( 'change' );
+				$child_cb_disabled.removeAttr( 'checked' ).trigger( 'change' );
 			} else {
 				$child_cb.removeAttr( 'checked' ).trigger( 'change' );
 			}
@@ -143,10 +174,12 @@
 		$( '.prflxtrflds-checkboxes-in-roles' ).on( 'change', function() {
 			var $parent = $( this ).closest( 'td' ),
 				$cb_all = $parent.find( '.prflxtrflds-checkboxes-select-all-in-roles' ),
+
 				$checkboxes = $parent.find( '.prflxtrflds-checkboxes-in-roles' ).filter( ':enabled' ),
 				$enabled_checkboxes = $checkboxes.filter( ':checked' );
+
 			if ( $checkboxes.length > 0 && $checkboxes.length == $enabled_checkboxes.length ) {
-				$cb_all.attr( 'checked', 'checked' );
+				$cb_all.prop( 'checked', true );
 				$cb_all.removeAttr( 'disabled' );
 			} else {
 				$cb_all.removeAttr( 'checked' );
@@ -159,11 +192,36 @@
 				role_id = $( this ).data( 'prflxtrflds-role-id' ),
 				checkboxes = $( '.prflxtrflds-checkboxes-editable[data-prflxtrflds-role-id="' + role_id + '"], .prflxtrflds-checkboxes-visible[data-prflxtrflds-role-id="' + role_id + '"]' );
 			if ( $( this ).is( ':checked' ) ) {
+				checkboxes.removeAttr( 'checked' ).trigger( 'change' );
 				checkboxes.removeAttr( 'disabled' ).trigger( 'change' );
 			} else {
-				checkboxes.attr( 'disabled', 'disabled' ).trigger( 'change' );
-			}
-		} ).trigger( 'change' );
+				checkboxes.prop( 'disabled', true ).trigger( 'change' );
+				checkboxes.removeAttr( 'checked' ).trigger( 'change' );
+			}			
+		} );
 
+
+		var table = $( 'table.toplevel_page_profile-extra-fields' );
+		if ( table.length > 1 ) {
+			table.wrap( '<div class="postbox prflxtrflds-table-wrap"><div class="inside"></div></div>' );
+			table.parents( 'form' ).addClass( 'meta-box-sortables' );
+
+			var table_wrap = $( '.prflxtrflds-table-wrap' );
+
+			table_wrap.prepend( '<h2 class="hndle"></h2>' );
+
+			table_wrap.each( function( i, e ) {
+				var 	$this = $( e ),
+						name = $this.next( '.prflxtrflds-tables-name' ).val(),
+						button = '<button type="button" class="handlediv" aria-expanded="true"><span class="screen-reader-text">Toggle panel: <label><input class="hide-if-no-js" id="plugins_checkbox" type="checkbox" value="prflxtrflds_tab_button">' + name + '</label></span><span class="toggle-indicator" aria-hidden="true"></span></button>';
+
+				$this.prepend( button );
+				$this.find( '.hndle' ).text( name );
+			} );
+
+			$( '.prflxtrflds-table-wrap .hndle, .prflxtrflds-table-wrap .handlediv' ).click( function( e ) {
+				$( e.target ).parents( '.prflxtrflds-table-wrap' ).toggleClass( 'closed' );
+			} );
+		}
 	} );
 } )( jQuery );

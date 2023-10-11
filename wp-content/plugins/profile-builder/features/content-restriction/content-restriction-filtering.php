@@ -1,4 +1,5 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 /* Hijack the content when restrictions are set on a single post */
 function wppb_content_restriction_filter_content( $content, $post = null ) {
@@ -32,8 +33,10 @@ function wppb_content_restriction_filter_content( $content, $post = null ) {
     }
 
     // Get user roles that have access to this post
-    $user_status        = get_post_meta( $post->ID, 'wppb-content-restrict-user-status', true );
-    $post_user_roles    = get_post_meta( $post->ID, 'wppb-content-restrict-user-role' );
+    if ( isset( $post ) && isset( $post->ID ) ) {
+        $user_status = get_post_meta($post->ID, 'wppb-content-restrict-user-status', true);
+        $post_user_roles = get_post_meta($post->ID, 'wppb-content-restrict-user-role');
+    }
 
     if( empty( $user_status ) && empty( $post_user_roles ) ) {
         return $content;
@@ -281,4 +284,92 @@ if( function_exists( 'wc_get_page_id' ) ) {
         echo apply_filters( 'the_content', $product_content );
         add_filter('the_content', 'wpautop');
     }
+}
+
+/* if the Static Posts Page has a restriction on it hijack the query */
+add_action( 'template_redirect', 'wppb_content_restriction_posts_page_handle_query', 1 );
+function wppb_content_restriction_posts_page_handle_query(){
+    if( is_home() ){
+        $posts_page_id = get_option( 'page_for_posts' );
+        if( $posts_page_id ) {
+            if (wppb_check_content_restriction_on_post_id($posts_page_id)) {
+                wppb_content_restriction_force_page($posts_page_id);
+            }
+        }
+    }
+}
+
+
+/* if the Static Posts Page has a restriction on it hijack the template back to the Page Template */
+add_filter( 'template_include', 'wppb_content_restriction_posts_page_template', 100 );
+function wppb_content_restriction_posts_page_template( $template ){
+    if( is_home() ){
+        $posts_page_id = get_option( 'page_for_posts' );
+        if( $posts_page_id ) {
+            if (wppb_check_content_restriction_on_post_id($posts_page_id)) {
+                $template = get_page_template();
+            }
+        }
+    }
+    return $template;
+}
+
+/* Change the query to a single post */
+function wppb_content_restriction_force_page( $posts_page_id ){
+    if( $posts_page_id ) {
+        global $wp_query, $post;
+        $post = get_post($posts_page_id);
+        $wp_query->posts = array($post);
+        $wp_query->post_count = 1;
+        $wp_query->is_singular = true;
+        $wp_query->is_singule = true;
+        $wp_query->is_archive = false;
+    }
+}
+
+// add callback to function that hides comments if post content is restricted
+function wppb_comments_hide_callback_function( $args ) {
+    global $post;
+
+    if ( empty( $post->ID ) ) return $args;
+
+    if( wppb_content_restriction_is_post_restricted( $post->ID ) )
+        $args[ 'callback' ] = 'wppb_comments_restrict_view';
+
+    return $args;
+}
+
+// display restriction message if post content is restricted
+function wppb_comments_restrict_view( $comment, $args, $depth ) {
+    static $message_shown = false;
+
+    if ( !$message_shown ) {
+
+        if ( is_user_logged_in() )
+            printf( '<p>%s</p>', apply_filters( 'wppb_comments_restriction_message_user_role', __( 'Comments are restricted for your user role.', 'profile-builder' ) ) );
+        else
+            printf( '<p>%s</p>', apply_filters( 'wppb_comments_restriction_message_logged_out', __( 'You must be logged in to view the comments.', 'profile-builder' ) ) );
+
+        $message_shown = true;
+    }
+}
+
+// restrict replying for restricted posts
+function wppb_comments_restrict_replying( $open, $post_id ) {
+    // Show for administrators
+    if( current_user_can( 'manage_options' ) && is_admin() )
+        return $open;
+
+    if( wppb_content_restriction_is_post_restricted( $post_id ) )
+        return false;
+
+    return $open;
+}
+
+$wppb_cr_settings = get_option( 'wppb_content_restriction_settings' );
+
+// add filter to hide comments and replies if post content is restricted
+if ( isset( $wppb_cr_settings[ 'contentRestriction' ] ) && $wppb_cr_settings[ 'contentRestriction' ] == 'yes' && apply_filters( 'wppb_enable_comment_restriction', true ) ) {
+    add_filter( 'comments_open', 'wppb_comments_restrict_replying', 20, 2 );
+    add_filter( 'wp_list_comments_args', 'wppb_comments_hide_callback_function', 999 );
 }

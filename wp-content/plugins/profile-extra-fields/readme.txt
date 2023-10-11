@@ -1,24 +1,24 @@
 === Profile Extra Fields by BestWebSoft ===
 Contributors: bestwebsoft
 Donate link: https://bestwebsoft.com/donate/
-Tags: add fields, add extra fields, add additional fields, add custom fields, adding fields plugin, profile extra fields, profile extra fields plugin, profile user data, profile information, extra user data, extra fields, additional fields
-Requires at least: 3.9
-Tested up to: 4.9.6
-Stable tag: 1.1.1
+Tags: add fields WordPress, add extra fields, custom fields, woocommerce extra fields, woocommerce additional fields, add custom fields, adding fields plugin, profile extra fields, profile extra fields plugin, profile user data, profile information, extra user data, extra fields, additional fields
+Requires at least: 4.5
+Tested up to: 5.5.1
+Stable tag: 1.2.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Add extra fields to default WordPress user profile. The easiest way to create and manage additional custom values.
+Add extra fields to WooCommerce and default WordPress user profile. The easiest way to create and manage additional custom values.
 
 == Description ==
 
-Simple plugin which helps to add additional fields to the WordPress website user profile page. Checkboxes, radio buttons, text, date, time, and phone number fields.
+Simple plugin which helps to add additional fields to the WooCommerce and WordPress website user profile page. Checkboxes, radio buttons, text, date, time, and phone number fields. 
 
 Easily add and display extra information about WordPress users!
 
 https://www.youtube.com/watch?v=O424Kpnffmo
 
-= Features =
+= Free Features =
 
 * Add unlimited number of extra fields
 * Use shortcode to display user data on your page or post:
@@ -27,8 +27,10 @@ https://www.youtube.com/watch?v=O424Kpnffmo
 	* Certain user role data
 	* Certain user data
 	* Current user data
+* Compatible with [Car Rental V2](https://bestwebsoft.com/products/wordpress/plugins/car-rental-v2/?k=a8f05dd9a324c003f22923d43eb75eea)
 * Display profile extra fields in user registration form
-* Export all user data to a CSV file [NEW]
+* Display certain fields via the shortcode
+* Export all user data to a CSV file 
 * User data shortcode settings:
 	* Choose user data rotation on page or post
 		* Rows
@@ -45,6 +47,7 @@ https://www.youtube.com/watch?v=O424Kpnffmo
 	* Enable or disable debug mode
 * Choose extra field type:
 	* Text
+	* Textarea
 	* Checkbox
 	* Radiobutton
 	* Dropdown list
@@ -53,10 +56,12 @@ https://www.youtube.com/watch?v=O424Kpnffmo
 	* Date and time
 	* Number
 	* Phone number
+	* URL
 * Customize extra fields:
 	* Name
 	* Description
 * Set the max length for text or number in the appropriate fields
+* Set the required symbol
 * Make any field required
 * Set the fields order
 * Choose date and time formats for the corresponding field types
@@ -69,11 +74,25 @@ https://www.youtube.com/watch?v=O424Kpnffmo
 * Detailed step-by-step documentation and videos
 * Multilingual and RTL ready
 
+> **Pro Features**
+>
+> All features from Free version included plus:
+>
+> * Compatible with WooCommerce:
+>   * Registration form
+>   * Checkout billing form
+> * Compatible with Gravity Forms
+> * Get answer to your question within one business day ([Support Policy](https://bestwebsoft.com/support-policy/))
+>
+> [Upgrade to Pro Now](https://bestwebsoft.com/products/wordpress/plugins/profile-extra-fields/?k=b21e006d6bce19b9c1ac7667c721fe1d)
+
 If you have a feature suggestion or idea you'd like to see in the plugin, we'd love to hear about it! [Suggest a Feature](https://support.bestwebsoft.com/hc/en-us/requests/new)
 
 = Documentation & Videos =
 
+* [[Doc] User Guide](https://docs.google.com/document/d/1dS8WUgdJOa4O5Ft48oe3z4iGTyN0cXC-SBBDoeHbChk)
 * [[Doc] Installation](https://docs.google.com/document/d/1-hvn6WRvWnOqj5v5pLUk7Awyu87lq5B_dO-Tv-MC9JQ)
+* [[Doc] Purchase](https://docs.google.com/document/d/1EUdBVvnm7IHZ6y0DNyldZypUQKpB8UVPToSc_LdOYQI)
 
 = Help & Support =
 
@@ -96,7 +115,7 @@ Some of these translations are not complete. We are constantly adding new featur
 
 1. Upload the `profile-extra-fields` folder to `/wp-content/plugins/` directory.
 2. Activate the plugin using the 'Plugins' menu in your WordPress admin panel.
-3. You can adjust the necessary settings using your WordPress admin panel in "BWS Panel" > "Profile Extra Fields".
+3. You can adjust the necessary settings using your WordPress admin panel in "Profile Extra Fields".
 4. Create a page or a post and insert the shortcode [prflxtrflds_user_data] into the text.
 
 [View a Step-by-step Instruction on Profile Extra Fields Installation](https://docs.google.com/document/d/1-hvn6WRvWnOqj5v5pLUk7Awyu87lq5B_dO-Tv-MC9JQ/)
@@ -105,17 +124,17 @@ Some of these translations are not complete. We are constantly adding new featur
 
 = How to add an additional field for the user? =
 
-Please go to the plugin settings page ( "BWS Panel" > "Profile Extra Fields" ) and press the button 'Add a new field'.
+Please go to the plugin settings page ( "Profile Extra Fields" ) and press the button 'Add a new field'.
 
 = Can I change the order of displaying fields? =
 
-Yes. If you have javascript enabled, you can simply drag the field on the settings page ( "BWS Panel" > "Profile Extra Fields" ) - Extra Fields tab, as you need.
+Yes. If you have javascript enabled, you can simply drag the field on the settings page ( "Profile Extra Fields" ) - Extra Fields tab, as you need.
 If you select some of the roles in the filter settings, the order will apply to a particular user role.
 You can also customize the order in the appropriate option while editing field.
 
 = How to view the data filled by users? =
 
-You can view the data filled by users on the plugin settings page ( "BWS Panel" > "Profile Extra Fields" ), in the 'User data' tab
+You can view the data filled by users on the plugin settings page ( "Profile Extra Fields" ), in the 'User data' tab
 
 = How to display the data which users submitted on my site? =
 
@@ -146,8 +165,48 @@ Please make sure that the problem hasn't been discussed yet on our forum (<https
 9. Datetimepicker displaying for the date, time or datetime type fields.
 10. Shortcode settings page.
 11. Adding Profile Extra Fields shortcode to your page or post.
+12. Optional fields.
+13. Car Rental fields.
+14. Car Rental plugin with additional fields.
+15. Additional Car Rental fields on the user profile page.
 
 == Changelog ==
+
+= V1.2.0 - 21.09.2020 =
+* NEW : 'URL link' field type was added.
+* NEW : Ability to display profile extra fields on the user registration page.
+* Update : BWS Panel section was updated.
+* Update : The plugin settings page was changed.
+
+= V1.1.9 - 09.04.2020 =
+* Update : The plugin settings page was changed.
+* Update : The compatibility with Car Rental V2 plugin has been improved.
+* Update : BWS menu has been updated.
+* Pro : Compatibility with Gravity Forms plugin has been added.
+
+= V1.1.8 - 04.09.2019 =
+* Update: The deactivation feedback has been changed. Misleading buttons have been removed.
+
+= V1.1.7 - 06.08.2019 =
+* NEW : Compatibility with Car Rental V2 plugin has been added.
+
+= V1.1.6 - 22.04.2019 =
+* Bugfix : The bug with the incorrect output of the field types has been fixed.
+* Bugfix : The bug with the displaying of the visible fields has been fixed.
+
+= V1.1.5 - 26.03.2019 =
+* New : Textarea field type has been added.
+* Update : All functionality was updated for WordPress 5.1.1
+
+= V1.1.4 - 28.02.2019 =
+* Update : All functionality was updated for WordPress 5.1.
+
+= V1.1.3 - 21.02.2019 =
+* PRO: Ability to display certain fields in Woocommerce has been added.
+
+= V1.1.2 - 18.10.2018 =
+* NEW : Ability to display Username or Public name has been added.
+* NEW : Ability to display certain fields via the shortcode has been added.
 
 = V1.1.1 - 30.05.2018 =
 * NEW : Ability to export all user data to a CSV file has been added.
@@ -192,6 +251,34 @@ Please make sure that the problem hasn't been discussed yet on our forum (<https
 * NEW : Screenshots are added.
 
 == Upgrade Notice ==
+
+= V1.2.0 =
+* Functionality has been expanded.
+
+= V1.1.9 =
+* Usability improved.
+
+= V1.1.8 =
+* Usability improved.
+
+= V1.1.7 =
+* New features added.
+
+= V1.1.6 =
+* Bugs fixed.
+
+= V1.1.5 =
+* New features added.
+* The compatibility with new WordPress version updated.
+
+= V1.1.4 =
+* The compatibility with new WordPress version updated.
+
+= V1.1.3 =
+* New features added.
+
+= V1.1.2 =
+* New features added.
 
 = V1.1.1 =
 * New features added.

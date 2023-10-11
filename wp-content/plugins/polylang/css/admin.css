@@ -21,6 +21,14 @@
 	font-family: 'dashicons';
 	content: "\f155";
 }
+.pll-icon:before{
+	display: inline-block;
+	text-align: left;
+	width: 15px;
+}
+.pll-circle:before{
+	content: "\25cf";
+}
 
 .form-field input[type="radio"] {
 	width: auto;
@@ -143,9 +151,10 @@
 }
 
 /* language columns in edit.php and edit-tags.php */
-th[class*='column-language_'],
-td[class*='column-language_'] {
+.wp-list-table th[class*='column-language_'],
+.wp-list-table td[class*='column-language_'] {
 	width: 1.5em;
+	box-sizing: content-box; /* Override ACF 5.9.0 styles */
 }
 
 /* Text direction in post.php and edit-tags.php */
@@ -263,10 +272,6 @@ td[class*='column-language_'] {
 }
 
 /* icon fonts */
-.pll_icon_tick:before {
-	content: "\f147";
-}
-
 .pll_icon_add:before {
 	content: "\f132";
 }
@@ -303,6 +308,10 @@ td[class*='column-language_'] {
 
 .pll-notice a.notice-dismiss {
 	text-decoration: none;
+}
+
+.pll-notice .button {
+	margin-right: 10px;
 }
 
 @media screen and ( max-width: 782px ) {

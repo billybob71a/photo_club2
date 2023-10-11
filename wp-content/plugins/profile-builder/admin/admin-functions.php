@@ -1,4 +1,5 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 /**
  * Function which returns the same field-format over and over again.
  *
@@ -84,7 +85,7 @@ add_filter( 'wck_element_class_wppb_manage_fields', 'wppb_manage_fields_display_
  */
 function wppb_update_container_class( $update_container_class, $meta, $results, $element_id ) {
 	$wppb_element_type = Wordpress_Creation_Kit_PB::wck_generate_slug( $results[$element_id]["field"] );
-	
+
 	return "class='wck_update_container update_container_$meta update_container_$wppb_element_type element_type_$wppb_element_type'";
 }
 add_filter( 'wck_update_container_class_wppb_manage_fields', 'wppb_update_container_class', 10, 4 );
@@ -104,7 +105,7 @@ add_filter( 'wck_update_container_class_wppb_manage_fields', 'wppb_update_contai
  */
 function wppb_element_class( $element_class, $meta, $results, $element_id ){
 	$wppb_element_type = Wordpress_Creation_Kit_PB::wck_generate_slug( $results[$element_id]["field"] );
-	
+
 	return "class='element_type_$wppb_element_type added_fields_list'";
 }
 add_filter( 'wck_element_class_wppb_manage_fields', 'wppb_element_class', 10, 4 );
@@ -123,7 +124,7 @@ function wppb_password_check_on_profile_update( $errors, $update, $user ){
 /* on reset password */
 add_action( 'validate_password_reset', 'wppb_password_check_extra_conditions', 10, 2 );
 function wppb_password_check_extra_conditions( $errors, $user ){
-    $password = ( isset( $_POST[ 'pass1' ] ) && trim( $_POST[ 'pass1' ] ) ) ? $_POST[ 'pass1' ] : false;
+    $password = ( isset( $_POST[ 'pass1' ] ) && trim( $_POST[ 'pass1' ] ) ) ? $_POST[ 'pass1' ] : false; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 
     if( $password ){
         $wppb_generalSettings = get_option( 'wppb_general_settings' );
@@ -157,7 +158,7 @@ function wppb_password_check_extra_conditions( $errors, $user ){
 add_action( 'admin_footer', 'wppb_add_hidden_password_strength_on_backend' );
 add_action( 'login_footer', 'wppb_add_hidden_password_strength_on_backend' );
 function wppb_add_hidden_password_strength_on_backend(){
-    if( $GLOBALS['pagenow'] == 'profile.php' || $GLOBALS['pagenow'] == 'user-new.php' || ( $GLOBALS['pagenow'] == 'wp-login.php' && isset( $_GET['action'] ) && ( $_GET['action'] == 'rp' || $_GET['action'] == 'resetpass' ) ) ){
+    if( $GLOBALS['pagenow'] == 'profile.php' || $GLOBALS['pagenow'] == 'user-new.php' || ( $GLOBALS['pagenow'] == 'wp-login.php' && isset( $_GET['action'] ) && ( $_GET['action'] === 'rp' || $_GET['action'] === 'resetpass' ) ) ){
         $wppb_generalSettings = get_option( 'wppb_general_settings' );
         if( !empty( $wppb_generalSettings['minimum_password_strength'] ) ){
             ?>
@@ -231,7 +232,7 @@ function wppb_plugin_action_links( $links, $file ) {
 }
 
 /**
- * add links on plugin page 
+ * add links on plugin page
  */
 add_filter( 'plugin_row_meta', 'wppb_plugin_row_meta', 10, 2 );
 function wppb_plugin_row_meta( $links, $file ) {
@@ -254,25 +255,26 @@ function wppb_add_plugin_notifications() {
     /* initiate the plugin notifications class */
     $notifications = WPPB_Plugin_Notifications::get_instance();
     /* this must be unique */
-    $notification_id = 'wppb_new_feature_private_site';
+    $notification_id = 'wppb_new_feature_customization_toolbox';
 
-    $message = '<p style="margin-top: 16px;">' . __( 'Set up a Private Website in WordPress with the help of Profile Builder. This feature is now available in all versions.', 'profile-builder' ) . '</p>';
+	$message  = '<img style="float: left; margin: 10px 12px 10px 0; max-width: 100px;" src="'.WPPB_PLUGIN_URL.'assets/images/pb_addon_small_toolbox.png" alt="Customization Toolbox Add-on"/>';
+    $message .= '<p style="margin-top: 16px;">' . __( 'Check out the Customization Toolbox add-on which packs the most popular customization requests from Profile Builder.', 'profile-builder' ) . '</p>';
     // be careful to use wppb_dismiss_admin_notification as query arg
-    $message .= '<p><a href="' . add_query_arg( array( 'page' => 'profile-builder-private-website', 'wppb_dismiss_admin_notification' => $notification_id ), admin_url( 'admin.php' ) ) . '" class="button-primary">' . __( 'Check it out!', 'profile-builder' ) . '</a></p>';
+    $message .= '<p><a href="https://www.cozmoslabs.com/add-ons/customization-toolbox/" class="button-primary">' . __( 'See details', 'profile-builder' ) . '</a></p>';
     $message .= '<a href="' . add_query_arg( array( 'wppb_dismiss_admin_notification' => $notification_id ) ) . '" type="button" class="notice-dismiss"><span class="screen-reader-text">' . __( 'Dismiss this notice.', 'profile-builder' ) . '</span></a>';
 
-    $notifications->add_notification( $notification_id, $message, 'wppb-notice wppb-narrow notice notice-info', true, array( 'profile-builder-general-settings' ) );
+    $notifications->add_notification( $notification_id, $message, 'wppb-notice wppb-narrow notice notice-info', true, array( 'profile-builder-add-ons' ) );
 }
 
 
 /* hook to create pages for out forms when a user press the create pages/setup button */
 add_action( 'admin_init', 'wppb_create_form_pages' );
 function wppb_create_form_pages(){
-    if( isset( $_GET['page'] ) && $_GET['page'] == 'profile-builder-basic-info' && isset( $_GET['wppb_create_pages'] ) && $_GET['wppb_create_pages'] == 'true' ){
+    if( isset( $_GET['page'] ) && $_GET['page'] === 'profile-builder-basic-info' && isset( $_GET['wppb_create_pages'] ) && $_GET['wppb_create_pages'] === 'true' ){
 
         $wppb_pages_created = get_option( 'wppb_pages_created' );
 
-        if( empty( $wppb_pages_created ) || ( isset( $_GET['wppb_force_create_pages'] ) && $_GET['wppb_force_create_pages'] == 'true' ) ) {
+        if( empty( $wppb_pages_created ) || ( isset( $_GET['wppb_force_create_pages'] ) && $_GET['wppb_force_create_pages'] === 'true' ) ) {
             $register_page = array(
                 'post_title' => 'Register',
                 'post_content' => '[wppb-register]',
@@ -302,4 +304,60 @@ function wppb_create_form_pages(){
             wp_safe_redirect( admin_url('edit.php?s=%5Bwppb-&post_status=all&post_type=page&action=-1&m=0&paged=1&action2=-1') );
         }
     }
+}
+
+/**
+ * Function that prepares labels to pass to the WCK api...we have a quirk in wck api that labels are wrapped
+ * in %label%...so if we want to have % inside the label for example 25% off...we will have a bad time
+ * @param string $label
+ * @return string|string[]
+ */
+function wppb_prepare_wck_labels( $label ){
+    return trim( str_replace( '%', '&#37;', $label ) );
+}
+
+/**
+ * Function that returns the reserved meta name list
+ */
+function wppb_get_reserved_meta_name_list( $all_fields, $posted_values ){
+
+    $unique_meta_name_list = array( 'first_name', 'last_name', 'nickname', 'description' );
+
+    // Default contact methods were removed in WP 3.6. A filter dictates contact methods.
+    if ( apply_filters( 'wppb_remove_default_contact_methods', get_site_option( 'initial_db_version' ) < 23588 ) ){
+        $unique_meta_name_list[] = 'aim';
+        $unique_meta_name_list[] = 'yim';
+        $unique_meta_name_list[] = 'jabber';
+    }
+
+    $add_reserved = true;
+
+    $reserved_meta_names = array( 'attachment', 'attachment_id', 'author', 'author_name', 'calendar', 'cat', 'category', 'category__and', 'category__in', 'category__not_in', 'category_name', 'comments_per_page',
+        'comments_popup', 'custom', 'customize_messenger_channel', 'customized', 'cpage', 'day', 'debug', 'embed', 'error', 'exact', 'feed', 'hour', 'link_category', 'm', 'minute', 'monthnum', 'more',
+        'name', 'nav_menu', 'nonce', 'nopaging', 'offset', 'order', 'orderby', 'p', 'page', 'page_id', 'paged', 'pagename', 'pb', 'perm', 'post', 'post__in', 'post__not_in', 'post_format', 'post_mime_type',
+        'post_status', 'post_tag', 'post_type', 'posts', 'posts_per_archive_page', 'posts_per_page', 'preview', 'robots', 's', 'search', 'second', 'sentence', 'showposts', 'static', 'status', 'subpost',
+        'subpost_id', 'tag', 'tag__and', 'tag__in', 'tag__not_in', 'tag_id', 'tag_slug__and', 'tag_slug__in', 'taxonomy', 'tb', 'term', 'terms', 'theme', 'title', 'type', 'w', 'withcomments', 'withoutcomments', 'year' );
+
+    $args = array(
+        'public'   => true,
+        '_builtin' => true
+    );
+    $post_types = get_post_types( $args, 'names', 'or' );
+    $taxonomies = get_taxonomies( $args, 'names', 'or' );
+
+
+    /*reserved meta names were added in PB 3.1.2 so to avoid the situation where someone updates an already existing field
+     with a reserved name and gets an error check if it is an update or new field */
+    if( !empty( $all_fields ) && !empty($posted_values['id'] ) && !empty($posted_values['meta-name']) ){
+        foreach( $all_fields as $field ){
+            if( $field['id'] === $posted_values['id'] && $field['meta-name'] === $posted_values['meta-name'] ){//it is an update
+                $add_reserved = false;
+            }
+        }
+    }
+
+    if( $add_reserved )
+        $unique_meta_name_list = array_merge( $unique_meta_name_list, $reserved_meta_names, $post_types, $taxonomies );
+
+    return apply_filters ( 'wppb_unique_meta_name_list', $unique_meta_name_list );
 }

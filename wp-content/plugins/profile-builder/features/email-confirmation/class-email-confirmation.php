@@ -241,7 +241,7 @@ class wpp_list_unfonfirmed_email_table extends PB_WP_List_Table {
 		global $current_user;
 		global $wpdb;
 		
-		if ( current_user_can( 'delete_users' ) ){
+		if ( current_user_can( apply_filters( 'wppb_email_confirmation_user_capability', 'manage_options' ) ) ){
 			if( 'delete' === $this->current_action() ) {
 				foreach ( $_GET['user'] as $user ){
 					$sql_result = $wpdb->query( $wpdb->prepare( "DELETE FROM ".$wpdb->base_prefix."signups WHERE user_email = %s", sanitize_email( $user ) ) );
@@ -303,7 +303,12 @@ class wpp_list_unfonfirmed_email_table extends PB_WP_List_Table {
         /**
          * First, lets decide how many records per page to show
          */
-        $per_page = apply_filters('wppb_email_confirmation_user_per_page_number', 20);
+        $per_page = get_user_meta( get_current_user_id(), 'users_per_page', true );
+        if( !empty($per_page) )
+            $per_page = apply_filters('wppb_email_confirmation_user_per_page_number', $per_page);
+        else
+            $per_page = apply_filters('wppb_email_confirmation_user_per_page_number', 20);
+
         /* determine offset */
         if( !empty( $_REQUEST['paged'] ) ){
             $offset = ( esc_attr( $_REQUEST['paged'] ) -1 ) * $per_page;
@@ -321,7 +326,7 @@ class wpp_list_unfonfirmed_email_table extends PB_WP_List_Table {
         }
         else
             $orderby = 'user_login';
-        if( !empty( $_REQUEST['order'] ) && $_REQUEST['order'] == 'desc' )
+        if( !empty( $_REQUEST['order'] ) && $_REQUEST['order'] === 'desc' )
             $order = "DESC";
         else
             $order = 'ASC';
@@ -329,7 +334,7 @@ class wpp_list_unfonfirmed_email_table extends PB_WP_List_Table {
         /* handle the WHERE clause */
         $where = "active = 0";
         if( isset( $_REQUEST['s'] ) && !empty( $_REQUEST['s'] ) ){
-            $where .= " AND ( user_login LIKE '%".sanitize_text_field($_REQUEST['s'])."%' OR user_email LIKE '%".sanitize_text_field($_REQUEST['s'])."%' OR registered LIKE '%".sanitize_text_field($_REQUEST['s'])."%' )";
+            $where .= " AND ( user_login LIKE '%".esc_sql($_REQUEST['s'])."%' OR user_email LIKE '%".esc_sql($_REQUEST['s'])."%' OR registered LIKE '%".esc_sql($_REQUEST['s'])."%' )";
         }
         /* since version 2.0.7 for multisite we add a 'registered_for_blog_id' meta in the registration process
             so we can display only the users registered on that blog. Also for backwards compatibility we display the users that don't have that meta at all */
@@ -422,7 +427,8 @@ function wppb_add_ec_submenu_page() {
     $wppb_generalSettings = get_option('wppb_general_settings', 'not_found');
     if($wppb_generalSettings != 'not_found') {
         if( !empty($wppb_generalSettings['emailConfirmation']) && ($wppb_generalSettings['emailConfirmation'] == 'yes') ){
-            add_submenu_page('users.php', 'Unconfirmed Email Address', 'Unconfirmed Email Address', 'manage_options', 'unconfirmed_emails', 'wppb_unconfirmed_email_address_custom_menu_page');
+            $hook = add_submenu_page('users.php', 'Unconfirmed Email Address', 'Unconfirmed Email Address', 'manage_options', 'unconfirmed_emails', 'wppb_unconfirmed_email_address_custom_menu_page');
+            add_action( "load-$hook", 'wppb_ec_screen_options' ); //add screen options to Unconfirmed Email Users page
             remove_submenu_page('users.php', 'unconfirmed_emails'); //hide the page in the admin menu
         }
     }
@@ -466,4 +472,31 @@ function wppb_unconfirmed_email_address_custom_menu_page(){
         
     </div>
     <?php
+}
+
+/**
+ * Function that handles the screen options on Unconfirmed Email Users page
+ */
+function wppb_ec_screen_options(){
+    $option = 'per_page';
+
+    $args = array(
+        'label' => __( 'Number of items per page:' ),//use the default wordpress domain
+        'default' => 20,
+        'option' => 'users_per_page' //this is the same option as the one on the normal User screen
+    );
+
+    add_screen_option( $option, $args );
+}
+
+/**
+ * Fix the page title of the admin page, since using remove_sumbenu_page() breaks the page title
+ */
+add_filter('admin_title', 'wppb_ec_admin_title', 10 );
+function wppb_ec_admin_title($admin_title){
+    if( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) === 'unconfirmed_emails' ) {
+        $admin_title = __('Users with Unconfirmed Email Address', 'profile-builder') . $admin_title;
+    }
+
+    return $admin_title;
 }
