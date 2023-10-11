@@ -19,10 +19,10 @@ function urlServerName(): string
     # the second index has a value in its first index as the value 'http'
     #$server_name = $matches[1][0];
     $http = 'http://';
-    if(isset($_SERVER['HTTPS']) && $_SERVER['SERVER_NAME'] == 'on') {
+    if(isset($_SERVER['HTTPS']) == 'on') {
         $http = 'https://';
     }
-    $urlServerName = $http . $_SERVER['HTTP_HOST'] . $_SERVER['SERVER_NAME'];
+    $urlServerName = $http . $_SERVER['SERVER_NAME'];
     return $urlServerName;
     }
 function display_photos_all($keys_of_division_unique, $sub_folder_current) {
