@@ -3,7 +3,7 @@
  * Custom Page Template
  */
 global $wpdb;
-require( '/var/www/html/www.cpas-yyc.com/wp-load.php' );
+require( '../../../wp-load.php' );
 $login_check = is_user_logged_in();
 $login_user = wp_get_current_user();
 $login_email = $login_user->user_email;
