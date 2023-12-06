@@ -92,7 +92,7 @@ function display_photos_all($keys_of_division_unique, $sub_folder_current) {
             # need to change this url below to dynamic one based on the URL location on the browser to be
             # compatible with both qa environment that uses localhost and prod env that uses cpas-yyc.com
             if ($item != "") {
-                echo("<tr><td colspan='3'><a href=".$server_name."download/".$item.".zip'>Download ".$item."</a></td></tr>");
+                echo("<tr><td colspan='3'><a href=".$server_name."/download/".$item.".zip'>Download ".$item."</a></td></tr>");
             }
             if ($counter == 0) {
                 echo("<tr><td colspan='3'>There have been no photos submitted yet</td></tr>");
