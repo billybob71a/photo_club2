@@ -32,6 +32,7 @@ $('a[href="#about_us_placeholder"]').append('&nbsp; &nbsp;<i class="fas fa-caret
 $('a[href="#activities_placeholder"]').append('&nbsp; &nbsp;<i class="fas fa-caret-down fa-xs"></i>');
 $('a[href="#Members_corner"]').append('&nbsp; &nbsp;<i class="fas fa-caret-down fa-xs"></i>');
 $('a[href="#2023_competitions"]').append('&nbsp; &nbsp;<i class="fas fa-caret-down fa-xs"></i>');
+$('a[href="#2023_competitions"]').append('&nbsp; &nbsp;<i class="fas fa-caret-down fa-xs"></i>');
 $('a[href="#2022_competitions"]').append('&nbsp; &nbsp;<i class="fas fa-caret-down fa-xs"></i>');
 $('a[href="#2021_competitions"]').append('&nbsp; &nbsp;<i class="fas fa-caret-down fa-xs"></i>');
 $('a[href="#2020_competitions"]').append('&nbsp; &nbsp;<i class="fas fa-caret-down fa-xs"></i>');
