@@ -15,7 +15,14 @@ class Upgrade {
 	 *
 	 * @since 1.1.0
 	 */
-	public function __construct() {
+	public function __construct() {}
+
+	/**
+	 * Run upgrades.
+	 *
+	 * @since 4.0.0
+	 */
+	public function run() {
 
 		$upgrades = $this->upgrades();
 
@@ -61,11 +68,13 @@ class Upgrade {
 	 */
 	public function v110_upgrade() {
 
-		$values = Options::init()->get_all();
-
 		// Enable SMTPAutoTLS option.
-		$values['smtp']['autotls'] = true;
+		$values = [
+			'smtp' => [
+				'autotls' => true,
+			],
+		];
 
-		Options::init()->set( $values );
+		Options::init()->set( $values, false, false );
 	}
 }
