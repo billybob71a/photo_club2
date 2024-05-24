@@ -173,9 +173,9 @@ add_action( 'wp_enqueue_scripts', 'my_theme_enqueue_styles' );
         //the above adds for non-current user near the top of profile page
         add_action( 'personal_options_update', 'save_extra_profile_fields' );
         //the above is for updating and saving to usermeta
-        add_action( 'register_form', 'extra_profile_fields');
-        add_filter( 'registration_errors', 'validate_extra_profile_fields', 10, 3);
-        add_action( 'user_register', 'save_extra_profile_fields');
+        //add_action( 'register_form', 'extra_profile_fields');
+        //add_filter( 'registration_errors', 'validate_extra_profile_fields', 10, 3);
+        //add_action( 'user_register', 'save_extra_profile_fields');
         //add_action( 'login_init', 'my_wp_new_user_notification_init' );
         //function my_wp_new_user_notification_init() {
         //	add_filter( 'wp_new_user_notification_email', 'my_wp_new_user_notification_email', 10, 3 );
