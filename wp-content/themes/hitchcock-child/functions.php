@@ -172,6 +172,20 @@ add_action( 'wp_enqueue_scripts', 'my_theme_enqueue_styles' );
         add_action( 'edit_user_profile', 'custom_user_profile_fields', 10, 1 );
         //the above adds for non-current user near the top of profile page
         add_action( 'personal_options_update', 'save_extra_profile_fields' );
+        add_action('register_form', 'add_hidden_field_to_registration_form');
+        function add_hidden_field_to_registration_form() {
+            ?>
+            <input type="hidden" name="division_drop_down_ff" value="Level_0">
+            <?php
+        }
+        add_action('user_register', 'save_hidden_field_value');
+
+        function save_hidden_field_value($user_id) {
+            if (isset($_POST['division_drop_down_ff'])) {
+                update_user_meta($user_id, 'division_drop_down', sanitize_text_field($_POST['division_drop_down_ff']), $prev_value = '');
+
+            }
+        }
         //the above is for updating and saving to usermeta
         //add_action( 'register_form', 'extra_profile_fields');
         //add_filter( 'registration_errors', 'validate_extra_profile_fields', 10, 3);
