@@ -3,42 +3,46 @@ jQuery(function($){
     /* Set active link color and show form sections when menu item is clicked */
     $('.ngg_page_content_menu a:first-of-type').addClass("ngg_page_content_menu_active");
 
-    $('.ngg_page_content_menu a').click( function(e) {
-        
+    $('.ngg_page_content_menu a').on('click', function(e) {
+
         /* Add color to only the active link */
         $('.ngg_page_content_menu a').removeClass("ngg_page_content_menu_active");
         $(this).addClass("ngg_page_content_menu_active");
 
         /* Show the associated div */
-        var id = $(this).attr('data-id');
+        let id = $(this).attr('data-id');
         $('.ngg_page_content_main > div').css("display", "none");
-        $('div[data-id="' + $(this).attr('data-id') + '"]').css("display", "block");
+        $('div[data-id="' + id + '"]').css("display", "block");
+				if(id === 'watermarks') {
+					$('#nextgen_settings_preview_refresh').click();
+				}
 
     });
 
-    /* Set up responsive menu for mobile devices. */   
+    /* Set up responsive menu for mobile devices. */
     $(".responsive-menu-icon").remove();
     $(".ngg_page_content_menu").addClass("responsive-menu").before('<div class="responsive-menu-icon"></div>');
 
-    $(".responsive-menu-icon").click(function(){
+    $(".responsive-menu-icon").on('click', function(){
         $(this).next(".ngg_page_content_menu").slideToggle( "fast" );
     });
 
-    $(window).resize(function(){
-        if(window.innerWidth > 640) {
+    $(window).on('resize', function() {
+        if (window.innerWidth > 640) {
             $(".ngg_page_content_menu").removeAttr("style");
             $(".responsive-menu > a").removeClass("menu-open");
         }
     });
 
-    $(".responsive-menu > a").click(function(event){
+    $(".responsive-menu > a").on('click', function(event){
         if(window.innerWidth < 782) {
             $(this).parent(".ngg_page_content_menu").slideToggle( "fast" );
         }
     });
 
     // When a submit button is clicked...
-    $('input[type="submit"], button[type="submit"]').click(function(e){
+    $('input[type="submit"], button[type="submit"]').on('click', function(e){
+
         var $button = $(this);
         var message = false;
 
@@ -72,22 +76,28 @@ jQuery(function($){
                 $button.parents('form').append($field);
             }
         }
+		// If watermark url or watermark text is empty, open watermarks tab.
+		if( $('#ngg_errors_in_tab').val() !== '' ){
+			$('.ngg_page_content_menu a').removeClass("ngg_page_content_menu_active");
+			$('.ngg_page_content_menu a[data-id="watermarks"]').addClass("ngg_page_content_menu_active");
+			$('.ngg_page_content_main > div').css("display", "none");
+			$('div[data-id="watermarks"]').css("display", "block");
+		}
     });
 
 
     // Toggle the advanced settings
-    $('.nextgen_advanced_toggle_link').on('click', function(e){
-        e.preventDefault();
-        var form_id = '#'+$(this).attr('rel');
-        var btn = $(this);
-        $(form_id).toggle(500, 'swing', function(){
+    $('.nextgen_advanced_toggle_link').on('click', function(event) {
+        event.preventDefault();
+        const $form = $('#' + $(this).attr('rel'));
+        const $btn = $(this);
+        $form.toggle(500, 'swing', function() {
             if ($(this).hasClass('hidden')) {
                 $(this).removeClass('hidden');
-                btn.text(btn.attr('active_label'));
-            }
-            else {
+                $btn.text($btn.attr('active_label'));
+            } else {
                 $(this).addClass('hidden');
-                btn.text(btn.attr('hidden_label'));
+                $btn.text($btn.attr('hidden_label'));
             }
         });
     });
@@ -96,9 +106,7 @@ jQuery(function($){
     $('#ngg_page_content').css('visibility', 'visible');
 
     // Handle the "recover" and "delete" links in Manage Gallery > each image row
-    $('#ngg-listimages .row-actions .confirmrecover, #ngg-listimages .row-actions.submitdelete.delete').on(
-        'click',
-        function(event) {
+    $('#ngg-listimages .row-actions .confirmrecover, #ngg-listimages .row-actions.submitdelete.delete').on('click', function(event) {
             var target = event.target;
             if (!confirm(target.getAttribute('data-question') + ' "' + target.getAttribute('data-text') + '"')) {
                 event.preventDefault();

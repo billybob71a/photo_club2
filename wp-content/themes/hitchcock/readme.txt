@@ -1,8 +1,9 @@
 === Hitchcock ===
 Contributors: Anlino
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=anders%40andersnoren%2ese&lc=US&item_name=Free%20WordPress%20Themes%20from%20Anders%20Noren&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted
-Requires at least: 4.4
-Tested up to: 5.0
+Requires at least: 4.5
+Tested up to: 6.0
+Requires PHP: 5.4
 Stable tag: trunk
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -50,6 +51,10 @@ FontAwesome font
 License: SIL Open Font License, 1.1 
 Source: http://www.fontawesome.io
 
+FontAwesome Code
+License: MIT License, https://opensource.org/licenses/MIT
+Source: https://www.fontawesome.io
+
 DoubleTapToGo.js 
 License: MIT License
 Source: https://github.com/dachcom-digital/jquery-doubletaptogo
@@ -68,6 +73,102 @@ Source: http://www.unsplash.com
 
 
 == Changelog ==
+
+Version 2.2.1 (2022-07-01)
+-------------------------
+- Improved fonts.css enqueue for child themes.
+
+Version 2.2 (2022-06-29)
+-------------------------
+- Switched from the Google Fonts CDN to font files included in the theme folder.
+- Removed the "Disable Google Fonts" Customizer setting, since it's no longer needed.
+- Bumped "Tested up to" to 6.0.
+
+Version 2.1 (2022-04-13)
+-------------------------
+- Feature: Added two widget areas to the footer, with styles.
+- Feature: Added a Customizer option for disabling Google Fonts.
+- Fixed layout of nested alignwide/alignfull blocks.
+- Remove the top/bottom margin of first/last elements in certain block containers.
+- Moved the Customizer accent color setting to the `colors` Customizer panel.
+- Fixed order of CSS sections.
+- Added "Tested up to" and "Requires PHP" to style.css and readme.txt.
+- Updated URLs to andersnoren.se to omit the www part.
+
+Version 2.0.2 (2020-05-10)
+-------------------------
+- Fixed the name attribute in `searchform.php` resulting in broken search strings.
+
+Version 2.0.1 (2020-05-09)
+-------------------------
+- Fixed style issues with gallery format and the Jetpack Infinite Scroll loader.
+
+Version 2.0.0 (2020-05-08)
+-------------------------
+- Increased "Tested up to" to 5.4.1.
+- Increased "Requires at least" to 4.5, since Hitchcock uses `custom_logo`.
+- Added the new `assets` folder, and moved images, styles and JavaScript to it.
+- Renamed the editor stylesheets.
+- Changed the screenshot to the `jpg` format, reducing file size by more than 600 KB.
+- Removed license.txt.
+- Added unique IDs to the search form and search field.
+- CSS: Cleanup (indentation, comment headings, etc).
+- CSS: Adjusted reset.
+- CSS: Added the new Element Base section, and made base styles more global, less specific.
+- CSS: Increased contrast of the light gray color, removed the medium gray color.
+- Moved the `Hitchcock_Customize` class to `/inc/classes/class-hitchcock-customize.php`.
+- Moved the archive pagination from a function to `pagination.php`.
+- Cleaned up ´index.php´, and moved modifications of the archive title to a `functions.php` filter where it belongs.
+- Removed a obsolete thumbnail admin CSS fix.
+- Removed removal of outline.
+- Only output Custom CSS as inline style if the accent color set differs from the default.
+- Restructured the custom CSS function, and added output of its CSS with `wp_add_inline_style()` instead of a `wp_head` action.
+- Added theme version to enqueues.
+- Fixed block editor buttons missing the Hitchcock button styles.
+- Updated clearing to use pseudos instead of a `.clear` element.
+- Removed title attributes from links.
+- Restructured site title output for better semantics.
+- CSS: Moved the block styles to their own section of the document.
+- Changed the "Regular" block editor font size to "Normal", to match the block editor naming convention.
+- Updated block editor styles.
+- Removed Customizer live JavaScript preview.
+
+Version 1.25 (2020-03-30)
+-------------------------
+- Social menu: Fixed targeting issue causing mail and feed links not getting the right icon.
+- Set font smoothing to antialiased.
+
+Version 1.24 (2020-03-30)
+-------------------------
+- Fixed issue with gallery block alignment after changes to the block markup in Core.
+- Updated the block editor styles for links to prevent them hitting elements outside of theme scope.
+- Limited the FontAwesome files to only include woff and woff2 files, reducing the theme file size by a large amount.
+- Updated the archive post previews to be square on mobile, so they always have the same aspect ratio.
+- Social menu: Added Xing, Snapchat.
+
+Version 1.23 (2019-07-20)
+-------------------------
+- Added theme URI to style.css
+- Updated "Tested up to"
+- Added theme tags
+- Added skip link
+- Don't show comments if the post is password protected
+- Don't show the post thumbnail if the post is password protected
+- Fixed font issues in the block editor styles
+- Updated FontAwesome to the latest version, and added a lot more icons
+- Added licensing information for FontAwesome code
+- Better social menu styling
+- Updated screenshot resolution to 1200x900
+
+Version 1.22 (2019-06-20)
+-------------------------
+- Fixed sub menus being overlapped by the menu link when on two lines
+- Updated Pinterest icon url to be domain independent
+- Added Twitch icon
+
+Version 1.21 (2019-04-07)
+-------------------------
+- Added the new wp_body_open() function, along with a function_exists check
 
 Version 1.20 (2019-01-11)
 -------------------------

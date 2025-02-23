@@ -3,10 +3,16 @@ namespace Elementor\TemplateLibrary;
 
 use Elementor\Api;
 use Elementor\Core\Common\Modules\Ajax\Module as Ajax;
+use Elementor\Core\Isolation\Wordpress_Adapter;
+use Elementor\Core\Isolation\Wordpress_Adapter_Interface;
+use Elementor\Core\Isolation\Elementor_Adapter;
+use Elementor\Core\Isolation\Elementor_Adapter_Interface;
 use Elementor\Core\Settings\Manager as SettingsManager;
+use Elementor\Includes\TemplateLibrary\Data\Controller;
 use Elementor\TemplateLibrary\Classes\Import_Images;
 use Elementor\Plugin;
 use Elementor\User;
+use Elementor\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -31,7 +37,7 @@ class Manager {
 	 *
 	 * @var Source_Base[]
 	 */
-	protected $_registered_sources = [];
+	protected $_registered_sources = []; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
 	/**
 	 * Imported template images.
@@ -42,7 +48,17 @@ class Manager {
 	 *
 	 * @var Import_Images
 	 */
-	private $_import_images = null;
+	private $_import_images = null; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+
+	/**
+	 * @var Wordpress_Adapter_Interface
+	 */
+	protected $wordpress_adapter = null;
+
+	/**
+	 * @var Elementor_Adapter_Interface
+	 */
+	protected $elementor_adapter = null;
 
 	/**
 	 * Template library manager constructor.
@@ -54,6 +70,8 @@ class Manager {
 	 * @access public
 	 */
 	public function __construct() {
+		Plugin::$instance->data_manager_v2->register_controller( new Controller() );
+
 		$this->register_default_sources();
 
 		$this->add_actions();
@@ -66,23 +84,6 @@ class Manager {
 	public function add_actions() {
 		add_action( 'elementor/ajax/register_actions', [ $this, 'register_ajax_actions' ] );
 		add_action( 'wp_ajax_elementor_library_direct_actions', [ $this, 'handle_direct_actions' ] );
-
-		// TODO: bc since 2.3.0
-		add_action( 'wp_ajax_elementor_update_templates', function() {
-			if ( ! isset( $_POST['templates'] ) ) {
-				return;
-			}
-
-			foreach ( $_POST['templates'] as & $template ) {
-				if ( ! isset( $template['content'] ) ) {
-					return;
-				}
-
-				$template['content'] = stripslashes( $template['content'] );
-			}
-
-			wp_send_json_success( $this->handle_ajax_request( 'update_templates', $_POST ) );
-		} );
 	}
 
 	/**
@@ -101,6 +102,14 @@ class Manager {
 		}
 
 		return $this->_import_images;
+	}
+
+	public function set_wordpress_adapter( Wordpress_Adapter_Interface $wordpress_adapter ) {
+		$this->wordpress_adapter = $wordpress_adapter;
+	}
+
+	public function set_elementor_adapter( Elementor_Adapter_Interface $elementor_adapter ): void {
+		$this->elementor_adapter = $elementor_adapter;
 	}
 
 	/**
@@ -146,9 +155,8 @@ class Manager {
 	 * Remove an existing template sources from the list of registered template
 	 * sources.
 	 *
-	 * @deprecated 2.7.0
-	 *
 	 * @since 1.0.0
+	 * @deprecated 2.7.0
 	 * @access public
 	 *
 	 * @param string $id The source ID.
@@ -200,16 +208,19 @@ class Manager {
 	 *
 	 * Retrieve all the templates from all the registered sources.
 	 *
-	 * @since 1.0.0
-	 * @access public
-	 *
-	 * @return array Templates array.
+	 * @param array $filter_sources
+	 * @param bool $force_update
+	 * @return array
 	 */
-	public function get_templates() {
+	public function get_templates( array $filter_sources = [], bool $force_update = false ): array {
 		$templates = [];
 
 		foreach ( $this->get_registered_sources() as $source ) {
-			$templates = array_merge( $templates, $source->get_items() );
+			if ( ! empty( $filter_sources ) && ! in_array( $source->get_id(), $filter_sources, true ) ) {
+				continue;
+			}
+
+			$templates = array_merge( $templates, $source->get_items( [ 'force_update' => $force_update ] ) );
 		}
 
 		return $templates;
@@ -230,11 +241,18 @@ class Manager {
 	public function get_library_data( array $args ) {
 		$library_data = Api::get_library_data( ! empty( $args['sync'] ) );
 
+		if ( empty( $library_data ) ) {
+			return $library_data;
+		}
+
 		// Ensure all document are registered.
 		Plugin::$instance->documents->get_document_types();
 
+		$filter_sources = ! empty( $args['filter_sources'] ) ? $args['filter_sources'] : [];
+		$force_update = ! empty( $args['sync'] );
+
 		return [
-			'templates' => $this->get_templates(),
+			'templates' => $this->get_templates( $filter_sources, $force_update ),
 			'config' => $library_data['types_data'],
 		];
 	}
@@ -359,6 +377,13 @@ class Manager {
 			return $validate_args;
 		}
 
+		if ( ! $this->is_allowed_to_read_template( $args ) ) {
+			return new \WP_Error(
+				'template_error',
+				esc_html__( 'You do not have permission to access this template.', 'elementor' )
+			);
+		}
+
 		if ( isset( $args['edit_mode'] ) ) {
 			Plugin::$instance->editor->set_edit_mode( $args['edit_mode'] );
 		}
@@ -410,7 +435,8 @@ class Manager {
 	/**
 	 * Export template.
 	 *
-	 * Export template to a file.
+	 * Export template to a file after ensuring it is a valid Elementor template
+	 * and checking user permissions for private posts.
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -424,6 +450,21 @@ class Manager {
 
 		if ( is_wp_error( $validate_args ) ) {
 			return $validate_args;
+		}
+
+		$post_id = intval( $args['template_id'] );
+		$post_status = get_post_status( $post_id );
+
+		if ( get_post_type( $post_id ) !== Source_Local::CPT ) {
+			return new \WP_Error( 'template_error', esc_html__( 'Invalid template type or template does not exist.', 'elementor' ) );
+		}
+
+		if ( 'private' === $post_status && ! current_user_can( 'read_private_posts', $post_id ) ) {
+			return new \WP_Error( 'template_error', esc_html__( 'You do not have permission to access this template.', 'elementor' ) );
+		}
+
+		if ( 'publish' !== $post_status && ! current_user_can( 'edit_post', $post_id ) ) {
+			return new \WP_Error( 'template_error', esc_html__( 'You do not have permission to export this template.', 'elementor' ) );
 		}
 
 		$source = $this->get_source( $args['source'] );
@@ -442,8 +483,8 @@ class Manager {
 	public function direct_import_template() {
 		/** @var Source_Local $source */
 		$source = $this->get_source( 'local' );
-
-		return $source->import_template( $_FILES['file']['name'], $_FILES['file']['tmp_name'] );
+		$file = Utils::get_super_global_value( $_FILES, 'file' );
+		return $source->import_template( $file['name'], $file['tmp_name'] );
 	}
 
 	/**
@@ -459,20 +500,45 @@ class Manager {
 	 * @return mixed Whether the export succeeded or failed.
 	 */
 	public function import_template( array $data ) {
-		/** @var Source_Local $source */
-		$file_content = base64_decode( $data['fileData'] );
+		// If the template is a JSON file, allow uploading it.
+		add_filter( 'elementor/files/allow-file-type/json', [ $this, 'enable_json_template_upload' ] );
+		add_filter( 'elementor/files/allow_unfiltered_upload', [ $this, 'enable_json_template_upload' ] );
 
-		$tmp_file = tmpfile();
+		// Imported templates can be either JSON files, or Zip files containing multiple JSON files
+		$upload_result = Plugin::$instance->uploads_manager->handle_elementor_upload( $data, [ 'zip', 'json' ] );
 
-		fwrite( $tmp_file, $file_content );
+		remove_filter( 'elementor/files/allow-file-type/json', [ $this, 'enable_json_template_upload' ] );
+		remove_filter( 'elementor/files/allow_unfiltered_upload', [ $this, 'enable_json_template_upload' ] );
 
-		$source = $this->get_source( 'local' );
+		if ( is_wp_error( $upload_result ) ) {
+			Plugin::$instance->uploads_manager->remove_file_or_dir( dirname( $upload_result['tmp_name'] ) );
 
-		$result = $source->import_template( $data['fileName'], stream_get_meta_data( $tmp_file )['uri'] );
+			return $upload_result;
+		}
 
-		fclose( $tmp_file );
+		/** @var Source_Local $source_local */
+		$source_local = $this->get_source( 'local' );
 
-		return $result;
+		$import_result = $source_local->import_template( $upload_result['name'], $upload_result['tmp_name'] );
+
+		// Remove the temporary directory generated for the stream-uploaded file.
+		Plugin::$instance->uploads_manager->remove_file_or_dir( dirname( $upload_result['tmp_name'] ) );
+
+		return $import_result;
+	}
+
+	/**
+	 * Enable JSON Template Upload
+	 *
+	 * Runs on the 'elementor/files/allow-file-type/json' Uploads Manager filter.
+	 *
+	 * @since 3.5.0
+	 * @access public
+	 *
+	 * return bool
+	 */
+	public function enable_json_template_upload() {
+		return true;
 	}
 
 	/**
@@ -497,6 +563,25 @@ class Manager {
 		$source = $this->get_source( $args['source'] );
 
 		return $source->mark_as_favorite( $args['template_id'], filter_var( $args['favorite'], FILTER_VALIDATE_BOOLEAN ) );
+	}
+
+	public function import_from_json( array $args ) {
+		$validate_args = $this->ensure_args( [ 'editor_post_id', 'elements' ], $args );
+
+		if ( is_wp_error( $validate_args ) ) {
+			return $validate_args;
+		}
+
+		$elements = json_decode( $args['elements'], true );
+
+		$document = Plugin::$instance->documents->get( $args['editor_post_id'] );
+		if ( ! $document ) {
+			return new \WP_Error( 'template_error', 'Document not found.' );
+		}
+
+		$import_data = $document->get_import_data( [ 'content' => $elements ] );
+
+		return $import_data['content'];
 	}
 
 	/**
@@ -539,14 +624,14 @@ class Manager {
 	 */
 	private function handle_ajax_request( $ajax_request, array $data ) {
 		if ( ! User::is_current_user_can_edit_post_type( Source_Local::CPT ) ) {
-			throw new \Exception( 'Access Denied' );
+			throw new \Exception( 'Access denied.' );
 		}
 
 		if ( ! empty( $data['editor_post_id'] ) ) {
 			$editor_post_id = absint( $data['editor_post_id'] );
 
 			if ( ! get_post( $editor_post_id ) ) {
-				throw new \Exception( __( 'Post not found.', 'elementor' ) );
+				throw new \Exception( 'Post not found.' );
 			}
 
 			Plugin::$instance->db->switch_to_post( $editor_post_id );
@@ -580,6 +665,7 @@ class Manager {
 			'delete_template',
 			'import_template',
 			'mark_template_as_favorite',
+			'import_from_json',
 		];
 
 		foreach ( $library_ajax_requests as $ajax_request ) {
@@ -605,9 +691,22 @@ class Manager {
 			$this->handle_direct_action_error( 'Access Denied' );
 		}
 
-		$action = $_REQUEST['library_action'];
+		$action = Utils::get_super_global_value( $_REQUEST, 'library_action' ); // phpcs:ignore -- Nonce already verified.
 
-		$result = $this->$action( $_REQUEST );
+		$whitelist_methods = [
+			'export_template',
+			'direct_import_template',
+		];
+
+		if ( 'direct_import_template' === $action && ! User::is_current_user_can_upload_json() ) {
+			return;
+		}
+
+		if ( in_array( $action, $whitelist_methods, true ) ) {
+			$result = $this->$action( $_REQUEST ); // phpcs:ignore -- Nonce already verified.
+		} else {
+			$result = new \WP_Error( 'method_not_exists', 'Method Not exists' );
+		}
 
 		if ( is_wp_error( $result ) ) {
 			/** @var \WP_Error $result */
@@ -660,10 +759,48 @@ class Manager {
 	 * @return \WP_Error|true True on success, 'WP_Error' otherwise.
 	 */
 	private function ensure_args( array $required_args, array $specified_args ) {
-		$not_specified_args = array_diff( $required_args, array_keys( array_filter( $specified_args ) ) );
+		$not_specified_args = array_diff( $required_args, array_keys( $specified_args ) );
 
 		if ( $not_specified_args ) {
 			return new \WP_Error( 'arguments_not_specified', sprintf( 'The required argument(s) "%s" not specified.', implode( ', ', $not_specified_args ) ) );
+		}
+
+		return true;
+	}
+
+	private function is_allowed_to_read_template( array $args ): bool {
+		if ( 'remote' === $args['source'] ) {
+			return true;
+		}
+
+		if ( null === $this->wordpress_adapter ) {
+			$this->set_wordpress_adapter( new WordPress_Adapter() );
+		}
+
+		if ( ! $this->should_check_permissions( $args ) ) {
+			return true;
+		}
+
+		$post_id = intval( $args['template_id'] );
+		$post_status = $this->wordpress_adapter->get_post_status( $post_id );
+		$is_private_or_non_published = ( 'private' === $post_status && ! $this->wordpress_adapter->current_user_can( 'read_private_posts', $post_id ) ) || ( 'publish' !== $post_status );
+
+		$can_read_template = $is_private_or_non_published || $this->wordpress_adapter->current_user_can( 'edit_post', $post_id );
+
+		return apply_filters( 'elementor/template-library/is_allowed_to_read_template', $can_read_template, $args );
+	}
+
+	private function should_check_permissions( array $args ): bool {
+		if ( null === $this->elementor_adapter ) {
+			$this->set_elementor_adapter( new Elementor_Adapter() );
+		}
+
+		// TODO: Remove $isWidgetTemplate in 3.28.0 as there is a Pro dependency
+		$check_permissions = isset( $args['check_permissions'] ) && false === $args['check_permissions'];
+		$is_widget_template = 'widget' === $this->elementor_adapter->get_template_type( $args['template_id'] );
+
+		if ( $check_permissions || $is_widget_template ) {
+			return false;
 		}
 
 		return true;

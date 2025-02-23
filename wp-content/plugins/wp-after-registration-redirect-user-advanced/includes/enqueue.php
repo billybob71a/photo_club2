@@ -2,8 +2,8 @@
 
 add_action( "admin_enqueue_scripts", "wparua_enqueue_scripts" );
 
-function wparua_enqueue_scripts(){
-
+function wparua_enqueue_scripts()
+{
 	wp_enqueue_style ( "wparua_style_css", 	   WPARUA_PLUGIN_URL . "admin/assets/css/style.css", false );
 	
 	wp_enqueue_style ( "wparua_bootstrap_css", WPARUA_PLUGIN_URL . "admin/assets/css/bootstrap.css", false );
@@ -14,5 +14,3 @@ function wparua_enqueue_scripts(){
 	
 	wp_enqueue_script( "wparua_script", 	   WPARUA_PLUGIN_URL . "admin/assets/js/script.js", array( 'jquery', 'jquery-ui-autocomplete' ), '' , true );
 }
-
-?>

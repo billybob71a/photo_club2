@@ -122,8 +122,11 @@ class Model extends CSS_Model {
 		$document = Plugin::$instance->documents->get( $this->post->ID );
 
 		return [
-			/* translators: %s: Document title */
-			'title' => sprintf( __( '%s Settings', 'elementor' ), $document::get_title() ),
+			'title' => sprintf(
+				/* translators: %s: Document title. */
+				esc_html__( '%s Settings', 'elementor' ),
+				$document::get_title()
+			),
 		];
 	}
 
@@ -161,10 +164,10 @@ class Model extends CSS_Model {
 	 *
 	 * Used to add new controls to the page settings model.
 	 *
-	 * @since 1.6.0
+	 * @since 3.1.0
 	 * @access protected
 	 */
-	protected function _register_controls() {
+	protected function register_controls() {
 		// Check if it's a real model, or abstract (for example - on import )
 		if ( $this->post->ID ) {
 			$document = Plugin::$instance->documents->get_doc_or_auto_save( $this->post->ID );

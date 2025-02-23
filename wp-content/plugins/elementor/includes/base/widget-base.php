@@ -1,7 +1,7 @@
 <?php
 namespace Elementor;
 
-use Elementor\Core\Settings\Manager as SettingsManager;
+use Elementor\Core\Utils\Promotions\Filtered_Promotions_Manager;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -19,7 +19,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @abstract
  */
 abstract class Widget_Base extends Element_Base {
-
 	/**
 	 * Whether the widget has content.
 	 *
@@ -33,6 +32,21 @@ abstract class Widget_Base extends Element_Base {
 	 * @var bool
 	 */
 	protected $_has_template_content = true;
+
+	private $is_first_section = true;
+
+	/**
+	 * Registered Runtime Widgets.
+	 *
+	 * Registering in runtime all widgets that are being used on the page.
+	 *
+	 * @since 3.3.0
+	 * @access public
+	 * @static
+	 *
+	 * @var array
+	 */
+	public static $registered_runtime_widgets = [];
 
 	/**
 	 * Get element type.
@@ -92,6 +106,20 @@ abstract class Widget_Base extends Element_Base {
 	}
 
 	/**
+	 * Get widget upsale data.
+	 *
+	 * Retrieve the widget promotion data.
+	 *
+	 * @since 3.18.0
+	 * @access protected
+	 *
+	 * @return array|null Widget promotion data.
+	 */
+	protected function get_upsale_data() {
+		return null;
+	}
+
+	/**
 	 * Widget base constructor.
 	 *
 	 * Initializing the widget base class.
@@ -111,11 +139,17 @@ abstract class Widget_Base extends Element_Base {
 		$is_type_instance = $this->is_type_instance();
 
 		if ( ! $is_type_instance && null === $args ) {
-			throw new \Exception( '`$args` argument is required when initializing a full widget instance.' );
+			throw new \Exception( 'An `$args` argument is required when initializing a full widget instance.' );
 		}
 
 		if ( $is_type_instance ) {
-			$this->_register_skins();
+			if ( $this->has_own_method( '_register_skins', self::class ) ) {
+				Plugin::$instance->modules_manager->get_modules( 'dev-tools' )->deprecation->deprecated_function( '_register_skins', '3.1.0', __CLASS__ . '::register_skins()' );
+
+				$this->_register_skins();
+			} else {
+				$this->register_skins();
+			}
 
 			$widget_name = $this->get_name();
 
@@ -149,9 +183,9 @@ abstract class Widget_Base extends Element_Base {
 	public function get_stack( $with_common_controls = true ) {
 		$stack = parent::get_stack();
 
-		if ( $with_common_controls && 'common' !== $this->get_unique_name() ) {
-			/** @var Widget_Common $common_widget */
-			$common_widget = Plugin::$instance->widgets_manager->get_widget_types( 'common' );
+		if ( $with_common_controls && ! $this instanceof Widget_Common_Base ) {
+			/** @var Widget_Common_Base $common_widget */
+			$common_widget = Plugin::$instance->widgets_manager->get_widget_types( $this->get_common_widget_name() );
 
 			$stack['controls'] = array_merge( $stack['controls'], $common_widget->get_controls() );
 
@@ -159,6 +193,14 @@ abstract class Widget_Base extends Element_Base {
 		}
 
 		return $stack;
+	}
+
+	private function get_common_widget_name() {
+		if ( Plugin::$instance->experiments->is_feature_active( 'e_optimized_markup' ) ) {
+			return $this->has_widget_inner_wrapper() ? 'common' : 'common-optimized';
+		}
+
+		return 'common';
 	}
 
 	/**
@@ -199,6 +241,19 @@ abstract class Widget_Base extends Element_Base {
 	}
 
 	/**
+	 * Hide on search.
+	 *
+	 * Whether to hide the widget on search in the panel or not. By default returns false.
+	 *
+	 * @access public
+	 *
+	 * @return bool Whether to hide the widget when searching for widget or not.
+	 */
+	public function hide_on_search() {
+		return false;
+	}
+
+	/**
 	 * Start widget controls section.
 	 *
 	 * Used to add a new section of controls to the widget. Regular controls and
@@ -216,12 +271,10 @@ abstract class Widget_Base extends Element_Base {
 	public function start_controls_section( $section_id, array $args = [] ) {
 		parent::start_controls_section( $section_id, $args );
 
-		static $is_first_section = true;
-
-		if ( $is_first_section ) {
+		if ( $this->is_first_section ) {
 			$this->register_skin_control();
 
-			$is_first_section = false;
+			$this->is_first_section = false;
 		}
 	}
 
@@ -240,7 +293,7 @@ abstract class Widget_Base extends Element_Base {
 			$skin_options = [];
 
 			if ( $this->_has_template_content ) {
-				$skin_options[''] = __( 'Default', 'elementor' );
+				$skin_options[''] = esc_html__( 'Default', 'elementor' );
 			}
 
 			foreach ( $skins as $skin_id => $skin ) {
@@ -255,7 +308,7 @@ abstract class Widget_Base extends Element_Base {
 				$this->add_control(
 					'_skin',
 					[
-						'label' => __( 'Skin', 'elementor' ),
+						'label' => esc_html__( 'Skin', 'elementor' ),
 						'type' => Controls_Manager::HIDDEN,
 						'default' => $default_value,
 					]
@@ -264,7 +317,7 @@ abstract class Widget_Base extends Element_Base {
 				$this->add_control(
 					'_skin',
 					[
-						'label' => __( 'Skin', 'elementor' ),
+						'label' => esc_html__( 'Skin', 'elementor' ),
 						'type' => Controls_Manager::SELECT,
 						'default' => $default_value,
 						'options' => $skin_options,
@@ -275,6 +328,19 @@ abstract class Widget_Base extends Element_Base {
 	}
 
 	/**
+	 * Register widget skins - deprecated prefixed method
+	 *
+	 * @since 1.7.12
+	 * @access protected
+	 * @deprecated 3.1.0 Use `register_skins()` method instead.
+	 */
+	protected function _register_skins() {
+		Plugin::$instance->modules_manager->get_modules( 'dev-tools' )->deprecation->deprecated_function( __METHOD__, '3.1.0', 'register_skins()' );
+
+		$this->register_skins();
+	}
+
+	/**
 	 * Register widget skins.
 	 *
 	 * This method is activated while initializing the widget base class. It is
@@ -282,14 +348,14 @@ abstract class Widget_Base extends Element_Base {
 	 *
 	 * Usage:
 	 *
-	 *    protected function _register_skins() {
+	 *    protected function register_skins() {
 	 *        $this->add_skin( new Skin_Classic( $this ) );
 	 *    }
 	 *
-	 * @since 1.7.12
+	 * @since 3.1.0
 	 * @access protected
 	 */
-	protected function _register_skins() {}
+	protected function register_skins() {}
 
 	/**
 	 * Get initial config.
@@ -312,7 +378,20 @@ abstract class Widget_Base extends Element_Base {
 			'categories' => $this->get_categories(),
 			'html_wrapper_class' => $this->get_html_wrapper_class(),
 			'show_in_panel' => $this->show_in_panel(),
+			'hide_on_search' => $this->hide_on_search(),
+			'upsale_data' => $this->get_upsale_data(),
+			'is_dynamic_content' => $this->is_dynamic_content(),
+			'has_widget_inner_wrapper' => $this->has_widget_inner_wrapper(),
 		];
+
+		if ( isset( $config['upsale_data'] ) && is_array( $config['upsale_data'] ) ) {
+			$filter_name = 'elementor/widgets/' . $this->get_name() . '/custom_promotion';
+			$config['upsale_data'] = Filtered_Promotions_Manager::get_filtered_promotion_data( $config['upsale_data'], $filter_name, 'upgrade_url' );
+		}
+
+		if ( isset( $config['upsale_data']['image'] ) ) {
+			$config['upsale_data']['image'] = esc_url( $config['upsale_data']['image'] );
+		}
 
 		$stack = Plugin::$instance->controls_manager->get_element_stack( $this );
 
@@ -321,7 +400,7 @@ abstract class Widget_Base extends Element_Base {
 			$config['tabs_controls'] = $this->get_tabs_controls();
 		}
 
-		return array_merge( parent::get_initial_config(), $config );
+		return array_replace_recursive( parent::get_initial_config(), $config );
 	}
 
 	/**
@@ -344,13 +423,13 @@ abstract class Widget_Base extends Element_Base {
 	 * @param string $template_content Template content.
 	 */
 	protected function print_template_content( $template_content ) {
-		?>
+		if ( $this->has_widget_inner_wrapper() ) : ?>
 		<div class="elementor-widget-container">
-			<?php
+		<?php endif;
 			echo $template_content; // XSS ok.
-			?>
+		if ( $this->has_widget_inner_wrapper() ) : ?>
 		</div>
-		<?php
+		<?php endif;
 	}
 
 	/**
@@ -382,6 +461,20 @@ abstract class Widget_Base extends Element_Base {
 	}
 
 	/**
+	 * Safe print parsed text editor.
+	 *
+	 * @uses static::parse_text_editor.
+	 *
+	 * @access protected
+	 *
+	 * @param string $content Text editor content.
+	 */
+	final protected function print_text_editor( $content ) {
+		// PHPCS - the method `parse_text_editor` is safe.
+		echo static::parse_text_editor( $content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	}
+
+	/**
 	 * Get HTML wrapper class.
 	 *
 	 * Retrieve the widget container class. Can be used to override the
@@ -402,8 +495,8 @@ abstract class Widget_Base extends Element_Base {
 	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected function _add_render_attributes() {
-		parent::_add_render_attributes();
+	protected function add_render_attributes() {
+		parent::add_render_attributes();
 
 		$this->add_render_attribute(
 			'_wrapper', 'class', [
@@ -449,7 +542,7 @@ abstract class Widget_Base extends Element_Base {
 	 *
 	 * @param array|string $element         The link HTML element.
 	 * @param int $id                       The ID of the image
-	 * @param string $lightbox_setting_key  The setting key that dictates weather to open the image in a lightbox
+	 * @param string $lightbox_setting_key  The setting key that dictates whether to open the image in a lightbox
 	 * @param string $group_id              Unique ID for a group of lightbox images
 	 * @param bool $overwrite               Optional. Whether to overwrite existing
 	 *                                      attribute. Default is false, not to overwrite.
@@ -460,12 +553,13 @@ abstract class Widget_Base extends Element_Base {
 	 *
 	 */
 	public function add_lightbox_data_attributes( $element, $id = null, $lightbox_setting_key = null, $group_id = null, $overwrite = false ) {
-		$general_settings_model = SettingsManager::get_settings_managers( 'general' )->get_model();
-		$is_global_image_lightbox_enabled = 'yes' === $general_settings_model->get_settings( 'elementor_global_image_lightbox' );
+		$kit = Plugin::$instance->kits_manager->get_active_kit();
+
+		$is_global_image_lightbox_enabled = 'yes' === $kit->get_settings( 'global_image_lightbox' );
 
 		if ( 'no' === $lightbox_setting_key ) {
 			if ( $is_global_image_lightbox_enabled ) {
-				$this->add_render_attribute( $element, 'data-elementor-open-lightbox', 'no' );
+				$this->add_render_attribute( $element, 'data-elementor-open-lightbox', 'no', $overwrite );
 			}
 
 			return $this;
@@ -477,8 +571,17 @@ abstract class Widget_Base extends Element_Base {
 
 		$attributes['data-elementor-open-lightbox'] = 'yes';
 
+		$action_hash_params = [];
+
+		if ( $id ) {
+			$action_hash_params['id'] = $id;
+			$action_hash_params['url'] = wp_get_attachment_url( $id );
+		}
+
 		if ( $group_id ) {
 			$attributes['data-elementor-lightbox-slideshow'] = $group_id;
+
+			$action_hash_params['slideshow'] = $group_id;
 		}
 
 		if ( $id ) {
@@ -492,6 +595,8 @@ abstract class Widget_Base extends Element_Base {
 				$attributes['data-elementor-lightbox-description'] = $lightbox_image_attributes['description'];
 			}
 		}
+
+		$attributes['data-e-action-hash'] = Plugin::instance()->frontend->create_action_hash( 'lightbox', $action_hash_params );
 
 		$this->add_render_attribute( $element, $attributes, null, $overwrite );
 
@@ -526,9 +631,9 @@ abstract class Widget_Base extends Element_Base {
 		$skin = $this->get_current_skin();
 		if ( $skin ) {
 			$skin->set_parent( $this );
-			$skin->render();
+			$skin->render_by_mode();
 		} else {
-			$this->render();
+			$this->render_by_mode();
 		}
 
 		$widget_content = ob_get_clean();
@@ -536,9 +641,13 @@ abstract class Widget_Base extends Element_Base {
 		if ( empty( $widget_content ) ) {
 			return;
 		}
-		?>
+		if ( $this->has_widget_inner_wrapper() ) : ?>
 		<div class="elementor-widget-container">
+		<?php endif; ?>
 			<?php
+			if ( $this->is_widget_first_render( $this->get_group_name() ) ) {
+				$this->register_runtime_widget( $this->get_group_name() );
+			}
 
 			/**
 			 * Render widget content.
@@ -554,8 +663,13 @@ abstract class Widget_Base extends Element_Base {
 
 			echo $widget_content; // XSS ok.
 			?>
+		<?php if ( $this->has_widget_inner_wrapper() ) : ?>
 		</div>
-		<?php
+		<?php endif;
+	}
+
+	protected function is_widget_first_render( $widget_name ) {
+		return ! in_array( $widget_name, self::$registered_runtime_widgets, true );
 	}
 
 	/**
@@ -657,8 +771,28 @@ abstract class Widget_Base extends Element_Base {
 	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected function _print_content() {
+	protected function print_content() {
 		$this->render_content();
+	}
+
+	/**
+	 * Print a setting content without escaping.
+	 *
+	 * Script tags are allowed on frontend according to the WP theme securing policy.
+	 *
+	 * @param string $setting
+	 * @param null $repeater_name
+	 * @param null $index
+	 */
+	final public function print_unescaped_setting( $setting, $repeater_name = null, $index = null ) {
+		if ( $repeater_name ) {
+			$repeater = $this->get_settings_for_display( $repeater_name );
+			$output = $repeater[ $index ][ $setting ];
+		} else {
+			$output = $this->get_settings_for_display( $setting );
+		}
+
+		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**
@@ -766,7 +900,7 @@ abstract class Widget_Base extends Element_Base {
 	 * Add new skin.
 	 *
 	 * Register new widget skin to allow the user to set custom designs. Must be
-	 * called inside the `_register_skins()` method.
+	 * called inside the `register_skins()` method.
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -859,15 +993,31 @@ abstract class Widget_Base extends Element_Base {
 	}
 
 	/**
+	 * Get group name.
+	 *
+	 * Some widgets need to use group names, this method allows you to create them.
+	 * By default it retrieves the regular name.
+	 *
+	 * @since 3.3.0
+	 * @access public
+	 *
+	 * @return string Unique name.
+	 */
+	public function get_group_name() {
+		return $this->get_name();
+	}
+
+	/**
 	 * @param string $plugin_title  Plugin's title
 	 * @param string $since         Plugin version widget was deprecated
 	 * @param string $last          Plugin version in which the widget will be removed
 	 * @param string $replacement   Widget replacement
 	 */
 	protected function deprecated_notice( $plugin_title, $since, $last = '', $replacement = '' ) {
-		$this->start_controls_section( 'Deprecated',
+		$this->start_controls_section(
+			'Deprecated',
 			[
-				'label' => __( 'Deprecated', 'elementor' ),
+				'label' => esc_html__( 'Deprecated', 'elementor' ),
 			]
 		);
 
@@ -884,6 +1034,51 @@ abstract class Widget_Base extends Element_Base {
 		);
 
 		$this->end_controls_section();
+	}
 
+	/**
+	 * Init controls.
+	 *
+	 * Reset the `is_first_section` flag to true, so when the Stacks are cleared
+	 * all the controls will be registered again with their skins and settings.
+	 *
+	 * @since 3.14.0
+	 * @access protected
+	 */
+	protected function init_controls() {
+		$this->is_first_section = true;
+		parent::init_controls();
+	}
+
+	public function register_runtime_widget( $widget_name ) {
+		self::$registered_runtime_widgets[] = $widget_name;
+	}
+
+	/**
+	 * Mark widget as deprecated.
+	 *
+	 * Use `get_deprecation_message()` method to print the message control at specific location in register_controls().
+	 *
+	 * @param $version string           The version of Elementor that deprecated the widget.
+	 * @param $message string         A message regarding the deprecation.
+	 * @param $replacement string   The widget that should be used instead.
+	 */
+	protected function add_deprecation_message( $version, $message, $replacement ) {
+		// Expose the config for handling in JS.
+		$this->set_config( 'deprecation', [
+			'version' => $version,
+			'message' => $message,
+			'replacement' => $replacement,
+		] );
+
+		$this->add_control(
+			'deprecation_message',
+			[
+				'type' => Controls_Manager::ALERT,
+				'alert_type' => 'info',
+				'content' => $message,
+				'separator' => 'after',
+			]
+		);
 	}
 }

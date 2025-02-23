@@ -2,7 +2,12 @@
 namespace Elementor;
 
 use Elementor\Core\Common\Modules\Ajax\Module as Ajax;
+use Elementor\Core\Utils\Collection;
 use Elementor\Core\Utils\Exceptions;
+use Elementor\Core\Utils\Force_Locale;
+use Elementor\Modules\NestedAccordion\Widgets\Nested_Accordion;
+use Elementor\Modules\NestedElements\Module as NestedElementsModule;
+use Elementor\Modules\NestedTabs\Widgets\NestedTabs;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -31,9 +36,28 @@ class Widgets_Manager {
 	private $_widget_types = null;
 
 	/**
+	 * Promoted widget types.
+	 *
+	 * Holds the list of all the Promoted widget types.
+	 *
+	 * @since 3.15.0
+	 * @access private
+	 *
+	 * @var Widget_Base[]
+	 *
+	 * @return array
+	 */
+	private array $promoted_widgets = [
+		NestedElementsModule::EXPERIMENT_NAME => [
+			NestedTabs::class,
+			Nested_Accordion::class,
+		],
+	];
+
+	/**
 	 * Init widgets.
 	 *
-	 * Initialize Elementor widgets manager. Include all the the widgets files
+	 * Initialize Elementor widgets manager. Include all the widgets files
 	 * and register each Elementor and WordPress widget.
 	 *
 	 * @since 2.0.0
@@ -41,7 +65,10 @@ class Widgets_Manager {
 	*/
 	private function init_widgets() {
 		$build_widgets_filename = [
+			'common-base',
 			'common',
+			'common-optimized',
+			'inner-section',
 			'heading',
 			'image',
 			'text-editor',
@@ -71,18 +98,21 @@ class Widgets_Manager {
 			'menu-anchor',
 			'sidebar',
 			'read-more',
+			'rating',
 		];
 
 		$this->_widget_types = [];
 
+		$this->register_promoted_widgets();
+
 		foreach ( $build_widgets_filename as $widget_filename ) {
-			include( ELEMENTOR_PATH . 'includes/widgets/' . $widget_filename . '.php' );
+			include ELEMENTOR_PATH . 'includes/widgets/' . $widget_filename . '.php';
 
 			$class_name = str_replace( '-', '_', $widget_filename );
 
 			$class_name = __NAMESPACE__ . '\Widget_' . $class_name;
 
-			$this->register_widget_type( new $class_name() );
+			$this->register( new $class_name() );
 		}
 
 		$this->register_wp_widgets();
@@ -93,10 +123,27 @@ class Widgets_Manager {
 		 * Fires after Elementor widgets are registered.
 		 *
 		 * @since 1.0.0
+		 * @deprecated 3.5.0 Use `elementor/widgets/register` hook instead.
 		 *
 		 * @param Widgets_Manager $this The widgets manager.
 		 */
-		do_action( 'elementor/widgets/widgets_registered', $this );
+		Plugin::$instance->modules_manager->get_modules( 'dev-tools' )->deprecation->do_deprecated_action(
+			'elementor/widgets/widgets_registered',
+			[ $this ],
+			'3.5.0',
+			'elementor/widgets/register'
+		);
+
+		/**
+		 * After widgets registered.
+		 *
+		 * Fires after Elementor widgets are registered.
+		 *
+		 * @since 3.5.0
+		 *
+		 * @param Widgets_Manager $this The widgets manager.
+		 */
+		do_action( 'elementor/widgets/register', $this );
 	}
 
 	/**
@@ -112,21 +159,6 @@ class Widgets_Manager {
 	*/
 	private function register_wp_widgets() {
 		global $wp_widget_factory;
-
-		// Skip Pojo widgets.
-		$pojo_allowed_widgets = [
-			'Pojo_Widget_Recent_Posts',
-			'Pojo_Widget_Posts_Group',
-			'Pojo_Widget_Gallery',
-			'Pojo_Widget_Recent_Galleries',
-			'Pojo_Slideshow_Widget',
-			'Pojo_Forms_Widget',
-			'Pojo_Widget_News_Ticker',
-
-			'Pojo_Widget_WC_Products',
-			'Pojo_Widget_WC_Products_Category',
-			'Pojo_Widget_WC_Product_Categories',
-		];
 
 		// Allow themes/plugins to filter out their widgets.
 		$black_list = [];
@@ -148,13 +180,9 @@ class Widgets_Manager {
 				continue;
 			}
 
-			if ( $widget_obj instanceof \Pojo_Widget_Base && ! in_array( $widget_class, $pojo_allowed_widgets ) ) {
-				continue;
-			}
-
 			$elementor_widget_class = __NAMESPACE__ . '\Widget_WordPress';
 
-			$this->register_widget_type(
+			$this->register(
 				new $elementor_widget_class( [], [
 					'widget_name' => $widget_class,
 				] )
@@ -174,6 +202,17 @@ class Widgets_Manager {
 		require ELEMENTOR_PATH . 'includes/base/widget-base.php';
 	}
 
+	private function pluck_default_controls( $controls ) {
+		return ( new Collection( $controls ) )
+			->reduce( function ( $controls_defaults, $control, $control_key ) {
+				if ( ! empty( $control['default'] ) ) {
+					$controls_defaults[ $control_key ]['default'] = $control['default'];
+				}
+
+				return $controls_defaults;
+			}, [] );
+	}
+
 	/**
 	 * Register widget type.
 	 *
@@ -181,19 +220,67 @@ class Widgets_Manager {
 	 *
 	 * @since 1.0.0
 	 * @access public
+	 * @deprecated 3.5.0 Use `register()` method instead.
 	 *
 	 * @param Widget_Base $widget Elementor widget.
 	 *
 	 * @return true True if the widget was registered.
 	*/
 	public function register_widget_type( Widget_Base $widget ) {
+		Plugin::$instance->modules_manager->get_modules( 'dev-tools' )->deprecation->deprecated_function(
+			__METHOD__,
+			'3.5.0',
+			'register()'
+		);
+
+		return $this->register( $widget );
+	}
+
+	/**
+	 * Register a new widget type.
+	 *
+	 * @param \Elementor\Widget_Base $widget_instance Elementor Widget.
+	 *
+	 * @return bool True if the widget was registered.
+	 * @since 3.5.0
+	 * @access public
+	 */
+	public function register( Widget_Base $widget_instance ) {
 		if ( is_null( $this->_widget_types ) ) {
 			$this->init_widgets();
 		}
 
-		$this->_widget_types[ $widget->get_name() ] = $widget;
+		/**
+		 * Should widget be registered.
+		 *
+		 * @since 3.18.0
+		 *
+		 * @param bool $should_register Should widget be registered. Default is `true`.
+		 * @param \Elementor\Widget_Base $widget_instance Widget instance.
+		 */
+		$should_register = apply_filters( 'elementor/widgets/is_widget_enabled', true, $widget_instance );
+
+		if ( ! $should_register ) {
+			return false;
+		}
+
+		$this->_widget_types[ $widget_instance->get_name() ] = $widget_instance;
 
 		return true;
+	}
+
+	/** Register promoted widgets
+	 *
+	 * Since we cannot allow widgets to place themselves is a specific
+	 * location on our widgets panel we need to use a hard coded solution for this.
+	 *
+	 * @return void
+	 */
+	private function register_promoted_widgets() {
+
+		foreach ( $this->promoted_widgets as $experiment_name => $classes ) {
+			$this->register_promoted_active_widgets( $experiment_name, $classes );
+		}
 	}
 
 	/**
@@ -203,12 +290,35 @@ class Widgets_Manager {
 	 *
 	 * @since 1.0.0
 	 * @access public
+	 * @deprecated 3.5.0 Use `unregister()` method instead.
 	 *
 	 * @param string $name Widget name.
 	 *
 	 * @return true True if the widget was unregistered, False otherwise.
 	*/
 	public function unregister_widget_type( $name ) {
+		Plugin::$instance->modules_manager->get_modules( 'dev-tools' )->deprecation->deprecated_function(
+			__METHOD__,
+			'3.5.0',
+			'unregister()'
+		);
+
+		return $this->unregister( $name );
+	}
+
+	/**
+	 * Unregister widget type.
+	 *
+	 * Removes widget type from the list of registered widget types.
+	 *
+	 * @since 3.5.0
+	 * @access public
+	 *
+	 * @param string $name Widget name.
+	 *
+	 * @return boolean Whether the widget was unregistered.
+	 */
+	public function unregister( $name ) {
 		if ( ! isset( $this->_widget_types[ $name ] ) ) {
 			return false;
 		}
@@ -262,7 +372,14 @@ class Widgets_Manager {
 		return $config;
 	}
 
+	/**
+	 * @throws \Exception
+	 */
 	public function ajax_get_widget_types_controls_config( array $data ) {
+		Plugin::$instance->documents->check_permissions( $data['editor_post_id'] );
+
+		wp_raise_memory_limit( 'admin' );
+
 		$config = [];
 
 		foreach ( $this->get_widget_types() as $widget_key => $widget ) {
@@ -277,6 +394,32 @@ class Widgets_Manager {
 		}
 
 		return $config;
+	}
+
+	public function ajax_get_widgets_default_value_translations( array $data = [] ) {
+		$locale = empty( $data['locale'] )
+			? get_locale()
+			: $data['locale'];
+
+		$force_locale = new Force_Locale( $locale );
+		$force_locale->force();
+
+		$controls = ( new Collection( $this->get_widget_types() ) )
+			->map( function ( Widget_Base $widget ) {
+				$controls = $widget->get_stack( false )['controls'];
+
+				return [
+					'controls' => $this->pluck_default_controls( $controls ),
+				];
+			} )
+			->filter( function ( $widget ) {
+				return ! empty( $widget['controls'] );
+			} )
+			->all();
+
+		$force_locale->restore();
+
+		return $controls;
 	}
 
 	/**
@@ -300,11 +443,7 @@ class Widgets_Manager {
 	 * }
 	 */
 	public function ajax_render_widget( $request ) {
-		$document = Plugin::$instance->documents->get( $request['editor_post_id'] );
-
-		if ( ! $document->is_editable_by_current_user() ) {
-			throw new \Exception( 'Access denied.', Exceptions::FORBIDDEN );
-		}
+		$document = Plugin::$instance->documents->get_with_permissions( $request['editor_post_id'] );
 
 		// Override the global $post for the render.
 		query_posts(
@@ -342,8 +481,11 @@ class Widgets_Manager {
 	 * @param array $request Ajax request.
 	 *
 	 * @return bool|string Rendered widget form.
+	 * @throws \Exception
 	 */
 	public function ajax_get_wp_widget_form( $request ) {
+		Plugin::$instance->documents->check_permissions( $request['editor_post_id'] );
+
 		if ( empty( $request['widget_type'] ) ) {
 			return false;
 		}
@@ -409,6 +551,61 @@ class Widgets_Manager {
 		}
 
 		return $keys;
+	}
+
+	/**
+	 * Widgets with styles.
+	 *
+	 * This method returns the list of all the widgets in the `/includes/`
+	 * folder that have styles.
+	 *
+	 * @since 3.24.0
+	 * @access public
+	 *
+	 * @return array The names of the widgets that have styles.
+	 */
+	public function widgets_with_styles(): array {
+		return [
+			'counter',
+			'divider',
+			'google_maps',
+			'heading',
+			'image',
+			'image-carousel',
+			'menu-anchor',
+			'rating',
+			'social-icons',
+			'spacer',
+			'testimonial',
+			'text-editor',
+			'video',
+		];
+	}
+
+	/**
+	 * Widgets with responsive styles.
+	 *
+	 * This method returns the list of all the widgets in the `/includes/`
+	 * folder that have responsive styles.
+	 *
+	 * @since 3.24.0
+	 * @access public
+	 *
+	 * @return array The names of the widgets that have responsive styles.
+	 */
+	public function widgets_with_responsive_styles(): array {
+		return [
+			'accordion',
+			'alert',
+			'icon-box',
+			'icon-list',
+			'image-box',
+			'image-gallery',
+			'progress',
+			'star-rating',
+			'tabs',
+			'toggle',
+		];
 	}
 
 	/**
@@ -522,5 +719,24 @@ class Widgets_Manager {
 		$ajax_manager->register_ajax_action( 'render_widget', [ $this, 'ajax_render_widget' ] );
 		$ajax_manager->register_ajax_action( 'editor_get_wp_widget_form', [ $this, 'ajax_get_wp_widget_form' ] );
 		$ajax_manager->register_ajax_action( 'get_widgets_config', [ $this, 'ajax_get_widget_types_controls_config' ] );
+
+		$ajax_manager->register_ajax_action( 'get_widgets_default_value_translations', function ( array $data ) {
+			return $this->ajax_get_widgets_default_value_translations( $data );
+		} );
+	}
+
+	/**
+	 * @param $experiment_name
+	 * @param $classes
+	 * @return void
+	 */
+	public function register_promoted_active_widgets( string $experiment_name, array $classes ) : void {
+		if ( ! Plugin::$instance->experiments->is_feature_active( $experiment_name ) || empty( $classes ) ) {
+			return;
+		}
+
+		foreach ( $classes as $class_name ) {
+			$this->register( new $class_name() );
+		}
 	}
 }

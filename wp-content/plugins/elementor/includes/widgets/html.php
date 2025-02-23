@@ -39,7 +39,7 @@ class Widget_Html extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return __( 'HTML', 'elementor' );
+		return esc_html__( 'HTML', 'elementor' );
 	}
 
 	/**
@@ -67,7 +67,19 @@ class Widget_Html extends Widget_Base {
 	 * @return array Widget keywords.
 	 */
 	public function get_keywords() {
-		return [ 'html', 'code' ];
+		return [ 'html', 'code', 'embed', 'script' ];
+	}
+
+	protected function is_dynamic_content(): bool {
+		return false;
+	}
+
+	public function show_in_panel() {
+		return User::is_current_user_can_use_custom_html();
+	}
+
+	public function has_widget_inner_wrapper(): bool {
+		return ! Plugin::$instance->experiments->is_feature_active( 'e_optimized_markup' );
 	}
 
 	/**
@@ -75,25 +87,28 @@ class Widget_Html extends Widget_Base {
 	 *
 	 * Adds different input fields to allow the user to change and customize the widget settings.
 	 *
-	 * @since 1.0.0
+	 * @since 3.1.0
 	 * @access protected
 	 */
-	protected function _register_controls() {
+	protected function register_controls() {
 		$this->start_controls_section(
 			'section_title',
 			[
-				'label' => __( 'HTML Code', 'elementor' ),
+				'label' => esc_html__( 'HTML Code', 'elementor' ),
 			]
 		);
 
 		$this->add_control(
 			'html',
 			[
-				'label' => '',
+				'label' => esc_html__( 'HTML Code', 'elementor' ),
 				'type' => Controls_Manager::CODE,
 				'default' => '',
-				'placeholder' => __( 'Enter your code', 'elementor' ),
-				'show_label' => false,
+				'placeholder' => esc_html__( 'Enter your code', 'elementor' ),
+				'dynamic' => [
+					'active' => true,
+				],
+				'is_editable' => User::is_current_user_can_use_custom_html(),
 			]
 		);
 
@@ -109,7 +124,7 @@ class Widget_Html extends Widget_Base {
 	 * @access protected
 	 */
 	protected function render() {
-		 echo $this->get_settings_for_display( 'html' );
+		$this->print_unescaped_setting( 'html' );
 	}
 
 	/**

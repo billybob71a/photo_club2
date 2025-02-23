@@ -1,774 +1,1716 @@
-# Translation of Plugins - User Submitted Posts - Development (trunk) in Greek
-# This file is distributed under the same license as the Plugins - User Submitted Posts - Development (trunk) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2018-04-26 12:07+0300\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Poedit 2.0.7\n"
-"Language: el_GR\n"
-"Project-Id-Version: Plugins - User Submitted Posts - Development (trunk)\n"
-"POT-Creation-Date: \n"
-"Last-Translator: Lena Stergatou <aqua6617@yahoo.com>\n"
-"Language-Team: \n"
-
-#. Tags of the plugin/theme
-msgid "submit, public, share, upload, images, posts, users, user-submit, community, front-end, submissions"
-msgstr "υποβoλή, δημόσια, μοιράζομαι, μεταφόρτωση, εικόνες, αναρτήσεις, χρήστες, ανάρτηση χρήστη, κοινότητα, frontend, υποβολές"
-
-#. Author URI of the plugin/theme
-msgid "http://monzilla.biz/"
-msgstr "http://monzilla.biz/ "
-
-#. Author of the plugin/theme
-msgid "Jeff Starr"
-msgstr "Jeff Starr "
-
-#. Description of the plugin/theme
-msgid "Enables your visitors to submit posts and images from anywhere on your site."
-msgstr "Επιτρέπει στους επισκέπτες σας να αναρτούν άρθρα και εικόνες από οπουδήποτε στο site σας."
-
-#. Plugin URI of the plugin/theme
-msgid "https://perishablepress.com/user-submitted-posts/"
-msgstr "https://perishablepress.com/user-submitted-posts/ "
-
-#: views/submission-form.php:162
-msgid "Submit Post"
-msgstr "Υποβολή άρθρου"
-
-#: views/submission-form.php:141
-msgid "Human verification: leave this field empty."
-msgstr "Επιβεβαίωση ανθρώπο:Αφήστε αυτό το πεδίο κενό"
-
-#: views/submission-form.php:120
-msgid "Add another image"
-msgstr "Προσθήκη νέας εικόνας"
-
-#: views/submission-form.php:112
-msgid "Upload an Image"
-msgstr "Ανέβασμα εικόνας"
-
-#: views/submission-form.php:70
-msgid "Please select a category.."
-msgstr "Παρακαλούμε επιλέξτε μία κατηγορία"
-
-#: views/submission-form.php:63
-msgid "Antispam Question"
-msgstr "Ερώτηση αντισπαμ"
-
-#: views/submission-form.php:44 views/submission-form.php:45
-msgid "Your Email"
-msgstr "Η ηλ. διεύθυνσή σας"
-
-#: views/submission-form.php:38 views/submission-form.php:39
-msgid "Your URL"
-msgstr "Ο ιστοτοπό σας"
-
-#: views/submission-form.php:32 views/submission-form.php:33
-msgid "Your Name"
-msgstr "Το ονομά σας"
-
-#: user-submitted-posts.php:1469
-msgid "Are you sure you want to restore all default options? (this action cannot be undone)"
-msgstr "Είστε σίγουροι ότι θέλετε να επαναφέρετε τις αρχικές ρυθμίσεις; (Η ενέργεια αυτή δεν αναστρέφεται)"
-
-#: user-submitted-posts.php:1463
-msgid "Save Preference"
-msgstr "Αποθήκευση προτιμήσεων"
-
-#: user-submitted-posts.php:1423
-msgid "Updates &amp; Info"
-msgstr "Ενημερώσεις,Πληροφορίες"
-
-#: user-submitted-posts.php:1416
-msgid "<strong>Tip:</strong> leave this option unchecked to remember your settings. Or, to go ahead and restore all default options, check the box, save your settings, and then deactivate/reactivate the plugin."
-msgstr "<strong>Συμβουλή:</strong> Αφήστε αυτη την επιλογή αμαρκάριστη για να θυμόσαστε τις ρυθμίσεις σας. Η συνεχίστε και επαναφέρετε τις εξ ορισμού ρυθμίσεις, τσεκάρετε τοι κουτί, και μετά απενεργοποιήστε/ενεργοποιήστε το πρόσθετο."
-
-#: user-submitted-posts.php:1412
-msgid "Restore default options upon plugin deactivation/reactivation."
-msgstr "Επαναφορά αρχικών ρυθμίσεων με την απενεργοποίηση/ενεργοποίηση του πρόσθετου"
-
-#: user-submitted-posts.php:1408
-msgid "Restore Default Options"
-msgstr "Επαναφορά αρχικών ρυθμίσεων"
-
-#: user-submitted-posts.php:1403
-msgid "Use this template tag to display the USP Form anywhere in your theme template:"
-msgstr "Χρησιμοποιήστε αυτό το πρότυπο για να εμφανιζεται η φόρμα του USP οπουδήποτε στο πρότυπο του θέματος"
-
-#: user-submitted-posts.php:1402
-msgid "Template tag"
-msgstr "Ετικέτα πρότυπου"
-
-#: user-submitted-posts.php:1399
-msgid "Use this shortcode to display the USP Form on any post or page:"
-msgstr "Χρησιμοποιήστε αυτόν τον σύντομο κώδικα για να εμφανίζεται η φόρμα USP σε κάθε ανάρτηση ή σελίδα"
-
-#: user-submitted-posts.php:1398
-msgid "Shortcode"
-msgstr "Σύντομος κώδικας"
-
-#: user-submitted-posts.php:1395
-msgid "Shortcode &amp; Template Tag"
-msgstr "Shortcode &amp; Template Tag"
-
-#: user-submitted-posts.php:1391 user-submitted-posts.php:1419
-msgid "Save Settings"
-msgstr "Αποθήκευση ρυθμίσεων"
-
-#: user-submitted-posts.php:1387
-msgid "Specify a <em>maximum height</em> (in pixels) for uploaded images."
-msgstr "Ορίστε <em>μέγιστο ύψος</em> (σε pixels) για τις εικόνες που ανεβάζετε."
-
-#: user-submitted-posts.php:1385
-msgid "Maximum image height"
-msgstr "Μέγιστο ύψος εικόνας"
-
-#: user-submitted-posts.php:1382
-msgid "Specify a <em>maximum width</em> (in pixels) for uploaded images."
-msgstr "Ορίστε <em>μέγιστο πλάτος</em> (σε pixels) για τις εικόνες που ανεβάζετε. "
-
-#: user-submitted-posts.php:1380
-msgid "Maximum image width"
-msgstr "Μέγιστο πλάτος εικόνας "
-
-#: user-submitted-posts.php:1377
-msgid "Specify a <em>minimum height</em> (in pixels) for uploaded images."
-msgstr "Καθορίστε ένα <em>ελάχιστο ύψοςt</em> (σε pixels) για τις ανεβασμένες εικόνες."
-
-#: user-submitted-posts.php:1375
-msgid "Minimum image height"
-msgstr "Ελάχιστο ύψος εικόνας"
-
-#: user-submitted-posts.php:1372
-msgid "Specify a <em>minimum width</em> (in pixels) for uploaded images."
-msgstr "καθορίστε το <em>ελάχιστο πλάτος</em> (σε pixels) για τις ανεβασμένες εικόνες."
-
-#: user-submitted-posts.php:1370
-msgid "Minimum image width"
-msgstr "Ελάχιστο πλάτος εικόνας"
-
-#: user-submitted-posts.php:1366
-msgid "Specify the <em>maximum</em> number of images."
-msgstr "Καθορίστε τον <em>μέγιστο</em> αριθμό εικόνων."
-
-#: user-submitted-posts.php:1363
-msgid "Maximum number of images"
-msgstr "Μέγιστος αριθμός εικόνων"
-
-#: user-submitted-posts.php:1359
-msgid "Specify the <em>minimum</em> number of images."
-msgstr "Καθορίστε τον <em>ελάχιστο</em> αριθμό εικόνων."
-
-#: user-submitted-posts.php:1356
-msgid "Minimum number of images"
-msgstr "Ελάχιστος αριθμός εικόνων."
-
-#: user-submitted-posts.php:1353
-msgid "Here you may specify your own custom markup for the &ldquo;Add another image&rdquo; link (leave blank to use the default markup)."
-msgstr "Εδώ μπορέιτε να καθορίσετε τον δικό σας καρκαπ κώδικα για το &ldquo. Προσθέστε έναν ακόμα σύνδεσμο image&rdquo (αφήστε κενό για χρήση του προεπιλεγμένου κώδικα)."
-
-#: user-submitted-posts.php:1351
-msgid "&ldquo;Add another image&rdquo; link"
-msgstr "&ldquo. Προσθήκε νέου σύνδεσμου εικόνας  image&rdquo."
-
-#: user-submitted-posts.php:1348
-msgid "This is the message that appears next to upload field. Useful to state your upload guidelines/rules/etc."
-msgstr "Αυτό το μήνυμα εμφανίζεται δίπλα στο πεδίο μεταφόρτωσης. Είναι χρήσιμο για να δηλώνει τις οδηγίες/κανόνες/κλπ της μεταφόρτωσης"
-
-#: user-submitted-posts.php:1346
-msgid "Upload Message"
-msgstr "Μήνυμα Μεταφόρτωσης"
-
-#: user-submitted-posts.php:1342
-msgid "Image Uploads"
-msgstr "Μεταφορτώσεις εικόνων"
-
-#: user-submitted-posts.php:1338
-msgid "Check this box if you want the challenge response to be case-sensitive."
-msgstr "Τσεκάρετε αυτό το κοτί αν θέλετε η ερώτηση να είναι ευαίσθητη κεφαλαίων γραμμάτων (case-sensitive)."
-
-#: user-submitted-posts.php:1336
-msgid "Case-sensitivity"
-msgstr "Διάκριση πεζών-κεφαλαίων"
-
-#: user-submitted-posts.php:1333
-msgid "Enter the <em>only</em> correct answer to the challenge question."
-msgstr "Εισάγετε <em>μόνο</em> τη σωστή απάντηση στην ερώτηση."
-
-#: user-submitted-posts.php:1331
-msgid "Challenge Response"
-msgstr "Απάντηση ερώτησης"
-
-#: user-submitted-posts.php:1328
-msgid "To prevent spam, enter a question that users must answer before submitting the form."
-msgstr "Για την εμπόδιση του σπαμ, πληκρολογείστε μία ερώτηση στην οποία οι χρήστες πρέπει να απαντούν πριν την υποβολή της φόρμας."
-
-#: user-submitted-posts.php:1326
-msgid "Challenge Question"
-msgstr "Ερώτηση"
-
-#: user-submitted-posts.php:1322
-msgid "Challenge Question (Captcha)"
-msgstr "Ερώτηση (Captcha)"
-
-#: user-submitted-posts.php:1318
-msgid "Specify a cateogry (ID) to use as the default category when using the &ldquo;hidden field&rdquo; option."
-msgstr "Καθορίστε μία κατηγορία (ID) για να την χρησημοποιήσετε ως προεπιλεγμένη κατηγορία όταν χρησιμποιείται η επιλογή του &ldquo;hidden field&rdquo"
-
-#: user-submitted-posts.php:1316
-msgid "Category ID for hidden field"
-msgstr "Κωδικός ID κατηγορίας για το κρυμμένο πεδίο"
-
-#: user-submitted-posts.php:1313
-msgid "Check this box if you want to use a hidden category field for the submitted category. Note: this may be used to specify a default category for submitted posts when the category field is hidden."
-msgstr "Επιλέξτε αυτό το πλαίσιο αν θέλετε να χρησιμοποιήσετε ένα κρυφό πεδίο της κατηγορίας για την υποβληθείσα κατηγορία. Σημείωση: αυτό μπορεί να χρησιμοποιηθεί για να καθορίσετε μια προεπιλεγμένη κατηγορία για τα υποβληθένατ άρθρα όταν το πεδίο της κατηγορίας είναι κρυμμένο."
-
-#: user-submitted-posts.php:1311
-msgid "Use a hidden field for submitted category?"
-msgstr "Θελετε να χρησιμοπιήσετε ένα κρυφό πεδίο της υποβληθείσας κατηγορίας;"
-
-#: user-submitted-posts.php:1308
-msgid "Check this box if you want to automatically use the registered user&rsquo;s specified URL as the submitted-post URL. Note: this really should only be used when requiring log-in for submissions."
-msgstr "Επιλέξτε αυτό το πλαίσιο αν θέλετε να χρησιμοποιήσετε αυτόματα την&rsquo;s καθορισμένη διεύθυνση URLπου έχει δώσει ο χρήστης  για το URL του υποβληθέντος άρθρου. Σημείωση: στην πράξη θα πρέπει να χρησιμοποιείται μόνο όταν χρειάζεται login για τις υποβολές."
-
-#: user-submitted-posts.php:1306
-msgid "Use registered URL for submitted URL?"
-msgstr "Χρήση του καταχωρημένου URL για τα υποβληθέντα URL;"
-
-#: user-submitted-posts.php:1303
-msgid "Check this box if you want to automatically use the registered username as the submitted-post author. Note: this really should only be used when requiring log-in for submissions."
-msgstr "Επιλέξτε αυτό το πλαίσιο αν θέλετε να χρησιμοποιήσετε αυτόματα το καταχωρημένο όνομα χρήστη ως συγγραφέας υποβληθέντων άρθρων Σημείωση: στην πράξη αυτό θα πρέπει να χρησιμοποιείται μόνο όταν χρειάζεται login για τις υποβολές."
-
-#: user-submitted-posts.php:1301
-msgid "Use registered username for author?"
-msgstr "Χρήση καταχωρημένου ονόματος χρήστη ως συγγραφέα;"
-
-#: user-submitted-posts.php:1297
-msgid "Registered User Info"
-msgstr "Πληροφορίες Καταχωρημένου Χρήστη"
-
-#: user-submitted-posts.php:1293
-msgid "Disable all required attributes on default form fields (useful for troubleshooting error messages)."
-msgstr "Απενεργοποιήστε όλα τα απαραίτητα χαρακτηριστικά για τα προεπιλεγμένα πεδία φόρμας (χρήσιμο για την αντιμετώπιση μηνυμάτων λάθους)."
-
-#: user-submitted-posts.php:1291
-msgid "Disable Required"
-msgstr "Απαιτείται Απενεργοποίηση"
-
-#: user-submitted-posts.php:1288
-msgid "Require submitted post titles to be unique (useful for preventing multiple/duplicate submitted posts)."
-msgstr "Πρέπει οι τίτλοι των αναρτημένων άρθρων να είναι μοναδικοί (χρήσιμο για να εμποδίζονται τα πολλαπλά/διπλότυπα άρθρα)."
-
-#: user-submitted-posts.php:1286
-msgid "Unique Titles"
-msgstr "Μοναδικοί Τίτλοι"
-
-#: user-submitted-posts.php:1283
-msgid "Here you may specify custom text/markup to be included before the submission form. Note: leave blank to disable."
-msgstr "Εδώ μπορείτε να καθορίσετε δικό σας κώδικα κειμένου/κείμενο ώστε να εμφανίζεται πριν τη φόρμα υποβολής. Σημείωση: αφήστε κενό για απενεργοποίηση."
-
-#: user-submitted-posts.php:1281
-msgid "Custom Content"
-msgstr "Περιεχόμενο ειδικό"
-
-#: user-submitted-posts.php:1278
-msgid "This is the error message that is displayed if post-submission fails."
-msgstr "Αυτό είναι μήνυμα σφάλματος που εμφανίζεται αν αποτύχει η ανάρτηση άρθρου"
-
-#: user-submitted-posts.php:1276
-msgid "Error Message"
-msgstr "Μήνμα Σφάλματος"
-
-#: user-submitted-posts.php:1273
-msgid "This is the success message that is displayed if post-submission is successful."
-msgstr "Αυτό είναι το μήνυμα επιτυχίας που εμφανιζεται αν η ανάρτηση άρθρου είναι επιτυχής."
-
-#: user-submitted-posts.php:1271
-msgid "Success Message"
-msgstr "Μήνυμα Επιτυχίας"
-
-#: user-submitted-posts.php:1268
-msgid "Specify a URL to redirect the user after post-submission. Note: leave blank to redirect back to current page."
-msgstr "Καθορίστε ένα URL για ανακατεύθυνση του χρήστη μετά την επιτυχή υποβολή άρθρου. Σημείωση: αφήστε το κενό για ανακατεύθυνση στην τρέχουσα σελίδα."
-
-#: user-submitted-posts.php:1266
-msgid "Redirect URL"
-msgstr "URL ανακατεύθυνσης"
-
-#: user-submitted-posts.php:1263
-msgid "Tip: multiple addresses may be included using a comma, like so:"
-msgstr "Συμβουλή: μπορούν να χρησιμοποιηθούν πολλές διευθύνσεις με την χ΄ρηση του κόμματος, ως εξής:"
-
-#: user-submitted-posts.php:1262
-msgid "If you checked the box to receive email alerts, indicate here the address(es) to which the emails should be sent."
-msgstr "Αν έχετε τσεκάρει το κουτί για να λαμβάνετε ειδοποιήσεις με ηλ. ταχυδρομείο, καθορίστε εδώ σε ποιά/ες ηλ διεύθυνση/σεις θέλετε να στέλνονται τα μηνυματα."
-
-#: user-submitted-posts.php:1260
-msgid "Email Address for Alerts"
-msgstr "Ηλ. Διεύθυνση για Ειδοποιήσεις"
-
-#: user-submitted-posts.php:1257
-msgid "to display Featured Images."
-msgstr "για την  εμφάνιση των εικόνων Featured."
-
-#: user-submitted-posts.php:1256
-msgid ""
-"Check this box if you want to set submitted images as Featured Images (aka Post Thumbnails) for posts. \n"
-"\t\t\t\t\t\t\t\t\t\t\tNote: your theme&rsquo;s single.php file must include"
-msgstr "Τσεκάρετε αυτό το κουτί αν θέλετε να κάνετε τις μεταφορτωμένες εικόνες ως Featured εικόνες (aka Post Thumbnails) για τις αναρτήσεις"
-
-#: user-submitted-posts.php:1254
-msgid "Set Uploaded Image as Featured Image"
-msgstr "Θέστε την μεταφορτωμένη Εικόνα ως Εικόνα Featured "
-
-#: user-submitted-posts.php:1251
-msgid "Check this box if you want to enable WP rich text editing for submitted posts."
-msgstr "Τσεκάρετε αυτό το κουτί αν θέλετε να ενεργοποιήσετε την λειτουργία επεξεργασίας εμπλουτισμένου κειμένου για τα υποβληθέντα άρθρα."
-
-#: user-submitted-posts.php:1249
-msgid "Enable Rich Text Editor"
-msgstr "Ενεργοποιήστε τον συντάκτη Εμπλουτισμένου Κειμένου"
-
-#: user-submitted-posts.php:1246
-msgid "Check this box if you want to be notified via email for new post submissions."
-msgstr "Τεκάρετε αυτό το κουτί αν θέλετε να ειδοποιείστε για κάθε νέα ανάρτηση μέσω ηλ. ταχυδρομείου."
-
-#: user-submitted-posts.php:1244
-msgid "Receive Email Alert"
-msgstr "Λάβετε Ειδοποιήσεις Ηλ. ταχυδρομείου"
-
-#: user-submitted-posts.php:1240
-msgid "For submitted posts, you can always moderate (recommended), publish immediately, or publish after any number of approved posts."
-msgstr "Τα υποβληθέντα άρθρα, μπορείτε πάντα να τα αλλάζετε (συνιστάται), να τα δημοσιεύετε αμέσως, ή να τα δημοσιεύσετε μετά από οποιοδήποτε αριθμό των εγκεκριμένων αναρτήσεων."
-
-#: user-submitted-posts.php:1235
-msgid "Always publish immediately"
-msgstr "Πάντα να δημοσιεύεται άμεσα"
-
-#: user-submitted-posts.php:1234
-msgid "Always moderate"
-msgstr "Να γίνεται πάντα έλεγχος"
-
-#: user-submitted-posts.php:1231
-msgid "Auto Publish?"
-msgstr "Αυτόματη δημοσίευση;"
-
-#: user-submitted-posts.php:1227
-msgid "Specify the user that should be assigned as author for user-submitted posts."
-msgstr "Επιλέξτε τον Χρήστη ο οποίος θα οριστεί ως συγγραφέας για τα user-submitted posts."
-
-#: user-submitted-posts.php:1217
-msgid "Assigned Author"
-msgstr "Ορισμένος Συγγραφέας"
-
-#: user-submitted-posts.php:1213
-msgid "Select which categories may be assigned to submitted posts."
-msgstr "Επιλέξτε σε ποιές κατηγορίες μπορούν να ανήκουν τα αναρτημένα άρθρα"
-
-#: user-submitted-posts.php:1200
-msgid "Categories"
-msgstr "Κατηγορίες"
-
-#: user-submitted-posts.php:1197
-msgid "When enabled, external CSS &amp; JavaScript files are loaded on every page. Here you may specify the URL of the USP form to load resources only on that page. Note: leave blank to load on all pages."
-msgstr "Οταν είναι ενεργό το εξωτερικό CSS &amp; φορτώνοντα αρχεία τύπου JavaScript σε κάθε σελίδα. Εδώ μπορείτε να καθορίσετε το URL της φόρμας USP για να φορτώνεται μόνο σε αυτη την σελίδα. Αφήστε κενό για φόρτωση σε όλες τις σελίδες."
-
-#: user-submitted-posts.php:1195
-msgid "Targeted Loading"
-msgstr "Στοχευμένη φόρτωση"
-
-#: user-submitted-posts.php:1192
-msgid "Check this box if you want to include the external JavaScript files (recommended)."
-msgstr "Τσεκάρετ αυτό το κουτί αν θέλετε να συμπεριλάβετε εξωτερικά αρχεία JavaScript (συνιστάται)."
-
-#: user-submitted-posts.php:1190
-msgid "Include JavaScript?"
-msgstr "Να συμπεριληφθεί JavaScript;"
-
-#: user-submitted-posts.php:1185
-msgid "CSS selectors for User Submitted Posts"
-msgstr "CSS selectors για User Submitted Posts"
-
-#: user-submitted-posts.php:1185
-msgid "Note: list of CSS selectors available at "
-msgstr "Σημείωση: Η λίστα CSS selectors είναι διαθέσιμη στο"
-
-#: user-submitted-posts.php:1183
-msgid "* If &ldquo;Custom&rdquo; is selected, you must upload your own template files,"
-msgstr "* Αν το &ldquo;Custom&rdquo; είναι επιλεγμένο, πρέπει να ανεβάσετε τα δικά σας αρχεία του πρότυπου,"
-
-#: user-submitted-posts.php:1165
-msgid "Form style"
-msgstr "Συλ φόρμας"
-
-#: user-submitted-posts.php:1161
-msgid "General Form Options"
-msgstr "Γενικές Επιλογές Φόρμας"
-
-#: user-submitted-posts.php:1158
-msgid "Challenge question (Captcha)"
-msgstr "Ερώτηση (Captcha)"
-
-#: user-submitted-posts.php:1152
-msgid "Post Images"
-msgstr "Εικόνες άρθρου"
-
-#: user-submitted-posts.php:1146 views/submission-form.php:103
-#: views/submission-form.php:104
-msgid "Post Content"
-msgstr "Περιεχόμενο άρθρου"
-
-#: user-submitted-posts.php:1140 views/submission-form.php:68
-msgid "Post Category"
-msgstr "Κατηγορία Άρθρου"
-
-#: user-submitted-posts.php:1134 views/submission-form.php:56
-#: views/submission-form.php:57
-msgid "Post Tags"
-msgstr "Ετικέτες Άρθρου"
-
-#: user-submitted-posts.php:1128 views/submission-form.php:50
-#: views/submission-form.php:51
-msgid "Post Title"
-msgstr "Τίτλος Άρθρου"
-
-#: user-submitted-posts.php:1122
-msgid "Post URL"
-msgstr "URL Άρθρου"
-
-#: user-submitted-posts.php:1116
-msgid "User Email"
-msgstr "Ηλ. διεύθυνση χρήστη"
-
-#: user-submitted-posts.php:1110
-msgid "User Name"
-msgstr "Όνομα Χρηστη"
-
-#: user-submitted-posts.php:1109 user-submitted-posts.php:1115
-#: user-submitted-posts.php:1121 user-submitted-posts.php:1127
-#: user-submitted-posts.php:1133 user-submitted-posts.php:1139
-#: user-submitted-posts.php:1145 user-submitted-posts.php:1151
-#: user-submitted-posts.php:1157
-msgid "Hide"
-msgstr "Απόκρυψη"
-
-#: user-submitted-posts.php:1108 user-submitted-posts.php:1114
-#: user-submitted-posts.php:1120 user-submitted-posts.php:1126
-#: user-submitted-posts.php:1132 user-submitted-posts.php:1138
-#: user-submitted-posts.php:1144 user-submitted-posts.php:1150
-#: user-submitted-posts.php:1156
-msgid "Show"
-msgstr "Εμφάνιση"
-
-#: user-submitted-posts.php:1104
-msgid "Show/Hide Form Fields"
-msgstr "Εμφάνιση/Απόκρυψη πεδίων φόρμας"
-
-#: user-submitted-posts.php:1103
-msgid "Here you may configure options for USP. See the <code>readme.txt</code> for more information."
-msgstr "Εδώ μπορείτε να κάνετε ρυθμίσεις του USP. Δείτε το <code>readme.txt</code> για περισσότερες πληροφορίες."
-
-#: user-submitted-posts.php:1101
-msgid "Options"
-msgstr "Επιλογές"
-
-#: user-submitted-posts.php:1089
-msgid "rate it at WordPress.org"
-msgstr "βαθμολογείστε το στο Wordpress.org"
-
-#: user-submitted-posts.php:1088
-msgid "Rate and review this plugin at the WP Plugin Directory"
-msgstr "Βαθμολογείστε και σχολιάστε αυτό το πρότυπο στον φάκελο WP του πρότυπου"
-
-#: user-submitted-posts.php:1087
-msgid "If you like USP, please"
-msgstr "Αν σας αρέσει το USP, παρακαλούμε"
-
-#: user-submitted-posts.php:1085
-msgid "homepage"
-msgstr "Αρχική"
-
-#: user-submitted-posts.php:1085 user-submitted-posts.php:1184
-msgid "and"
-msgstr "και"
-
-#: user-submitted-posts.php:1084
-msgid "More info:"
-msgstr "Περισσότερες πληροφορίες:"
-
-#: user-submitted-posts.php:1082
-msgid "Get the shortcode &amp; template tag"
-msgstr "Πάρτε το shortcode &amp; template tag"
-
-#: user-submitted-posts.php:1081
-msgid "Configure settings"
-msgstr "Κάντε ρυμίσεις"
-
-#: user-submitted-posts.php:1077
-msgid "&mdash; the ultimate solution for unlimited front-end forms."
-msgstr "&mdash. Η απόλυτη λύση για απεριόριστες front-end φόρμες."
-
-#: user-submitted-posts.php:1076
-msgid "For more functionality check out"
-msgstr "Για περισσότερη λειτουργικότητα ελέγξτε"
-
-#: user-submitted-posts.php:1075
-msgid "To implement, configure the plugin settings and include the USP form in any post or page via shortcode or anywhere in your theme via template tag."
-msgstr "Για την εφαρμογή, αλλάξτε τις ρυθμίσεις του πρόσθετου και βάλτε τη φόρμα USP σε οποιαδήποτε θέση ή σελίδα μέσω του σύντομου κώδικα ή οπουδήποτε στο θέμα σας μέσω της ετικέτας του πρότυπου."
-
-#: user-submitted-posts.php:1074
-msgid "(USP) enables your visitors to submit posts and upload images from anywhere on your site."
-msgstr "Το (USP) επιτρέπει στους επισκέπτες σας να υποβάλλουν άρθρα και να ανεβάζουν εικόνες από οπουδήποτε στον ιστοτοπό σας."
-
-#: user-submitted-posts.php:1070
-msgid "Overview"
-msgstr "Περιγραφή"
-
-#: user-submitted-posts.php:1062
-msgid "Check this box if you have shown support"
-msgstr "Τσεκάρετε αυτό το κουτί αν έχετε υποστήριξη"
-
-#: user-submitted-posts.php:1057
-msgid "Your generous support enables continued development of this free plugin. Thank you!"
-msgstr "Η γεναιόδωρη υποστηριξή σας επιτρέπει την συνεχή ανάπτυξη αυτού του πρότυπου. Σας ευχαριστούμε!"
-
-#: user-submitted-posts.php:1053
-msgid "give it a 5-star rating"
-msgstr "Δώστε αξιολόγηση 5 αστέρων"
-
-#: user-submitted-posts.php:1052
-msgid "Rate and review at the Plugin Directory"
-msgstr "Αξιολογείστε και σχολιάστε στον φάκελο του πρότυπου"
-
-#: user-submitted-posts.php:1051
-msgid "and/or"
-msgstr "και/ή"
-
-#: user-submitted-posts.php:1051
-msgid "make a donation"
-msgstr "κάντε μια δωρεά"
-
-#: user-submitted-posts.php:1051
-msgid "Make a donation via PayPal"
-msgstr "Κάντε μια δωρεά μέσω του PayPal"
-
-#: user-submitted-posts.php:1051
-msgid "Please"
-msgstr "Παρακαλούμε"
-
-#: user-submitted-posts.php:1047
-msgid "User Submitted Posts needs your support!"
-msgstr "Το User Submitted Posts χρειάζεται την υποσ!τηριξή σας!"
-
-#: user-submitted-posts.php:1038
-msgid "Toggle all panels"
-msgstr "Εναλλαγή των πανελς"
-
-#: user-submitted-posts.php:835
-msgid "Disable stylesheet"
-msgstr "Απενεργοποίηση stylesheet"
-
-#: user-submitted-posts.php:831
-msgid "Custom form + CSS (<small><em>You must provide the template for this option*</em></small>)"
-msgstr "Ειδικής κατασκευής φόρμα + CSS (<small><em>Πρέπει να ορίσετε το πρότυπο για αυτή την επιλογή*</em></small>)"
-
-#: user-submitted-posts.php:827
-msgid "HTML5 form + CSS (<small><em>Recommended</em></small>)"
-msgstr "HTML5 form + CSS (<small><em>Συνιστάται</em></small>)"
-
-#: user-submitted-posts.php:802
-msgid "Success! Thank you for your submission."
-msgstr "Επιτυχία! Ευχαριστούμε για την υποβολή."
-
-#: user-submitted-posts.php:795
-msgid "Please select your image(s) to upload."
-msgstr "Παρακαλούμε επιλέξτε την/τις εικόνα/ες για μεταφόρτωση."
-
-#: user-submitted-posts.php:790 user-submitted-posts.php:794
-msgid "hide"
-msgstr "απόκρυψη"
-
-#: user-submitted-posts.php:788 user-submitted-posts.php:789
-#: user-submitted-posts.php:791 user-submitted-posts.php:792
-#: user-submitted-posts.php:793 user-submitted-posts.php:800
-#: user-submitted-posts.php:801
-msgid "show"
-msgstr "εμφάνιση"
-
-#: user-submitted-posts.php:781
-msgid "There was an error. Please ensure that you have added a title, some content, and that you have uploaded only images."
-msgstr "Υπήρξε λάθος. Παρακαλούμε βεβαιωθείτε ότι έχετε προσθέσει τίτλο, κάποιο περιεχόμενο και ότι έχετε μεταφορτώσει μόνο εικόνες."
-
-#: user-submitted-posts.php:742
-msgid "Settings"
-msgstr "Ρυθμίσεις"
-
-#: user-submitted-posts.php:729
-msgid "Error: "
-msgstr "Σφάλμα:"
-
-#: user-submitted-posts.php:723
-msgid "Duplicate post title. Please try again."
-msgstr "Διπλότυπος τίτλος άρθρου. Παρακαλούμε δοκιμάστε ξανά."
-
-#: user-submitted-posts.php:722
-msgid "Post not created. Please contact the site administrator for help."
-msgstr "Το αρθρο δεν δημιουργήθηκε. Παρακαλούμε επικοινωνείστε με τον διαχειριστή του ιστότοπου για βοήθεια."
-
-#: user-submitted-posts.php:719
-msgid "The file(s) could not be uploaded"
-msgstr "Το/τα αρχείο/α δεν μπορούσαν να μεταφορτωθούν"
-
-#: user-submitted-posts.php:718
-msgid "The selected files could not be uploaded to the server"
-msgstr "Τα επιλεγμένα αρχεία δεν μπόρεσαν να μεταφορτωθούν στον σέρβερ"
-
-#: user-submitted-posts.php:717
-msgid "File type not allowed (please upload images only)"
-msgstr "Μη επιτρεπτός τύπος αρχείου (παρακαλούμε ανεβάστε μόνο εικόνες)"
-
-#: user-submitted-posts.php:716
-msgid "Image height exceeds maximum"
-msgstr "Το ύψος της εικόνας ξεπερνάει το μέγιστο επιτρεπόμενο"
-
-#: user-submitted-posts.php:715
-msgid "Minimum image height not met"
-msgstr "Το ελάχιστο ύψος εικόνας δεν είναι το σωστό"
-
-#: user-submitted-posts.php:714
-msgid "Image width exceeds maximum"
-msgstr "Το πλάτος της εικόνας ξεπερνάει το μέγιστο επιτρεπόμενο"
-
-#: user-submitted-posts.php:713
-msgid "Minimum image width not met"
-msgstr "Το ελάχιστο πλάτος εικόνας δεν είναι το σωστό "
-
-#: user-submitted-posts.php:712
-msgid "Maximum number of images exceeded "
-msgstr "Υπέρβαση ορίου μέγιστου αριθμού εικόνων"
-
-#: user-submitted-posts.php:711
-msgid "Minimum number of images not met"
-msgstr "Ο ελάχιστος αριθμός εικόνων δεν είναι ο σωστός"
-
-#: user-submitted-posts.php:710
-msgid "Non-empty value for hidden field"
-msgstr "Μη κενή τιμή για το κρυμμένο πεδίο"
-
-#: user-submitted-posts.php:709
-msgid "User email required"
-msgstr "Απαιτείται η ηλ διεύθυνση του χρήστη"
-
-#: user-submitted-posts.php:708
-msgid "Correct captcha required"
-msgstr "Απαιτείται το σωστό captcha"
-
-#: user-submitted-posts.php:707
-msgid "Post content required"
-msgstr "Απαιτείται περιεχόμενο"
-
-#: user-submitted-posts.php:706
-msgid "Post category required"
-msgstr "Απαιτείται κατηγορία"
-
-#: user-submitted-posts.php:705
-msgid "Post tags required"
-msgstr "Απαιτούνται ετικέτες"
-
-#: user-submitted-posts.php:704
-msgid "Post url required"
-msgstr "Απαιτείται το URL"
-
-#: user-submitted-posts.php:703
-msgid "Post title required"
-msgstr "Απαιτείται τίτλος"
-
-#: user-submitted-posts.php:702
-msgid "User name required"
-msgstr "Απαιτείται όνομα χρήστη"
-
-#: user-submitted-posts.php:701
-msgid "User login required"
-msgstr "Απαιτείται σύνδεση του χρήστη"
-
-#: user-submitted-posts.php:694
-msgid "An error occurred. Please go back and try again."
-msgstr "Σφάλμα. Παρακαλούμε επιστρέψτε και δοκιμάστε ξανά."
-
-#: user-submitted-posts.php:688 user-submitted-posts.php:689
-#: user-submitted-posts.php:690 user-submitted-posts.php:691
-msgid " pixels"
-msgstr " pixels"
-
-#: user-submitted-posts.php:686
+"X-Generator: POEditor.com\n"
+"Project-Id-Version: USP 20241026\n"
+"Language: el\n"
+
+#: library/plugin-settings.php:590
+msgid " approved posts"
+msgstr " εγκεκριμένες θέσεις"
+
+#: user-submitted-posts.php:1701
 msgid " file"
 msgstr " αρχείο"
 
-#: user-submitted-posts.php:685
-msgid " files"
-msgstr " αρχεία"
-
-#: user-submitted-posts.php:683
+#: user-submitted-posts.php:1698
 msgid " file required"
 msgstr " απαιτείται αρχείο"
 
-#: user-submitted-posts.php:682
+#: user-submitted-posts.php:1700
+msgid " files"
+msgstr " αρχεία"
+
+#: user-submitted-posts.php:1697
 msgid " files required"
 msgstr " απαιτούνται αρχεία"
 
-#: user-submitted-posts.php:332
+#: user-submitted-posts.php:123
+msgid " or higher, and has been deactivated! "
+msgstr " ή υψηλότερο, και έχει απενεργοποιηθεί! "
+
+#: user-submitted-posts.php:1703 user-submitted-posts.php:1704
+#: user-submitted-posts.php:1705 user-submitted-posts.php:1706
+msgid " pixels"
+msgstr " εικονοστοιχεία"
+
+#: user-submitted-posts.php:1743 user-submitted-posts.php:1744
+msgid " required"
+msgstr " υποχρεούμαι"
+
+#: library/plugin-display.php:540
+msgid "&ldquo;Add another image&rdquo; link"
+msgstr "&ldquo;Προσθήκη άλλης εικόνας&rdquo; σύνδεσμος"
+
+#: library/plugin-display.php:61
+msgid "&mdash; the ultimate solution for user-generated content."
+msgstr "&mdash; η απόλυτη λύση για περιεχόμενο που δημιουργείται από χρήστες."
+
+#: library/plugin-settings.php:203
+msgid "(Provide your own form template &amp; styles)"
+msgstr "(Παρέχετε το δικό σας πρότυπο φόρμας και στυλ)"
+
+#: library/plugin-settings.php:199
+msgid "(Provide your own styles)"
+msgstr "(Δώστε τα δικά σας στυλ)"
+
+#: library/plugin-settings.php:195
+msgid "(Recommended)"
+msgstr "(Συνιστάται)"
+
+#: library/plugin-display.php:131
+msgid "..and upload them into a directory named"
+msgstr "..και ανεβάστε τα σε έναν κατάλογο με το όνομα"
+
+#: library/plugin-display.php:774
+msgid "Access Control"
+msgstr "Έλεγχος πρόσβασης"
+
+#: library/plugin-display.php:473
+msgid "Add a challenge question to help stop spam. Tip: make the question easy to answer for any human."
+msgstr "Προσθέστε μια ερώτηση πρόκλησης για να σταματήσετε τα ανεπιθύμητα. Συμβουλή: κάντε την ερώτηση εύκολη στην απάντηση για κάθε άνθρωπο."
+
+#: views/submission-form.php:147 views/submission-form-alt.php:162
+msgid "Add another image"
+msgstr "Προσθήκη άλλης εικόνας"
+
+#: library/plugin-display.php:291
+msgid "Additional recipients for email alerts. Use commas to separate multiple addresses."
+msgstr "Πρόσθετοι παραλήπτες για ειδοποιήσεις μέσω email. Χρησιμοποιήστε κόμματα για να διαχωρίσετε πολλές διευθύνσεις."
+
+#: library/shortcode-login.php:183
+msgid "Admin"
+msgstr "Διαχειρ"
+
+#: library/plugin-settings.php:223 library/plugin-settings.php:247
+#: library/plugin-settings.php:271 library/plugin-settings.php:295
+#: library/plugin-settings.php:319
+msgid "After post content"
+msgstr "Μετά το περιεχόμενο της ανάρτησης"
+
+#: user-submitted-posts.php:1714
+msgid "An error occurred. Please go back and try again."
+msgstr "Παρουσιάστηκε σφάλμα. Επιστρέψτε και δοκιμάστε ξανά."
+
+#: library/plugin-settings.php:1219 library/plugin-display.php:363
+#: library/plugin-display.php:751 library/plugin-display.php:756
+msgid "and"
+msgstr "και"
+
+#: library/support-panel.php:61
+msgid "and is greatly appreciated."
+msgstr "και εκτιμάται ιδιαίτερα."
+
+#: library/plugin-display.php:35
+msgid "and/or"
+msgstr "και/ή"
+
+#: views/submission-form.php:85 views/submission-form-alt.php:100
+msgid "Antispam Question"
+msgstr "Ερώτηση Antispam"
+
+#: library/support-panel.php:63
+msgid "Any size donation helps me to continue developing this free plugin and other awesome WordPress resources."
+msgstr "Η δωρεά οποιουδήποτε μεγέθους με βοηθά να συνεχίσω να αναπτύσσω αυτό το δωρεάν πρόσθετο και άλλους καταπληκτικούς πόρους του WordPress."
+
+#: library/plugin-settings.php:1221
+msgid "Apply code"
+msgstr "Εφαρμογή κωδικού"
+
+#: library/plugin-display.php:231
+msgid "Assigned Author"
+msgstr "Ανατεθειμένος συγγραφέας"
+
+#: library/plugin-settings.php:1221
+msgid "at checkout. Sale ends 12/21/24."
+msgstr "στο ταμείο. Η προσφορά λήγει 21/12/24."
+
+#: library/plugin-display.php:752 library/plugin-display.php:756
+msgid "attributes"
+msgstr "γνωρίσματα"
+
+#: library/plugin-display.php:588
+msgid "Automatically display images and more."
+msgstr "Αυτόματη εμφάνιση εικόνων και πολλά άλλα."
+
+#: library/plugin-settings.php:219 library/plugin-settings.php:243
+#: library/plugin-settings.php:267 library/plugin-settings.php:291
+#: library/plugin-settings.php:315
+msgid "Before post content"
+msgstr "Πριν δημοσιεύσετε περιεχόμενο"
+
+#: library/support-panel.php:53 library/plugin-settings.php:1220
+msgid "books"
+msgstr "βιβλία"
+
+#: library/plugin-display.php:833
+msgid "by"
+msgstr "με"
+
+#: library/plugin-display.php:152
+msgid "By default, CSS &amp; JavaScript files are loaded on every page. To load only on specific page(s), enter the URL(s) here. Use commas to separate multiple URLs. Leave blank to load on all pages."
+msgstr "Από προεπιλογή, CSS &amp; Τα αρχεία JavaScript φορτώνονται σε κάθε σελίδα. Για φόρτωση μόνο σε συγκεκριμένες σελίδες, εισαγάγετε τη διεύθυνση URL εδώ. Χρησιμοποιήστε κόμματα για να διαχωρίσετε πολλαπλές διευθύνσεις URL. Αφήστε το κενό για φόρτωση σε όλες τις σελίδες."
+
+#: library/plugin-display.php:430
+msgid "By default, this displays an &ldquo;Agree to Terms&rdquo; checkbox. Customize as desired."
+msgstr "Από προεπιλογή, εμφανίζεται μια ένδειξη &ldquo;Συμφωνώ με τους Όρους&rdquo; πλαίσιο ελέγχου. Προσαρμόστε όπως θέλετε."
+
+#: library/plugin-display.php:758
+msgid "Can use"
+msgstr "Μπορεί να χρησιμοποιηθεί"
+
+#: library/plugin-display.php:486
+msgid "Case-sensitivity"
+msgstr "Ευαισθησία πεζών-κεφαλαίων"
+
+#: library/plugin-display.php:332
+msgid "Categories"
+msgstr "Κατηγορίες"
+
+#: library/plugin-display.php:327
+msgid "Categories &amp; Tags"
+msgstr "Κατηγορίες &amp; Ετικέτες"
+
+#: library/plugin-display.php:363
+msgid "category"
+msgstr "κατηγορία"
+
+#: library/plugin-display.php:349
+msgid "Category ID for Hidden Field"
+msgstr "Αναγνωριστικό κατηγορίας για κρυφό πεδίο"
+
+#: library/plugin-settings.php:431 library/plugin-display.php:471
+#: library/plugin-display.php:476
+msgid "Challenge Question"
+msgstr "Ερώτηση πρόκλησης"
+
+#: library/plugin-display.php:481
+msgid "Challenge Response"
+msgstr "Απάντηση πρόκλησης"
+
+#: library/plugin-display.php:319 library/plugin-display.php:392
+#: library/plugin-display.php:420 library/plugin-display.php:463
+msgid "check out"
+msgstr "αναχωρώ"
+
+#: library/plugin-display.php:759
+msgid "Check out the source code inline notes for more info"
+msgstr "Ελέγξτε τις ενσωματωμένες σημειώσεις του πηγαίου κώδικα για περισσότερες πληροφορίες"
+
+#: library/plugin-display.php:46
+msgid "Check this box if you have shown support"
+msgstr "Επιλέξτε αυτό το πλαίσιο εάν έχετε δείξει υποστήριξη"
+
+#: library/shortcode-login.php:98
+msgid "Check your email for the password."
+msgstr "Ελέγξτε το email σας για τον κωδικό πρόσβασης."
+
+#: library/shortcode-login.php:103
+msgid "Check your email to reset your password."
+msgstr "Ελέγξτε το email σας για να επαναφέρετε τον κωδικό πρόσβασής σας."
+
+#: library/plugin-display.php:448
+msgid "Checkbox Error"
+msgstr "Σφάλμα πλαισίου ελέγχου"
+
+#: library/plugin-display.php:443
+msgid "Checkbox Name"
+msgstr "Όνομα πλαισίου ελέγχου"
+
+#: library/plugin-display.php:453
+msgid "Checkbox Text"
+msgstr "Κείμενο πλαισίου ελέγχου"
+
+#: library/plugin-display.php:85
+msgid "Choose fields to display on the front-end form."
+msgstr "Επιλέξτε πεδία για εμφάνιση στη φόρμα της διεπαφής."
+
+#: library/plugin-display.php:511
+msgid "Choose reCaptcha version"
+msgstr "Επιλέξτε την έκδοση reCaptcha"
+
+#: library/plugin-display.php:374
+msgid "Configure Custom Field #1."
+msgstr "Διαμόρφωση προσαρμοσμένου πεδίου #1."
+
+#: library/plugin-display.php:402
+msgid "Configure Custom Field #2."
+msgstr "Διαμόρφωση προσαρμοσμένου πεδίου #2."
+
+#: library/plugin-display.php:276
+msgid "Configure email notifications for new submitted posts."
+msgstr "Διαμόρφωση ειδοποιήσεων email για νέες υποβληθείσες αναρτήσεις."
+
+#: library/plugin-display.php:118
+msgid "Configure general settings. Note: the default settings work fine for most cases."
+msgstr "Διαμορφώστε τις γενικές ρυθμίσεις. Σημείωση: οι προεπιλεγμένες ρυθμίσεις λειτουργούν καλά στις περισσότερες περιπτώσεις."
+
+#: library/plugin-display.php:519
+msgid "Configure settings for image uploads."
+msgstr "Διαμορφώστε τις ρυθμίσεις για μεταφορτώσεις εικόνων."
+
+#: library/plugin-display.php:329
+msgid "Configure settings for the Category and Tag fields."
+msgstr "Διαμορφώστε τις ρυθμίσεις για τα πεδία Κατηγορία και Ετικέτα."
+
+#: library/plugin-display.php:228
+msgid "Configure user settings."
+msgstr "Διαμορφώστε τις ρυθμίσεις χρήστη."
+
+#: library/shortcode-login.php:180
+msgid "Congratulations, you&rsquo;re logged in."
+msgstr "Συγχαρητήρια, έχετε συνδεθεί."
+
+#: user-submitted-posts.php:1731 user-submitted-posts.php:1732
+msgid "Correct captcha required"
+msgstr "Απαιτείται σωστό captcha"
+
+#: library/plugin-display.php:296
+msgid "Custom address for the email &ldquo;From&rdquo; header (see plugin FAQs for info)."
+msgstr "Προσαρμοσμένη διεύθυνση για το email &ldquo;Από&rdquo; κεφαλίδα (ανατρέξτε στις Συνήθεις Ερωτήσεις της προσθήκης για πληροφορίες)."
+
+#: library/plugin-display.php:428
+msgid "Custom Checkbox"
+msgstr "Προσαρμοσμένο πλαίσιο ελέγχου"
+
+#: user-submitted-posts.php:1711
+msgid "Custom checkbox required"
+msgstr "Απαιτείται προσαρμοσμένο πλαίσιο ελέγχου"
+
+#: library/plugin-display.php:184
+msgid "Custom Content"
+msgstr "Προσαρμοσμένο περιεχόμενο"
+
+#: user-submitted-posts.php:1708 library/core-functions.php:306
+#: library/plugin-settings.php:392 library/plugin-settings.php:930
+#: library/plugin-display.php:372
+msgid "Custom Field 1"
+msgstr "Προσαρμοσμένο πεδίο 1"
+
+#: library/plugin-display.php:644
+msgid "Custom Field 1 Display"
+msgstr "Εμφάνιση προσαρμοσμένου πεδίου 1"
+
+#: library/plugin-display.php:651
+msgid "Custom Field 1 Markup"
+msgstr "Προσαρμοσμένη Σήμανση Πεδίου 1"
+
+#: user-submitted-posts.php:1709 library/core-functions.php:255
+#: library/plugin-settings.php:397 library/plugin-settings.php:933
+#: library/plugin-display.php:400
+msgid "Custom Field 2"
+msgstr "Προσαρμοσμένο πεδίο 2"
+
+#: library/plugin-display.php:657
+msgid "Custom Field 2 Display"
+msgstr "Εμφάνιση προσαρμοσμένου πεδίου 2"
+
+#: library/plugin-display.php:664
+msgid "Custom Field 2 Markup"
+msgstr "Προσαρμοσμένη Σήμανση Πεδίου 2"
+
+#: library/plugin-display.php:382 library/plugin-display.php:410
+msgid "Custom Field Label"
+msgstr "Προσαρμοσμένη ετικέτα πεδίου"
+
+#: library/plugin-display.php:377 library/plugin-display.php:405
+msgid "Custom Field Name"
+msgstr "Προσαρμοσμένο όνομα πεδίου"
+
+#: library/plugin-settings.php:203
+msgid "Custom Form + Custom CSS"
+msgstr "Προσαρμοσμένη φόρμα + Προσαρμοσμένο CSS"
+
+#: library/plugin-display.php:542
+msgid "Custom markup for the &ldquo;Add another image&rdquo; link. Leave blank to use the default markup (recommended)."
+msgstr "Προσαρμοσμένη σήμανση για το &ldquo;Προσθήκη άλλης εικόνας&rdquo; σύνδεσμος. Αφήστε το κενό για να χρησιμοποιήσετε την προεπιλεγμένη σήμανση (συνιστάται)."
+
+#: library/plugin-display.php:527
+msgid "Default Featured Image"
+msgstr "Προεπιλεγμένη επιλεγμένη εικόνα"
+
+#: library/plugin-settings.php:504
+msgid "Disable"
+msgstr "Καθιστώ ανίκανο"
+
+#: library/plugin-display.php:201
+msgid "Disable all required attributes on form fields (useful for troubleshooting error messages)"
+msgstr "Απενεργοποιήστε όλα τα απαιτούμενα χαρακτηριστικά στα πεδία φόρμας (χρήσιμο για την αντιμετώπιση προβλημάτων μηνυμάτων σφαλμάτων)"
+
+#: library/plugin-display.php:204
+msgid "Disable IP Tracking"
+msgstr "Απενεργοποιήστε την παρακολούθηση IP"
+
+#: library/plugin-display.php:258
+msgid "Disable Replace Author"
+msgstr "Απενεργοποίηση Αντικατάσταση συντάκτη"
+
+#: library/plugin-display.php:199
+msgid "Disable Required"
+msgstr "Απαιτείται απενεργοποίηση"
+
+#: library/plugin-settings.php:373 library/plugin-settings.php:414
+#: library/plugin-settings.php:444 library/plugin-settings.php:474
+msgid "Disable this field"
+msgstr "Απενεργοποιήστε αυτό το πεδίο"
+
+#: library/plugin-settings.php:1293
+msgid "Dismiss"
+msgstr "Απολύω"
+
+#: library/plugin-display.php:356
+msgid "Display a select/dropdown menu of existing tags (valid when Tag field is displayed on the form)"
+msgstr "Εμφάνιση ενός μενού επιλογής/αναπτυσσόμενου μενού υπαρχουσών ετικετών (ισχύει όταν το πεδίο Tag εμφανίζεται στη φόρμα)"
+
+#: library/plugin-display.php:433
+msgid "Display Checkbox"
+msgstr "Εμφάνιση πλαισίου ελέγχου"
+
+#: library/plugin-display.php:777
+msgid "Display content only to users with a specific capability:"
+msgstr "Εμφάνιση περιεχομένου μόνο σε χρήστες με συγκεκριμένη δυνατότητα:"
+
+#: library/plugin-display.php:779
+msgid "Display content to logged-in users:"
+msgstr "Εμφάνιση περιεχομένου σε συνδεδεμένους χρήστες:"
+
+#: library/plugin-display.php:781
+msgid "Display content to visitors only:"
+msgstr "Εμφάνιση περιεχομένου μόνο στους επισκέπτες:"
+
+#: library/plugin-display.php:435
+msgid "Display custom checkbox on the submission form"
+msgstr "Εμφάνιση προσαρμοσμένου πλαισίου ελέγχου στη φόρμα υποβολής"
+
+#: library/plugin-display.php:646
+msgid "Display Custom Field 1:"
+msgstr "Εμφάνιση προσαρμοσμένου πεδίου 1:"
+
+#: library/plugin-display.php:659
+msgid "Display Custom Field 2:"
+msgstr "Εμφάνιση προσαρμοσμένου πεδίου 2:"
+
+#: library/plugin-display.php:735
+msgid "Display image gallery"
+msgstr "Εμφάνιση συλλογής εικόνων"
+
+#: library/plugin-display.php:620
+msgid "Display submitted author/name:"
+msgstr "Εμφάνιση του υποβληθέντος συγγραφέα/ονόματος:"
+
+#: library/plugin-display.php:607
+msgid "Display submitted email address:"
+msgstr "Εμφάνιση της υποβληθείσας διεύθυνσης email:"
+
+#: library/plugin-display.php:593
+msgid "Display submitted images:"
+msgstr "Εμφάνιση υποβαλλόμενων εικόνων:"
+
+#: library/plugin-display.php:633
+msgid "Display submitted URL:"
+msgstr "Εμφάνιση υποβληθείσας διεύθυνσης URL:"
+
+#: library/plugin-display.php:689
+msgid "Display the Form"
+msgstr "Εμφάνιση της Φόρμας"
+
+#: library/plugin-display.php:706
+msgid "Display the login/register form"
+msgstr "Εμφάνιση της φόρμας σύνδεσης/εγγραφής"
+
+#: library/plugin-display.php:693
+msgid "Display the submit-post form"
+msgstr "Εμφάνιση της φόρμας υποβολής-ανάρτησης"
+
+#: library/plugin-display.php:716
+msgid "Display user-submitted posts"
+msgstr "Εμφάνιση αναρτήσεων που έχουν υποβληθεί από τους χρήστες"
+
+#: library/plugin-display.php:206
+msgid "Do not collect or store any user IP address (useful for complying with privacy regulations)"
+msgstr "Μην συλλέγετε ή αποθηκεύετε καμία διεύθυνση IP χρήστη (χρήσιμη για τη συμμόρφωση με τους κανονισμούς απορρήτου)"
+
+#: library/plugin-settings.php:227 library/plugin-settings.php:251
+#: library/plugin-settings.php:275 library/plugin-settings.php:299
+#: library/plugin-settings.php:323
+msgid "Do not display"
+msgstr "Να μην εμφανίζεται"
+
+#: library/plugin-display.php:260
+msgid "Do not replace post author with submitted user name"
+msgstr "Μην αντικαθιστάτε τον συντάκτη της ανάρτησης με το υποβληθέν όνομα χρήστη"
+
+#: library/plugin-display.php:65
+msgid "Documentation"
+msgstr "Απόδειξη με έγγραφα"
+
+#: library/support-panel.php:51
+msgid "Donate via PayPal, credit card, or cryptocurrency"
+msgstr "Κάντε δωρεά μέσω PayPal, πιστωτικής κάρτας ή κρυπτονομίσματος"
+
+#: library/support-panel.php:55
+msgid "donation"
+msgstr "δωρεά"
+
+#: library/plugin-settings.php:586
+msgid "Draft"
+msgstr "Προσχέδιο"
+
+#: user-submitted-posts.php:1756
+msgid "Duplicate post title. Please try again."
+msgstr "Διπλότυπος τίτλος ανάρτησης. Δοκιμάστε ξανά."
+
+#: library/plugin-settings.php:918
+msgid "Email"
+msgstr "E-mail"
+
+#: library/plugin-display.php:294
+msgid "Email &ldquo;From&rdquo; Address"
+msgstr "Email &ldquo;Από&rdquo; Διεύθυνση"
+
+#: library/plugin-display.php:289
+msgid "Email Address for Alerts"
+msgstr "Διεύθυνση ηλεκτρονικού ταχυδρομείου για ειδοποιήσεις"
+
+#: library/plugin-display.php:307
+msgid "Email Alert Message"
+msgstr "Μήνυμα ειδοποίησης μέσω email"
+
+#: library/plugin-display.php:300
+msgid "Email Alert Subject"
+msgstr "Θέμα ειδοποίησης email"
+
+#: library/plugin-display.php:274
+msgid "Email Alerts"
+msgstr "Ειδοποιήσεις μέσω email"
+
+#: library/plugin-display.php:605
+msgid "Email Display"
+msgstr "Εμφάνιση email"
+
+#: library/plugin-display.php:612
+msgid "Email Markup"
+msgstr "Σήμανση email"
+
+#: library/plugin-display.php:318
+msgid "email-alert options"
+msgstr "επιλογές ειδοποίησης μέσω email"
+
+#: library/plugin-settings.php:503
+msgid "Enable"
+msgstr "Καθιστώ ικανό"
+
+#: library/plugin-settings.php:371 library/plugin-settings.php:412
+#: library/plugin-settings.php:443 library/plugin-settings.php:473
+msgid "Enable and require"
+msgstr "Ενεργοποίηση και απαίτηση"
+
+#: library/plugin-settings.php:372 library/plugin-settings.php:413
+msgid "Enable but do not require"
+msgstr "Ενεργοποίηση αλλά δεν απαιτείται"
+
+#: library/plugin-display.php:284
+msgid "Enable HTML Format"
+msgstr "Ενεργοποίηση μορφής HTML"
+
+#: library/plugin-display.php:286
+msgid "Enable HTML format for email alert messages"
+msgstr "Ενεργοποιήστε τη μορφή HTML για μηνύματα ειδοποίησης μέσω email"
+
+#: library/plugin-display.php:191
+msgid "Enable RTE/Visual Editor for the Post Content field"
+msgstr "Ενεργοποιήστε το RTE/Visual Editor για το πεδίο Post Content"
+
+#: library/plugin-display.php:209
+msgid "Enable Shortcodes"
+msgstr "Ενεργοποίηση Shortcodes"
+
+#: library/plugin-display.php:211
+msgid "Enable shortcodes in widgets. By default, WordPress does not enable shortcodes in widgets. "
+msgstr "Ενεργοποίηση σύντομων κωδικών σε γραφικά στοιχεία. Από προεπιλογή, το WordPress δεν ενεργοποιεί τους συντομότερους κωδικούς σε γραφικά στοιχεία. "
+
+#: library/plugin-display.php:341
+msgid "Enable users to select multiple categories"
+msgstr "Επιτρέψτε στους χρήστες να επιλέξουν πολλές κατηγορίες"
+
+#: library/plugin-display.php:578
+msgid "Enable users to upload other file types (like PDF, Word, Zip, videos, and more), check out"
+msgstr "Επιτρέψτε στους χρήστες να ανεβάζουν άλλους τύπους αρχείων (όπως PDF, Word, Zip, βίντεο και άλλα), ελέγξτε"
+
+#. Description of the plugin
+#: 
+msgid "Enables your visitors to submit posts and images from anywhere on your site."
+msgstr "Επιτρέπει στους επισκέπτες σας να υποβάλλουν αναρτήσεις και εικόνες από οπουδήποτε στον ιστότοπό σας."
+
+#: library/plugin-display.php:59
+msgid "enables your visitors to submit posts and upload images from the front-end of your site. "
+msgstr "δίνει τη δυνατότητα στους επισκέπτες σας να υποβάλλουν αναρτήσεις και να ανεβάζουν εικόνες από το μπροστινό μέρος του ιστότοπού σας. "
+
+#: library/plugin-display.php:483
+msgid "Enter the *only* correct answer to the challenge question"
+msgstr "Εισαγάγετε τη *μόνη* σωστή απάντηση στην ερώτηση πρόκλησης"
+
+#: library/plugin-display.php:531
+msgid "Enter URL or click button to upload/choose an image (optional)"
+msgstr "Εισαγάγετε τη διεύθυνση URL ή κάντε κλικ στο κουμπί για να ανεβάσετε/επιλέξετε μια εικόνα (προαιρετικό)"
+
+#: library/plugin-display.php:505
+msgid "Enter your Private Key"
+msgstr "Εισαγάγετε το ιδιωτικό σας κλειδί"
+
+#: library/plugin-display.php:500
+msgid "Enter your Public Key"
+msgstr "Εισαγάγετε το δημόσιο κλειδί σας"
+
+#: library/shortcode-login.php:156
+msgid "Enter your username or email to reset your password."
+msgstr "Εισαγάγετε το όνομα χρήστη ή το email σας για να επαναφέρετε τον κωδικό πρόσβασής σας."
+
+#: library/plugin-display.php:179
+msgid "Error Message"
+msgstr "Μήνυμα σφάλματος"
+
+#: library/plugin-display.php:181
+msgid "Error message displayed if post submission fails (basic markup allowed)"
+msgstr "Εμφανίζεται μήνυμα σφάλματος εάν η υποβολή της ανάρτησης αποτύχει (επιτρέπεται η βασική σήμανση)"
+
+#: library/plugin-display.php:450
+msgid "Error message displayed if user does not check the box"
+msgstr "Εμφανίζεται μήνυμα σφάλματος εάν ο χρήστης δεν επιλέξει το πλαίσιο"
+
+#: user-submitted-posts.php:1766
+msgid "Error: "
+msgstr "Σφάλμα: "
+
+#: library/plugin-display.php:787
+msgid "Example"
+msgstr "Παράδειγμα"
+
+#: library/plugin-settings.php:1216
+msgid "Fall Sale!"
+msgstr "Φθινοπωρινές εκπτώσεις!"
+
+#: library/plugin-display.php:522
+msgid "Featured Image"
+msgstr "Επιλεγμένη εικόνα"
+
+#: user-submitted-posts.php:1749
+msgid "File not uploaded. Please check the file and try again."
+msgstr "Το αρχείο δεν μεταφορτώθηκε. Ελέγξτε το αρχείο και δοκιμάστε ξανά."
+
+#: user-submitted-posts.php:1742
+msgid "File type not allowed (please upload images only)"
+msgstr "Ο τύπος αρχείου δεν επιτρέπεται (παρακαλώ μεταφορτώστε μόνο εικόνες)"
+
+#: library/plugin-display.php:390 library/plugin-display.php:418
+#: library/plugin-display.php:461
+msgid "For"
+msgstr "Για"
+
+#: library/plugin-display.php:317 library/plugin-display.php:362
+msgid "For more"
+msgstr "Για περισσότερα"
+
+#: library/plugin-display.php:60
+msgid "For more features and unlimited forms, check out"
+msgstr "Για περισσότερες δυνατότητες και απεριόριστες φόρμες, ρίξτε μια ματιά"
+
+#: library/plugin-display.php:218 library/plugin-display.php:266
+#: library/plugin-display.php:673
+msgid "For more options and features, check out"
+msgstr "Για περισσότερες επιλογές και δυνατότητες, ρίξτε μια ματιά"
+
+#: library/plugin-display.php:108
+msgid "For unlimited fields, check out"
+msgstr "Για απεριόριστα πεδία, ελέγξτε έξω"
+
+#: library/shortcode-login.php:90
+msgid "Forgot?"
+msgstr "Ξεχάσατε;"
+
+#: library/plugin-display.php:83
+msgid "Form Fields"
+msgstr "Πεδία Φόρμας"
+
+#: library/plugin-display.php:121
+msgid "Form Style"
+msgstr "Στυλ φόρμας"
+
+#: library/plugin-display.php:586
+msgid "Front-end Display"
+msgstr "Εμπρός οθόνη"
+
+#: library/plugin-display.php:139
+msgid "FYI: here is a"
+msgstr "FYI: εδώ είναι ένα"
+
+#: library/plugin-display.php:116
+msgid "General Settings"
+msgstr "Γενικές Ρυθμίσεις"
+
+#: library/plugin-display.php:72
+msgid "Get USP Pro"
+msgstr "Αποκτήστε το USP Pro"
+
+#: library/plugin-settings.php:38
+msgid "Get USP Pro for unlimited forms!"
+msgstr "Αποκτήστε το USP Pro για απεριόριστες φόρμες!"
+
+#: library/plugin-display.php:70
+msgid "give it a 5-star rating"
+msgstr "δώστε του μια βαθμολογία 5 αστέρων"
+
+#: library/plugin-display.php:37
+msgid "give this plugin a 5-star rating"
+msgstr "δώστε σε αυτό το πρόσθετο βαθμολογία 5 αστέρων"
+
+#: library/plugin-settings.php:66
+msgid "Give USP a 5-star rating at WordPress.org"
+msgstr "Δώστε στο USP μια βαθμολογία 5 αστέρων στο WordPress.org"
+
+#: library/plugin-settings.php:39
+msgid "Go Pro"
+msgstr "Go Pro"
+
+#: library/plugin-settings.php:461 library/plugin-display.php:493
+msgid "Google reCaptcha"
+msgstr "Google reCaptcha"
+
+#: library/shortcode-login.php:107
+msgid "Have an account?"
+msgstr "Έχετε λογαριασμό;"
+
+#: library/plugin-display.php:722
+msgid "Here are some examples showing how to configure this shortcode:"
+msgstr "Ακολουθούν μερικά παραδείγματα που δείχνουν πώς να ρυθμίσετε αυτόν τον σύντομο κώδικα:"
+
+#: library/plugin-display.php:344
+msgid "Hidden/Default Category"
+msgstr "Κρυφή/Προεπιλεγμένη κατηγορία"
+
+#: library/plugin-settings.php:61
+msgid "Homepage"
+msgstr "Αρχική σελίδα"
+
+#: library/plugin-settings.php:195
+msgid "HTML5 Form + Default CSS"
+msgstr "Φόρμα HTML5 + Προεπιλεγμένο CSS"
+
+#: library/plugin-settings.php:199
+msgid "HTML5 Form + Disable CSS"
+msgstr "Φόρμα HTML5 + Απενεργοποίηση CSS"
+
+#. URI of the plugin
+#: 
+msgid "https://perishablepress.com/user-submitted-posts/"
+msgstr "https://perishablepress.com/user-submitted-posts/"
+
+#. Author URI of the plugin
+#: 
+msgid "https://plugin-planet.com/"
+msgstr "https://plugin-planet.com/"
+
+#: views/submission-form.php:169 views/submission-form-alt.php:184
+msgid "Human verification: leave this field empty."
+msgstr "Ανθρώπινη επαλήθευση: αφήστε αυτό το πεδίο κενό."
+
+#: library/plugin-display.php:297
+msgid "If multiple addresses are specified for the previous setting, include an equal number of addresses for this setting (in the same order)."
+msgstr "Εάν έχουν καθοριστεί πολλές διευθύνσεις για την προηγούμενη ρύθμιση, συμπεριλάβετε ίσο αριθμό διευθύνσεων για αυτήν τη ρύθμιση (με την ίδια σειρά)."
+
+#: library/plugin-display.php:788
+msgid "If the user is logged in, display the post-submit form; or if the user is not logged in, display the login form:"
+msgstr "Εάν ο χρήστης είναι συνδεδεμένος, εμφανίστε τη φόρμα μετά την υποβολή. ή εάν ο χρήστης δεν είναι συνδεδεμένος, εμφανίστε τη φόρμα σύνδεσης:"
+
+#: library/plugin-display.php:69
+msgid "If you like this plugin, please"
+msgstr "Αν σας αρέσει αυτό το πρόσθετο, παρακαλώ"
+
+#: library/plugin-display.php:591
+msgid "Image Display"
+msgstr "Εμφάνιση εικόνας"
+
+#: user-submitted-posts.php:1741
+msgid "Image height exceeds maximum"
+msgstr "Το ύψος της εικόνας υπερβαίνει το μέγιστο"
+
+#: library/plugin-display.php:598
+msgid "Image Markup"
+msgstr "Σήμανση εικόνας"
+
+#: library/plugin-settings.php:491 library/plugin-display.php:517
+msgid "Image Uploads"
+msgstr "Μεταφορτώσεις εικόνων"
+
+#: user-submitted-posts.php:1739
+msgid "Image width exceeds maximum"
+msgstr "Το πλάτος της εικόνας υπερβαίνει το μέγιστο"
+
+#: library/plugin-display.php:751
+msgid "in"
+msgstr "σε"
+
+#: library/plugin-display.php:131
+msgid "in your theme:"
+msgstr "στο θέμα σας:"
+
+#: library/plugin-display.php:145
+msgid "Include JavaScript"
+msgstr "Συμπεριλάβετε JavaScript"
+
+#: library/plugin-display.php:147
+msgid "Include required JavaScript files (recommended)"
+msgstr "Συμπερίληψη απαιτούμενων αρχείων JavaScript (συνιστάται)"
+
+#: library/enqueue-scripts.php:152
+msgid "Incorrect response."
+msgstr "Λανθασμένη απάντηση."
+
+#: library/plugin-display.php:138
+msgid "Installation Docs"
+msgstr "Έγγραφα εγκατάστασης"
+
+#. Author of the plugin
+#: 
+msgid "Jeff Starr"
+msgstr "Τζεφ Σταρ"
+
+#: library/plugin-display.php:834
+msgid "Jeff Starr on Twitter"
+msgstr "Ο Τζεφ Σταρ στο Twitter"
+
+#: library/plugin-display.php:731 library/plugin-display.php:802
+msgid "Learn&nbsp;more"
+msgstr "Μάθετε&nbsp;περισσότερα"
+
+#: library/plugin-display.php:813
+msgid "Leave this option disabled to remember your settings."
+msgstr "Αφήστε αυτή την επιλογή απενεργοποιημένη για να θυμάστε τις ρυθμίσεις σας."
+
+#: library/plugin-settings.php:88
+msgid "Like this plugin? Give it a"
+msgstr "Σας αρέσει αυτό το πρόσθετο; Δώστε του ένα"
+
+#: library/plugin-display.php:139
+msgid "list of USP CSS selectors"
+msgstr "λίστα επιλογέων USP CSS"
+
+#: user-submitted-posts.php:1823
+msgid "log in"
+msgstr "συνδεθείτε"
+
+#: library/shortcode-login.php:108
+msgid "Log in or sign up! It&rsquo;s fast &amp; free!"
+msgstr "Συνδεθείτε ή εγγραφείτε! Είναι γρήγορο &amp; δωρεάν!"
+
+#: library/shortcode-login.php:182
+msgid "Log out"
+msgstr "Αποσυνδεθείτε"
+
+#: library/shortcode-login.php:88 library/shortcode-login.php:127
+msgid "Login"
+msgstr "Σύνδεση"
+
+#: library/shortcode-login.php:155
+msgid "Lose something?"
+msgstr "Να χαθεί κάτι;"
+
+#: library/plugin-display.php:35
+msgid "make a donation"
+msgstr "κάντε μια δωρεά"
+
+#: library/plugin-display.php:35
+msgid "Make a donation via PayPal"
+msgstr "Κάντε μια δωρεά μέσω PayPal"
+
+#: library/support-panel.php:107
+msgid "Make a donation&nbsp;&raquo;"
+msgstr "Κάντε μια δωρεά&nbsp;&raquo;"
+
+#: library/plugin-display.php:488
+msgid "Make the challenge response case-sensitive"
+msgstr "Κάντε την απάντηση πρόκλησης με διάκριση πεζών-κεφαλαίων"
+
+#: library/plugin-display.php:440
+msgid "Make the custom checkbox required (uncheck to make optional)"
+msgstr "Απαιτείται το προσαρμοσμένο πλαίσιο ελέγχου (αποεπιλέξτε για να γίνει προαιρετικό)"
+
+#: library/plugin-display.php:653
+msgid "Markup for Custom Field 1. You may include any of the following variables:"
+msgstr "Σήμανση για προσαρμοσμένο πεδίο 1. Μπορείτε να συμπεριλάβετε οποιαδήποτε από τις ακόλουθες μεταβλητές:"
+
+#: library/plugin-display.php:666
+msgid "Markup for Custom Field 2. You may include any of the following variables:"
+msgstr "Σήμανση για προσαρμοσμένο πεδίο 2. Μπορείτε να συμπεριλάβετε οποιαδήποτε από τις ακόλουθες μεταβλητές:"
+
+#: library/plugin-display.php:600
+msgid "Markup for each submitted image. You may include any of the following variables:"
+msgstr "Σήμανση για κάθε εικόνα που υποβάλλεται. Μπορείτε να συμπεριλάβετε οποιαδήποτε από τις ακόλουθες μεταβλητές:"
+
+#: library/plugin-display.php:627
+msgid "Markup for submitted author/name. You may include"
+msgstr "Σήμανση για τον συγγραφέα/όνομα που υποβλήθηκε. Μπορείτε να συμπεριλάβετε"
+
+#: library/plugin-display.php:614
+msgid "Markup for submitted email address. You may include any of the following variables:"
+msgstr "Σήμανση για την υποβληθείσα διεύθυνση email. Μπορείτε να συμπεριλάβετε οποιαδήποτε από τις ακόλουθες μεταβλητές:"
+
+#: library/plugin-display.php:640
+msgid "Markup for submitted URL. You may include any of the following variables:"
+msgstr "Σήμανση για υποβληθείσα διεύθυνση URL. Μπορείτε να συμπεριλάβετε οποιαδήποτε από τις ακόλουθες μεταβλητές:"
+
+#: library/plugin-display.php:572
+msgid "Maximum height (in pixels) for uploaded images"
+msgstr "Μέγιστο ύψος (σε pixel) για τις μεταφορτωμένες εικόνες"
+
+#: library/plugin-display.php:570
+msgid "Maximum image height"
+msgstr "Μέγιστο ύψος εικόνας"
+
+#: library/plugin-display.php:565
+msgid "Maximum image width"
+msgstr "Μέγιστο πλάτος εικόνας"
+
+#: library/plugin-display.php:550
+msgid "Maximum number of images"
+msgstr "Μέγιστος αριθμός εικόνων"
+
+#: user-submitted-posts.php:1737
+msgid "Maximum number of images exceeded "
+msgstr "Υπέρβαση του μέγιστου αριθμού εικόνων "
+
+#: library/plugin-display.php:552
+msgid "Maximum number of images for each submitted post"
+msgstr "Μέγιστος αριθμός εικόνων για κάθε υποβληθείσα ανάρτηση"
+
+#: library/plugin-display.php:567
+msgid "Maximum width (in pixels) for uploaded images"
+msgstr "Μέγιστο πλάτος (σε pixel) για μεταφορτωμένες εικόνες"
+
+#: library/plugin-display.php:176
+msgid "Message displayed after successful post submission (basic markup allowed)"
+msgstr "Το μήνυμα εμφανίζεται μετά την επιτυχή υποβολή της ανάρτησης (επιτρέπεται η βασική σήμανση)"
+
+#: library/plugin-display.php:537
+msgid "Message displayed next to the file upload field (basic markup allowed)"
+msgstr "Το μήνυμα εμφανίζεται δίπλα στο πεδίο μεταφόρτωσης αρχείου (επιτρέπεται η βασική σήμανση)"
+
+#: library/plugin-display.php:309
+msgid "Message for email alerts. Leave blank to use default message. You may include any of the following variables:"
+msgstr "Μήνυμα για ειδοποιήσεις μέσω email. Αφήστε το κενό για να χρησιμοποιήσετε το προεπιλεγμένο μήνυμα. Μπορείτε να συμπεριλάβετε οποιαδήποτε από τις ακόλουθες μεταβλητές:"
+
+#: library/plugin-display.php:562
+msgid "Minimum height (in pixels) for uploaded images"
+msgstr "Ελάχιστο ύψος (σε pixel) για τις μεταφορτωμένες εικόνες"
+
+#: library/plugin-display.php:560
+msgid "Minimum image height"
+msgstr "Ελάχιστο ύψος εικόνας"
+
+#: user-submitted-posts.php:1740
+msgid "Minimum image height not met"
+msgstr "Δεν πληρούται το ελάχιστο ύψος εικόνας"
+
+#: library/plugin-display.php:555
+msgid "Minimum image width"
+msgstr "Ελάχιστο πλάτος εικόνας"
+
+#: user-submitted-posts.php:1738
+msgid "Minimum image width not met"
+msgstr "Δεν πληρούται το ελάχιστο πλάτος εικόνας"
+
+#: library/plugin-display.php:545
+msgid "Minimum number of images"
+msgstr "Ελάχιστος αριθμός εικόνων"
+
+#: library/plugin-display.php:547
+msgid "Minimum number of images for each submitted post"
+msgstr "Ελάχιστος αριθμός εικόνων για κάθε υποβληθείσα ανάρτηση"
+
+#: user-submitted-posts.php:1736
+msgid "Minimum number of images not met"
+msgstr "Δεν πληρούται ο ελάχιστος αριθμός εικόνων"
+
+#: library/plugin-display.php:557
+msgid "Minimum width (in pixels) for uploaded images"
+msgstr "Ελάχιστο πλάτος (σε pixel) για μεταφορτωμένες εικόνες"
+
+#: library/plugin-display.php:105 library/plugin-display.php:215
+#: library/plugin-display.php:263 library/plugin-display.php:314
+#: library/plugin-display.php:359 library/plugin-display.php:387
+#: library/plugin-display.php:415 library/plugin-display.php:458
+#: library/plugin-display.php:575 library/plugin-display.php:670
+msgid "More Options"
+msgstr "Περισσότερες επιλογές"
+
+#: library/plugin-display.php:339
+msgid "Multiple Categories"
+msgstr "Πολλαπλές Κατηγορίες"
+
+#: library/plugin-display.php:618
+msgid "Name Display"
+msgstr "Εμφάνιση ονόματος"
+
+#: library/plugin-display.php:625
+msgid "Name Markup"
+msgstr "Σήμανση ονόματος"
+
+#: user-submitted-posts.php:1735
+msgid "Non-empty value for hidden field"
+msgstr "Μη κενή τιμή για κρυφό πεδίο"
+
+#: library/plugin-display.php:771
+msgid "Note that the url attribute accepts"
+msgstr "Σημειώστε ότι το χαρακτηριστικό url δέχεται"
+
+#: library/plugin-display.php:747
+msgid "Notes:"
+msgstr "Σημειώσεις:"
+
+#: library/plugin-display.php:835
+msgid "Obsessive Web Design &amp; Development"
+msgstr "Εμμονική σχεδίαση ιστοσελίδων &amp; Ανάπτυξη"
+
+#: library/plugin-display.php:186
+msgid "Optional markup/text to include before the submission form (leave blank to disable)"
+msgstr "Προαιρετική σήμανση/κείμενο που πρέπει να συμπεριληφθεί πριν από τη φόρμα υποβολής (αφήστε κενό για απενεργοποίηση)"
+
+#: library/plugin-display.php:364
+msgid "options, check out"
+msgstr "επιλογές, ελέγξτε έξω"
+
+#: library/support-panel.php:59
+msgid "or"
+msgstr "ή"
+
+#: library/support-panel.php:59
+msgid "or by making a"
+msgstr "ή κάνοντας ένα"
+
+#: library/plugin-display.php:814
+msgid "Or, to go ahead and restore the default plugin options: check the box, save your settings, and then deactivate/reactivate the plugin."
+msgstr "Ή, για να προχωρήσετε και να επαναφέρετε τις προεπιλεγμένες επιλογές προσθήκης: επιλέξτε το πλαίσιο, αποθηκεύστε τις ρυθμίσεις σας και, στη συνέχεια, απενεργοποιήστε/ενεργοποιήστε ξανά την προσθήκη."
+
+#: library/plugin-display.php:720
+msgid "Or, use the template tag to display a list of submitted posts anywhere in your theme template:"
+msgstr "Εναλλακτικά, χρησιμοποιήστε την ετικέτα προτύπου για να εμφανίσετε μια λίστα με υποβληθείσες αναρτήσεις οπουδήποτε στο πρότυπο θέματός σας:"
+
+#: library/plugin-display.php:739
+msgid "Or, use the template tag to display an image gallery anywhere in your theme template:"
+msgstr "Εναλλακτικά, χρησιμοποιήστε την ετικέτα προτύπου για να εμφανίσετε μια συλλογή εικόνων οπουδήποτε στο πρότυπο θέματός σας:"
+
+#: library/plugin-display.php:698 library/plugin-display.php:711
+msgid "Or, use the template tag to display the form anywhere in your theme template:"
+msgstr "Εναλλακτικά, χρησιμοποιήστε την ετικέτα προτύπου για να εμφανίσετε τη φόρμα οπουδήποτε στο πρότυπο θέματός σας:"
+
+#: library/plugin-display.php:55
+msgid "Overview"
+msgstr "Επισκόπηση"
+
+#: library/shortcode-login.php:118
+msgid "Password"
+msgstr "Σύνθημα"
+
+#: library/plugin-settings.php:587
+msgid "Pending (default)"
+msgstr "Σε εκκρεμότητα (προεπιλογή)"
+
+#: library/support-panel.php:49
+msgid "Perishable Press Books"
+msgstr "Φθαρτά Βιβλία Τύπου"
+
+#: user-submitted-posts.php:1822 library/plugin-display.php:35
+msgid "Please"
+msgstr "Παρακαλώ"
+
+#: user-submitted-posts.php:1734
+msgid "Please check your email and try again"
+msgstr "Ελέγξτε το email σας και δοκιμάστε ξανά"
+
+#: views/submission-form.php:21 views/submission-form-alt.php:40
+msgid "Please complete the required fields."
+msgstr "Συμπληρώστε τα απαιτούμενα πεδία."
+
+#: library/support-panel.php:105
+msgid "Please Donate"
+msgstr "Παρακαλώ Δωρείστε"
+
+#: user-submitted-posts.php:124
+msgid "Please return to the"
+msgstr "Παρακαλώ επιστρέψτε στο"
+
+#: views/submission-form.php:92 views/submission-form-alt.php:107
+msgid "Please select a category.."
+msgstr "Επιλέξτε κατηγορία.."
+
+#: views/submission-form.php:58 views/submission-form-alt.php:73
+msgid "Please select some tags.."
+msgstr "Επιλέξτε μερικές ετικέτες.."
+
+#: library/plugin-settings.php:883
+msgid "Please select your image(s) to upload."
+msgstr "Επιλέξτε τις εικόνες σας για μεταφόρτωση."
+
+#: library/support-panel.php:58
+msgid "Please show support by purchasing one of my"
+msgstr "Δείξτε υποστήριξη αγοράζοντας ένα από τα δικά μου"
+
+#: library/plugin-settings.php:60 library/plugin-display.php:64
+#: library/plugin-display.php:833
+msgid "Plugin Homepage"
+msgstr "Αρχική σελίδα προσθήκης"
+
+#: library/support-panel.php:50
+msgid "Plugin Planet: Pro WordPress Plugins"
+msgstr "Plugin Planet: Pro WordPress Plugins"
+
+#: library/plugin-display.php:79
+msgid "Plugin Settings"
+msgstr "Ρυθμίσεις Plugin"
+
+#: library/support-panel.php:54
+msgid "plugins"
+msgstr "πρόσθετα"
+
+#: views/submission-form.php:90 views/submission-form-alt.php:105
+#: library/plugin-display.php:94
+msgid "Post Category"
+msgstr "Κατηγορία αναρτήσεων"
+
+#: user-submitted-posts.php:1729
+msgid "Post category required"
+msgstr "Απαιτείται κατηγορία ανάρτησης"
+
+#: views/submission-form.php:123 views/submission-form.php:124
+#: views/submission-form-alt.php:138 views/submission-form-alt.php:139
+#: library/plugin-display.php:95
+msgid "Post Content"
+msgstr "Περιεχόμενο ανάρτησης"
+
+#: user-submitted-posts.php:1730
+msgid "Post content required"
+msgstr "Απαιτείται περιεχόμενο ανάρτησης"
+
+#: user-submitted-posts.php:1755
+msgid "Post not created. Please contact the site administrator for help."
+msgstr "Η ανάρτηση δεν δημιουργήθηκε. Επικοινωνήστε με τον διαχειριστή του ιστότοπου για βοήθεια."
+
+#: library/plugin-display.php:162
+msgid "Post Status"
+msgstr "Κατάσταση ανάρτησης"
+
+#: library/plugin-display.php:165
+msgid "Post Status for submitted posts"
+msgstr "Κατάσταση ανάρτησης για υποβληθείσες αναρτήσεις"
+
+#: views/submission-form.php:56 views/submission-form.php:65
+#: views/submission-form.php:66 views/submission-form-alt.php:71
+#: views/submission-form-alt.php:80 views/submission-form-alt.php:81
+#: library/plugin-display.php:93
+msgid "Post Tags"
+msgstr "Ετικέτες ανάρτησης"
+
+#: user-submitted-posts.php:1728
+msgid "Post tags required"
+msgstr "Απαιτούνται ετικέτες ανάρτησης"
+
+#: views/submission-form.php:49 views/submission-form.php:50
+#: views/submission-form-alt.php:64 views/submission-form-alt.php:65
+#: library/plugin-display.php:92
+msgid "Post Title"
+msgstr "Τίτλος ανάρτησης"
+
+#: user-submitted-posts.php:1726
+msgid "Post title required"
+msgstr "Απαιτείται τίτλος ανάρτησης"
+
+#: library/plugin-display.php:155
+msgid "Post Type"
+msgstr "Τύπος ανάρτησης"
+
+#: library/plugin-display.php:158
+msgid "Post Type for submitted posts"
+msgstr "Τύπος ανάρτησης για υποβληθείσες αναρτήσεις"
+
+#: library/plugin-display.php:503
+msgid "Private Key"
+msgstr "Ιδιωτικό κλειδί"
+
+#: library/plugin-settings.php:1218
+msgid "Pro WordPress plugins"
+msgstr "Προσθήκες Pro WordPress"
+
+#: library/shortcode-login.php:184
+msgid "Profile"
+msgstr "Προφίλ"
+
+#: library/plugin-display.php:498
+msgid "Public Key"
+msgstr "Δημόσιο κλειδί"
+
+#: library/plugin-settings.php:590
+msgid "Publish after "
+msgstr "Δημοσίευση μετά "
+
+#: library/plugin-settings.php:589
+msgid "Publish after 1 approved post"
+msgstr "Δημοσίευση μετά από 1 εγκεκριμένη ανάρτηση"
+
+#: library/plugin-settings.php:588
+msgid "Publish immediately"
+msgstr "Δημοσιεύστε αμέσως"
+
+#: library/plugin-display.php:36
+msgid "Rate and review at the Plugin Directory"
+msgstr "Αξιολογήστε και αξιολογήστε τον Κατάλογο προσθηκών"
+
+#: library/plugin-settings.php:67
+msgid "Rate this plugin&nbsp;&raquo;"
+msgstr "Βαθμολογήστε αυτήν την προσθήκη&nbsp;&raquo;"
+
+#: library/plugin-display.php:508
+msgid "reCaptcha Version"
+msgstr "Έκδοση reCaptcha"
+
+#: library/plugin-display.php:279
+msgid "Receive Email Alert"
+msgstr "Λήψη ειδοποίησης μέσω email"
+
+#: library/plugin-display.php:169
+msgid "Redirect URL"
+msgstr "URL ανακατεύθυνσης"
+
+#: library/plugin-display.php:171
+msgid "Redirect user to this URL after post submission (leave blank to stay on current page)"
+msgstr "Ανακατεύθυνση χρήστη σε αυτήν τη διεύθυνση URL μετά την υποβολή της ανάρτησης (αφήστε κενό για να παραμείνετε στην τρέχουσα σελίδα)"
+
+#: library/shortcode-login.php:89
+msgid "Register"
+msgstr "Μητρώο"
+
+#: library/shortcode-login.php:135
+msgid "Register for this site!"
+msgstr "Εγγραφείτε σε αυτόν τον ιστότοπο!"
+
+#: library/plugin-display.php:243
+msgid "Registered Email"
+msgstr "Εγγεγραμμένο email"
+
+#: library/plugin-display.php:248
+msgid "Registered URL"
+msgstr "Εγγεγραμμένο URL"
+
+#: library/plugin-display.php:238
+msgid "Registered Username"
+msgstr "Εγγεγραμμένο Όνομα Χρήστη"
+
+#: library/shortcode-login.php:124
+msgid "Remember me"
+msgstr "Θυμήσου με"
+
+#: library/plugin-display.php:438
+msgid "Require Checkbox"
+msgstr "Απαιτείται πλαίσιο ελέγχου"
+
+#: library/plugin-display.php:196
+msgid "Require submitted post titles to be unique (useful for preventing multiple/duplicate posts)"
+msgstr "Να απαιτείται οι τίτλοι των αναρτήσεων που υποβάλλονται να είναι μοναδικοί (χρήσιμοι για την αποτροπή πολλαπλών/διπλότυπων αναρτήσεων)"
+
+#: library/plugin-display.php:253
+msgid "Require User Login"
+msgstr "Απαιτείται σύνδεση χρήστη"
+
+#: library/plugin-display.php:255
+msgid "Require users to be logged in to WordPress to view/submit the form"
+msgstr "Απαιτείται από τους χρήστες να είναι συνδεδεμένοι στο WordPress για να προβάλουν/υποβάλουν τη φόρμα"
+
+#: user-submitted-posts.php:122
+msgid "requires WordPress "
+msgstr "απαιτεί WordPress "
+
+#: library/shortcode-misc.php:17
+msgid "Reset form"
+msgstr "Επαναφορά φόρμας"
+
+#: library/plugin-display.php:763
+msgid "Reset Form Button"
+msgstr "Κουμπί επαναφοράς φόρμας"
+
+#: library/shortcode-login.php:163
+msgid "Reset my password"
+msgstr "Επαναφέρω τον κωδικό πρόσβασής μου"
+
+#: library/plugin-display.php:817
+msgid "Restore default options upon plugin deactivation/reactivation"
+msgstr "Επαναφέρετε τις προεπιλεγμένες επιλογές κατά την απενεργοποίηση/επανενεργοποίηση της προσθήκης"
+
+#: library/plugin-display.php:811
+msgid "Restore Defaults"
+msgstr "Επαναφορά προεπιλογών"
+
+#: user-submitted-posts.php:1792
+msgid "Return to form"
+msgstr "Επιστροφή στη φόρμα"
+
+#: library/plugin-display.php:189
+msgid "Rich Text Editor"
+msgstr "Επεξεργαστής εμπλουτισμένου κειμένου"
+
+#: library/plugin-display.php:681
+msgid "Save All Changes"
+msgstr "Αποθήκευση όλων των αλλαγών"
+
+#: library/plugin-display.php:846
+msgid "Save Preference"
+msgstr "Αποθήκευση Προτίμησης"
+
+#: library/plugin-display.php:819
+msgid "Save Settings"
+msgstr "Αποθήκευση ρυθμίσεων"
+
+#: library/plugin-settings.php:618
+msgid "Select categories to include in the Category field:"
+msgstr "Επιλέξτε κατηγορίες που θα συμπεριληφθούν στο πεδίο Κατηγορία:"
+
+#: library/plugin-display.php:281
+msgid "Send email alerts for new post submissions"
+msgstr "Στείλτε ειδοποιήσεις μέσω email για νέες υποβολές αναρτήσεων"
+
+#: library/plugin-settings.php:29
+msgid "Settings"
+msgstr "Ρυθμίσεις"
+
+#: library/plugin-display.php:334
+msgid "Show categories"
+msgstr "Εμφάνιση κατηγοριών"
+
+#: user-submitted-posts.php:704
+msgid "Show USP Posts"
+msgstr "Εμφάνιση αναρτήσεων USP"
+
+#: library/shortcode-login.php:136
+msgid "Sign up now for the good stuff."
+msgstr "Εγγραφείτε τώρα για τα καλά πράγματα."
+
+#: library/shortcode-login.php:147
+msgid "Sign up!"
+msgstr "Εγγραφείτε!"
+
+#: library/plugin-display.php:351
+msgid "Specify category ID(s) to use for &ldquo;Hidden/Default Category&rdquo; (separate multiple IDs with commas)"
+msgstr "Καθορίστε αναγνωριστικά κατηγορίας που θα χρησιμοποιηθούν για &ldquo;Κρυφή/Προεπιλεγμένη κατηγορία&rdquo; (διαχωρίστε πολλαπλά αναγνωριστικά με κόμματα)"
+
+#: library/plugin-display.php:234
+msgid "Specify the user that should be assigned as author for submitted posts"
+msgstr "Καθορίστε τον χρήστη που θα πρέπει να οριστεί ως συγγραφέας για τις υποβληθείσες αναρτήσεις"
+
+#: library/plugin-display.php:302
+msgid "Subject line for email alerts. Leave blank to use default subject line. You may include any of the following variables:"
+msgstr "Γραμμή θέματος για ειδοποιήσεις μέσω email. Αφήστε το κενό για να χρησιμοποιήσετε την προεπιλεγμένη γραμμή θέματος. Μπορείτε να συμπεριλάβετε οποιαδήποτε από τις ακόλουθες μεταβλητές:"
+
+#: views/submission-form.php:197 views/submission-form-alt.php:212
+msgid "Submit Post"
+msgstr "Υποβολή ανάρτησης"
+
+#: library/plugin-settings.php:9
+msgid "Submitted Posts"
+msgstr "Υποβλήθηκαν δημοσιεύσεις"
+
+#: user-submitted-posts.php:647
+msgid "Submitter Email: "
+msgstr "Email υποβάλλοντος: "
+
+#: user-submitted-posts.php:649
+msgid "Submitter IP: "
+msgstr "IP υποβολέα: "
+
+#: user-submitted-posts.php:646
+msgid "Submitter Name: "
+msgstr "Όνομα υποβάλλοντος: "
+
+#: user-submitted-posts.php:648
+msgid "Submitter URL: "
+msgstr "Διεύθυνση URL υποβολής: "
+
+#: library/plugin-display.php:174
+msgid "Success Message"
+msgstr "Μήνυμα επιτυχίας"
+
+#: library/shortcode-login.php:97 library/shortcode-login.php:102
+msgid "Success!"
+msgstr "Επιτυχία!"
+
+#: library/plugin-settings.php:889
+msgid "Success! Thank you for your submission."
+msgstr "Επιτυχία! Σας ευχαριστούμε για την υποβολή σας."
+
+#: library/plugin-display.php:66
+msgid "Support Forum"
+msgstr "Φόρουμ υποστήριξης"
+
+#: library/plugin-display.php:364
+msgid "tag"
+msgstr "ετικέτα"
+
+#: library/plugin-settings.php:1217
+msgid "Take 25% OFF any of our"
+msgstr "Κερδίστε ΕΚΠΤΩΣΗ 25% σε οποιοδήποτε από τα προϊόντα μας"
+
+#: library/plugin-display.php:150
+msgid "Targeted Loading"
+msgstr "Στοχευμένη φόρτωση"
+
+#: library/plugin-display.php:455
+msgid "Text displayed next to checkbox. Tip: use curly brackets to output angle brackets, for example:"
+msgstr "Το κείμενο εμφανίζεται δίπλα στο πλαίσιο ελέγχου. Συμβουλή: χρησιμοποιήστε σγουρές αγκύλες για την έξοδο γωνιακών βραχιόνων, για παράδειγμα:"
+
+#: library/support-panel.php:57
+msgid "Thank you for using"
+msgstr "Σας ευχαριστούμε για τη χρήση"
+
+#: library/plugin-display.php:70
+msgid "THANK YOU for your support!"
+msgstr "ΕΥΧΑΡΙΣΤΟΥΜΕ για την υποστήριξή σας!"
+
+#: library/plugin-display.php:137
+msgid "That will enable you to customize the form and styles as desired. For more info, check out the \"Custom Submission Form\" section in the"
+msgstr "Αυτό θα σας επιτρέψει να προσαρμόσετε τη φόρμα και τα στυλ όπως θέλετε. Για περισσότερες πληροφορίες, ανατρέξτε στην ενότητα \"Προσαρμοσμένη φόρμα υποβολής\" στο"
+
+#: library/plugin-display.php:797
+msgid "The access shortcodes can be added to any WP Post or Page. So you can display forms and other content conditionally, based on user role and login status."
+msgstr "Οι σύντομοι κωδικοί πρόσβασης μπορούν να προστεθούν σε οποιαδήποτε ανάρτηση ή σελίδα WP. Έτσι, μπορείτε να εμφανίζετε φόρμες και άλλο περιεχόμενο υπό όρους, βάσει του ρόλου χρήστη και της κατάστασης σύνδεσης."
+
+#: user-submitted-posts.php:1753
+msgid "The file(s) could not be uploaded"
+msgstr "Δεν ήταν δυνατή η μεταφόρτωση των αρχείων"
+
+#: library/plugin-display.php:713
+msgid "The login/register form displays as a tabbed interface, so users can switch between login, register, and reset password."
+msgstr "Η φόρμα σύνδεσης/εγγραφής εμφανίζεται ως διεπαφή με καρτέλες, ώστε οι χρήστες να μπορούν να κάνουν εναλλαγή μεταξύ σύνδεσης, εγγραφής και επαναφοράς κωδικού πρόσβασης."
+
+#: library/plugin-display.php:730
+msgid "The pro version provides many more options for this shortcode."
+msgstr "Η έκδοση pro παρέχει πολλές περισσότερες επιλογές για αυτόν τον σύντομο κώδικα."
+
+#: library/plugin-display.php:801
+msgid "The pro version provides more flexibility with access-control shortcodes."
+msgstr "Η έκδοση pro παρέχει μεγαλύτερη ευελιξία με συντομότερους κωδικούς ελέγχου πρόσβασης."
+
+#: library/plugin-settings.php:869
+msgid "There was an error. Please check required fields and try again."
+msgstr "Παρουσιάστηκε σφάλμα. Ελέγξτε τα υποχρεωτικά πεδία και δοκιμάστε ξανά."
+
+#: library/plugin-display.php:212
+msgid "This setting enables any/all shortcodes in widgets (even shortcodes from other plugins)."
+msgstr "Αυτή η ρύθμιση ενεργοποιεί οποιονδήποτε/όλους τους συντομότερους κωδικούς σε γραφικά στοιχεία (ακόμη και συντομότερους κωδικούς από άλλα πρόσθετα)."
+
+#: library/plugin-display.php:767
+msgid "This shortcode accepts the following attributes:"
+msgstr "Αυτός ο σύντομος κώδικας δέχεται τα ακόλουθα χαρακτηριστικά:"
+
+#: library/plugin-display.php:765
+msgid "This shortcode displays a link that resets the form to its original state:"
+msgstr "Αυτός ο σύντομος κώδικας εμφανίζει έναν σύνδεσμο που επαναφέρει τη φόρμα στην αρχική της κατάσταση:"
+
+#: library/plugin-display.php:384
+msgid "This will be displayed as the field label on the form. Default: Custom Field 1"
+msgstr "Αυτό θα εμφανιστεί ως η ετικέτα πεδίου στη φόρμα. Προεπιλογή: Προσαρμοσμένο πεδίο 1"
+
+#: library/plugin-display.php:412
+msgid "This will be displayed as the field label on the form. Default: Custom Field 2"
+msgstr "Αυτό θα εμφανιστεί ως η ετικέτα πεδίου στη φόρμα. Προεπιλογή: Προσαρμοσμένο πεδίο 2"
+
+#: library/plugin-display.php:729 library/plugin-display.php:784
+#: library/plugin-display.php:800
+msgid "Tip:"
+msgstr "Ακρο:"
+
+#: library/plugin-display.php:628
+msgid "to display the submitted name."
+msgstr "για εμφάνιση του υποβληθέντος ονόματος."
+
+#: library/plugin-display.php:495
+msgid "To enable Google reCaptcha, enter your public and private keys."
+msgstr "Για να ενεργοποιήσετε το Google reCaptcha, εισαγάγετε τα δημόσια και ιδιωτικά κλειδιά σας."
+
+#: library/plugin-display.php:771
+msgid "to get the current URL."
+msgstr "για να λάβετε την τρέχουσα διεύθυνση URL."
+
+#: library/plugin-display.php:758
+msgid "to get the URL of the full-size image"
+msgstr "για να λάβετε τη διεύθυνση URL της εικόνας πλήρους μεγέθους"
+
+#: library/plugin-display.php:785
+msgid "to include markup in the deny message, you can use"
+msgstr "για να συμπεριλάβετε τη σήμανση στο μήνυμα άρνησης, μπορείτε να χρησιμοποιήσετε"
+
+#: library/plugin-display.php:785
+msgid "to output"
+msgstr "στην έξοδο"
+
+#: library/plugin-display.php:750
+msgid "to output angle brackets"
+msgstr "για την έξοδο γωνιακών βραχιόνων"
+
+#: library/plugin-display.php:478
+msgid "To prevent spam, enter a question that users must answer before submitting the form"
+msgstr "Για να αποτρέψετε την ανεπιθύμητη αλληλογραφία, εισαγάγετε μια ερώτηση στην οποία πρέπει να απαντήσουν οι χρήστες πριν υποβάλουν τη φόρμα"
+
+#: user-submitted-posts.php:1824
+msgid "to submit content!"
+msgstr "για να υποβάλετε περιεχόμενο!"
+
+#: user-submitted-posts.php:126
+msgid "to upgrade WordPress and try again."
+msgstr "να αναβαθμίσετε το WordPress και να προσπαθήσετε ξανά."
+
+#: library/plugin-display.php:22
+msgid "Toggle all panels"
+msgstr "Εναλλαγή όλων των πλαισίων"
+
+#: library/plugin-display.php:194
+msgid "Unique Titles"
+msgstr "Μοναδικοί τίτλοι"
+
+#: library/plugin-display.php:462
+msgid "unlimited checkbox fields"
+msgstr "απεριόριστα πεδία πλαισίου ελέγχου"
+
+#: library/plugin-display.php:391 library/plugin-display.php:419
+msgid "unlimited custom fields"
+msgstr "απεριόριστα προσαρμοσμένα πεδία"
+
+#: library/plugin-display.php:72
+msgid "Unlimited front-end forms"
+msgstr "Απεριόριστες φόρμες front-end"
+
+#: views/submission-form.php:138 views/submission-form-alt.php:153
+msgid "Upload an Image"
+msgstr "Ανεβάστε μια εικόνα"
+
+#: library/plugin-display.php:535
+msgid "Upload Message"
+msgstr "Μεταφόρτωση μηνύματος"
+
+#: library/plugin-settings.php:920
+msgid "URL"
+msgstr "URL"
+
+#: library/plugin-display.php:631
+msgid "URL Display"
+msgstr "Εμφάνιση URL"
+
+#: library/plugin-display.php:638
+msgid "URL Markup"
+msgstr "Σήμανση URL"
+
+#: library/plugin-display.php:346
+msgid "Use a hidden field for the post category. This hides the category field and sets its value via the next option."
+msgstr "Χρησιμοποιήστε ένα κρυφό πεδίο για την κατηγορία ανάρτησης. Αυτό αποκρύπτει το πεδίο κατηγορίας και ορίζει την τιμή του μέσω της επόμενης επιλογής."
+
+#: library/plugin-display.php:750
+msgid "Use curly brackets"
+msgstr "Χρησιμοποιήστε σγουρά στηρίγματα"
+
+#: library/plugin-display.php:354
+msgid "Use Existing Tags"
+msgstr "Χρησιμοποιήστε υπάρχουσες ετικέτες"
+
+#: library/plugin-display.php:379 library/plugin-display.php:407
+#: library/plugin-display.php:445
+msgid "Use only alphanumeric, underscores, and dashes. If unsure, use the default name:"
+msgstr "Χρησιμοποιήστε μόνο αλφαριθμητικά, κάτω παύλες και παύλες. Εάν δεν είστε σίγουροι, χρησιμοποιήστε το προεπιλεγμένο όνομα:"
+
+#: library/plugin-display.php:755
+msgid "Use single straight quotes (instead of double quotes) in"
+msgstr "Χρησιμοποιήστε απλά εισαγωγικά (αντί για διπλά εισαγωγικά)."
+
+#: library/plugin-display.php:524
+msgid "Use submitted images as Featured Images. Requires theme support for Featured Images (aka Post Thumbnails)"
+msgstr "Χρησιμοποιήστε τις υποβληθείσες εικόνες ως Προτεινόμενες εικόνες. Απαιτείται υποστήριξη θεμάτων για Επιλεγμένες εικόνες (γνωστή και ως Μικρογραφίες ανάρτησης)"
+
+#: library/plugin-display.php:696 library/plugin-display.php:709
+msgid "Use the shortcode to display the form on any WP Post or Page:"
+msgstr "Χρησιμοποιήστε τον σύντομο κωδικό για να εμφανίσετε τη φόρμα σε οποιαδήποτε ανάρτηση ή σελίδα WP:"
+
+#: library/plugin-display.php:250
+msgid "Use the user&rsquo;s Profile URL as the value of the URL field (valid when the user is logged in to WordPress)"
+msgstr "Χρησιμοποιήστε τη διεύθυνση URL του προφίλ χρήστη ως την τιμή του πεδίου URL (ισχύει όταν ο χρήστης είναι συνδεδεμένος στο WordPress)"
+
+#: library/plugin-display.php:245
+msgid "Use the user&rsquo;s registered email as the value of the Email field (valid when the user is logged in to WordPress)"
+msgstr "Χρησιμοποιήστε το καταχωρημένο email του χρήστη ως τιμή του πεδίου Email (ισχύει όταν ο χρήστης είναι συνδεδεμένος στο WordPress)"
+
+#: library/plugin-display.php:240
+msgid "Use the user&rsquo;s registered username for the Name field (valid when the user is logged in to WordPress)"
+msgstr "Χρησιμοποιήστε το καταχωρημένο όνομα χρήστη του χρήστη για το πεδίο Όνομα (ισχύει όταν ο χρήστης είναι συνδεδεμένος στο WordPress)"
+
+#: library/plugin-display.php:737
+msgid "Use this shortcode to display a gallery of uploaded images for each submitted post:"
+msgstr "Χρησιμοποιήστε αυτόν τον σύντομο κώδικα για να εμφανίσετε μια συλλογή με μεταφορτωμένες εικόνες για κάθε υποβληθείσα ανάρτηση:"
+
+#: library/plugin-display.php:718
+msgid "Use this shortcode to display a list of submitted posts on any WP Post or Page:"
+msgstr "Χρησιμοποιήστε αυτόν τον σύντομο κωδικό για να εμφανίσετε μια λίστα με υποβληθείσες αναρτήσεις σε οποιαδήποτε ανάρτηση ή σελίδα WP:"
+
+#: library/plugin-display.php:90
+msgid "User Email"
+msgstr "Email χρήστη"
+
+#: user-submitted-posts.php:1733
+msgid "User email required"
+msgstr "Απαιτείται email χρήστη"
+
+#: user-submitted-posts.php:1724
+msgid "User login required"
+msgstr "Απαιτείται σύνδεση χρήστη"
+
+#: library/plugin-display.php:89
+msgid "User Name"
+msgstr "Ονομα χρήστη"
+
+#: user-submitted-posts.php:1725
+msgid "User name required"
+msgstr "Απαιτείται όνομα χρήστη"
+
+#: library/plugin-display.php:226
+msgid "User Settings"
+msgstr "Ρυθμίσεις χρήστη"
+
+#: user-submitted-posts.php:202
+msgid "User Submitted Post"
+msgstr "Ανάρτηση που υπέβαλε ο χρήστης"
+
+#: user-submitted-posts.php:616
+msgid "User Submitted Post Info"
+msgstr "Πληροφορίες που υποβλήθηκαν από τον χρήστη"
+
+#. Name of the plugin
+#: user-submitted-posts.php:42 library/support-panel.php:7
+msgid "User Submitted Posts"
+msgstr "Αναρτήσεις που υποβλήθηκαν από τον χρήστη"
+
+#: library/plugin-display.php:91
+msgid "User URL"
+msgstr "URL χρήστη"
+
+#: user-submitted-posts.php:1727
+msgid "User URL required"
+msgstr "Απαιτείται διεύθυνση URL χρήστη"
+
+#: library/shortcode-login.php:114 library/shortcode-login.php:139
+msgid "Username"
+msgstr "Όνομα χρήστη"
+
+#: library/shortcode-login.php:159
+msgid "Username or Email"
+msgstr "Όνομα χρήστη ή email"
+
+#: user-submitted-posts.php:705 library/plugin-display.php:59
 msgid "USP"
 msgstr "USP"
 
-#: user-submitted-posts.php:199
-msgid "Submitter IP: "
-msgstr "IP του υποβάλλοντος:"
+#: library/plugin-display.php:695
+msgid "USP enables you to display a post-submission form anywhere on your site."
+msgstr "Το USP σάς δίνει τη δυνατότητα να εμφανίσετε μια φόρμα μετά την υποβολή οπουδήποτε στον ιστότοπό σας."
 
-#: user-submitted-posts.php:198
-msgid "Submitter URL: "
-msgstr "URL του υποβάλλοντος: "
+#: library/plugin-display.php:60 library/plugin-display.php:109
+#: library/plugin-display.php:219 library/plugin-display.php:267
+#: library/plugin-display.php:320 library/plugin-display.php:365
+#: library/plugin-display.php:393 library/plugin-display.php:421
+#: library/plugin-display.php:464 library/plugin-display.php:579
+#: library/plugin-display.php:674 library/plugin-display.php:702
+msgid "USP Pro"
+msgstr "USP Pro"
 
-#: user-submitted-posts.php:197
-msgid "Submitter Email: "
-msgstr "ηλ. ταχυδρομείο του του υποβάλλοντος: "
+#: library/plugin-display.php:776
+msgid "USP provides three shortcodes to control access and restrict content."
+msgstr "Το USP παρέχει τρεις συντόμους για τον έλεγχο της πρόσβασης και τον περιορισμό του περιεχομένου."
 
-#: user-submitted-posts.php:196
-msgid "Submitter Name: "
-msgstr "Ονομα του υποβάλλοντος: "
+#: library/plugin-settings.php:339
+msgid "v2 (I&rsquo;m not a robot)"
+msgstr "v2 (Δεν είμαι ρομπότ)"
 
-#: user-submitted-posts.php:179
-msgid "User Submitted Post Info"
-msgstr "Πληροφορίες του υποβάλλοντος: "
+#: library/plugin-settings.php:343
+msgid "v3 (Hidden reCaptcha)"
+msgstr "v3 (Κρυφό reCaptcha)"
 
-#: user-submitted-posts.php:66
-msgid "Submitted"
-msgstr "Υποβλήθηκε"
+#: views/submission-form.php:131 views/submission-form-alt.php:146
+msgid "Verification"
+msgstr "Επαλήθευση"
 
-#: user-submitted-posts.php:54
-msgid "to upgrade WordPress and try again."
-msgstr "αναβαθμίστε το Wordpress και δοκιμάστε ξανά."
+#: library/shortcode-misc.php:133
+msgid "View full post"
+msgstr "Δείτε την πλήρη ανάρτηση"
 
-#: user-submitted-posts.php:54
-msgid "WordPress Admin area"
-msgstr "Περιοχή διαχειριστή του Wordpress"
+#: library/plugin-display.php:701
+msgid "Want more than one form? Create unlimited submission forms, registration forms, contact forms and more with"
+msgstr "Θέλετε περισσότερες από μία φόρμες; Δημιουργήστε απεριόριστες φόρμες υποβολής, φόρμες εγγραφής, φόρμες επικοινωνίας και πολλά άλλα με"
 
-#: user-submitted-posts.php:54
-msgid "Please return to the "
-msgstr "Παρακαλούμε επιστρέψστε στο"
+#: library/plugin-display.php:31
+msgid "We need your support!"
+msgstr "Χρειαζόμαστε την υποστήριξή σας!"
 
-#: user-submitted-posts.php:53
-msgid " or higher, and has been deactivated!"
-msgstr "ή νεότερο  και έχει ενεργοποιηθεί!"
+#: library/shortcode-login.php:177
+msgid "Welcome, "
+msgstr "Καλωσόρισμα, "
 
-#: user-submitted-posts.php:53
-msgid "requires WordPress "
-msgstr "απαιτεί το Wordpress"
+#: library/plugin-display.php:126
+msgid "With this option, you can copy the plugin&rsquo;s default templates:"
+msgstr "Με αυτήν την επιλογή, μπορείτε να αντιγράψετε τα προεπιλεγμένα πρότυπα της προσθήκης:"
 
-#. #-#-#-#-#  tmp-user-submitted-posts.pot (User Submitted Posts 20150808)
-#. Plugin Name of the plugin/theme
-#: user-submitted-posts.php:24 user-submitted-posts.php:66
-msgid "User Submitted Posts"
-msgstr "Αναρτήσεις δημοσιευμένες απότον Χρήστη"
+#: user-submitted-posts.php:125
+msgid "WordPress Admin Area"
+msgstr "Περιοχή διαχειριστή WordPress"
+
+#: library/plugin-settings.php:179
+msgid "WP Page"
+msgstr "Σελίδα WP"
+
+#: library/plugin-settings.php:175
+msgid "WP Post (recommended)"
+msgstr "WP Post (συνιστάται)"
+
+#: library/plugin-display.php:824
+msgid "WP Resources"
+msgstr "Πόροι WP"
+
+#: library/plugin-display.php:708
+msgid "You also can display a simple form that enables users to log in, register, or reset their password."
+msgstr "Μπορείτε επίσης να εμφανίσετε μια απλή φόρμα που επιτρέπει στους χρήστες να συνδεθούν, να εγγραφούν ή να επαναφέρουν τον κωδικό πρόσβασής τους."
+
+#: library/plugin-display.php:741
+msgid "You can customize using any of the follwing attributes:"
+msgstr "Μπορείτε να προσαρμόσετε χρησιμοποιώντας οποιοδήποτε από τα ακόλουθα χαρακτηριστικά:"
+
+#: views/submission-form.php:37 views/submission-form.php:38
+#: views/submission-form-alt.php:52 views/submission-form-alt.php:53
+#: library/shortcode-login.php:143
+msgid "Your Email"
+msgstr "Το email σας"
+
+#: library/plugin-display.php:41
+msgid "Your generous support enables continued development of this free plugin. Thank you!"
+msgstr "Η γενναιόδωρη υποστήριξή σας επιτρέπει τη συνεχή ανάπτυξη αυτής της δωρεάν προσθήκης. Σας ευχαριστώ!"
+
+#: library/support-panel.php:60
+msgid "Your generous support helps future development of"
+msgstr "Η γενναιόδωρη υποστήριξή σας βοηθά στη μελλοντική ανάπτυξη του"
+
+#: views/submission-form.php:31 views/submission-form.php:32
+#: views/submission-form-alt.php:46 views/submission-form-alt.php:47
+msgid "Your Name"
+msgstr "Το όνομά σας"
+
+#: views/submission-form.php:43 views/submission-form.php:44
+#: views/submission-form-alt.php:58 views/submission-form-alt.php:59
+msgid "Your URL"
+msgstr "Το URL σας"
+
+#: library/plugin-settings.php:92
+msgid "★★★★★ rating&nbsp;&raquo;"
+msgstr "★★★★★ βαθμολογία&nbsp;&raquo;"
+

@@ -31,7 +31,7 @@ class URE_Ajax_Processor {
     
     protected function get_action() {
         $action = $this->lib->get_request_var( 'sub_action', 'post' );
-        if (empty($action)) {
+        if ( empty( $action ) ) {
             $action = $this->lib->get_request_var( 'sub_action', 'get' );
         }
                 
@@ -41,8 +41,13 @@ class URE_Ajax_Processor {
     
     
     protected function get_required_cap() {
-        
-        if ($this->action=='grant_roles' || $this->action=='get_user_roles') {
+        $promote_users_actions = array(
+            'grant_roles',
+            'get_user_roles',
+            'add_role_to_user',
+            'revoke_role_from_user'
+        );
+        if ( in_array( $this->action, $promote_users_actions ) ) {
             $cap = 'promote_users';
         } else {
             $cap = URE_Own_Capabilities::get_key_capability();
@@ -55,8 +60,8 @@ class URE_Ajax_Processor {
     
     protected function valid_nonce() {
         
-        if ( !isset($_REQUEST['wp_nonce']) || !wp_verify_nonce( $_REQUEST['wp_nonce'], 'user-role-editor' ) ) {
-            echo json_encode(array('result'=>'error', 'message'=>'URE: Wrong or expired request'));
+        if ( !isset( $_REQUEST['wp_nonce'] ) || !wp_verify_nonce( $_REQUEST['wp_nonce'], 'user-role-editor' ) ) {
+            echo wp_json_encode( array('result'=>'error', 'message'=>'URE: Wrong or expired request') );
             return false;
         } else {
             return true;
@@ -70,7 +75,7 @@ class URE_Ajax_Processor {
         
         $capability = $this->get_required_cap();                
         if ( !current_user_can( $capability ) ) {
-            echo json_encode( array('result'=>'error', 'message'=>'URE: Insufficient permissions') );
+            echo wp_json_encode( array('result'=>'error', 'message'=>'URE: Insufficient permissions') );
             return false;
         } else {
             return true;
@@ -89,27 +94,46 @@ class URE_Ajax_Processor {
             'role_id'=>$response['role_id'],  
             'role_name'=>$response['role_name'],
             'message'=>$response['message']
-                );
+            );
         
         return $answer;
     }
     // end of add_role()
     
     
+    protected function update_role() {
+        
+        $editor = URE_Editor::get_instance();
+        $response = $editor->update_role();                
+        
+        $answer = array(
+            'result'=>$response['result'], 
+            'role_id'=>$response['role_id'],  
+            'role_name'=>$response['role_name'],
+            'message'=>$response['message']
+            );
+        
+        return $answer;
+    }
+    // end of add_role()
+
+        
     protected function add_capability() {
         
-        $notification = URE_Capability::add( 'role' );
+        $response = URE_Capability::add( 'role' );
         $editor = URE_Editor::get_instance();
         $editor->init1();
         $message = $editor->init_current_role_name();
-        if (empty( $message ) ) {
+        if ( empty( $message ) ) {
             $view = new URE_View();        
             $html = $view->_show_capabilities( true, true );
         } else {
             $html = '';
+            $response['result'] = 'error';
+            $response['message'] = $message;
         }
         
-        $answer = array('result'=>'success', 'html'=>$html, 'message'=>$notification);
+        $answer = array('result'=>$response['result'], 'html'=>$html, 'message'=>$response['message']);
         
         return $answer;
     }
@@ -158,7 +182,7 @@ class URE_Ajax_Processor {
             'message'=>$response['message'], 
             'role_id'=> $response['role_id'],
             'role_name'=>$response['role_name']
-                );
+            );
         
         return $answer;
     }
@@ -178,24 +202,29 @@ class URE_Ajax_Processor {
     protected function get_users_without_role() {
         
         $new_role = $this->lib->get_request_var( 'new_role', 'post' );
-        if (empty($new_role)) {
+        if ( empty( $new_role ) ) {
             $answer = array('result'=>'error', 'message'=>'Provide new role');
             return $answer;
         }
         
         $assign_role = $this->lib->get_assign_role();
-        if ($new_role==='no_rights') {
+        if ( $new_role==='no_rights') {
             $assign_role->create_no_rights_role();
         }        
         
         $wp_roles = wp_roles();        
-        if (!isset($wp_roles->roles[$new_role])) {
+        if ( !isset( $wp_roles->roles[$new_role] ) ) {
             $answer = array('result'=>'error', 'message'=>'Selected new role does not exist');
             return $answer;
         }
                 
         $users = $assign_role->get_users_without_role();        
-        $answer = array( 'result'=>'success', 'users'=>$users, 'new_role'=>$new_role, 'message'=>'success' );
+        $answer = array(
+            'result'=>'success', 
+            'users'=>$users, 
+            'new_role'=>$new_role, 
+            'message'=>'success'
+            );
         
         return $answer;
     }
@@ -210,7 +239,26 @@ class URE_Ajax_Processor {
         
     }
     // end of grant_roles()
+
     
+    protected function add_role_to_user() {
+        
+        $answer = URE_Grant_Roles::add_role();
+        
+        return $answer;
+        
+    }
+    // end of add_role_to_user()
+
+    
+    protected function revoke_role_from_user() {
+        
+        $answer = URE_Grant_Roles::revoke_role();
+        
+        return $answer;
+        
+    }
+    // end of add_role_to_user()
     
     protected function get_user_roles() {
         
@@ -225,22 +273,28 @@ class URE_Ajax_Processor {
     protected function get_role_caps() {
         
         $role = $this->lib->get_request_var('role', 'post' );
-        if (empty($role)) {
+        if ( empty( $role ) ) {
             $answer = array('result'=>'error', 'message'=>'Provide role ID');
             return $answer;
         }
         
         $wp_roles = wp_roles();
-        if (!isset($wp_roles->roles[$role])) {
+        if ( !isset( $wp_roles->roles[$role] ) ) {
             $answer = array('result'=>'error', 'message'=>'Requested role does not exist');
             return $answer;
         }
         
         $active_items = URE_Role_Additional_Options::get_active_items();
-        if (isset($active_items[$role])) {
+        if ( isset( $active_items[$role] ) ) {
             $role_options = $active_items[$role];
         } else {
             $role_options = array();
+        }
+        
+        $caps = array();
+        foreach( $wp_roles->roles[$role]['capabilities'] as $cap_id=>$allowed ) {
+            $cap = URE_Capability::escape( $cap_id );
+            $caps[$cap] = $allowed;
         }
         
         $answer = array(
@@ -248,7 +302,7 @@ class URE_Ajax_Processor {
             'message'=>'Role capabilities retrieved successfully', 
             'role_id'=>$role,
             'role_name'=>$wp_roles->roles[$role]['name'],
-            'caps'=>$wp_roles->roles[$role]['capabilities'],
+            'caps'=>$caps,
             'options'=>$role_options
             );
         
@@ -274,7 +328,10 @@ class URE_Ajax_Processor {
     
     protected function _dispatch() {
         
-        switch ($this->action) {
+        switch ( $this->action ) {
+            case 'update_role':
+                $answer = $this->update_role();
+                break;
             case 'add_role':
                 $answer = $this->add_role();
                 break;
@@ -295,6 +352,12 @@ class URE_Ajax_Processor {
                 break;
             case 'grant_roles':
                 $answer = $this->grant_roles();
+                break;
+            case 'add_role_to_user':
+                $answer = $this->add_role_to_user();
+                break;
+            case 'revoke_role_from_user':
+                $answer = $this->revoke_role_from_user();
                 break;
             case 'get_user_roles':
                 $answer = $this->get_user_roles();
@@ -329,7 +392,7 @@ class URE_Ajax_Processor {
         
         $answer = $this->_dispatch();
         
-        $json_answer = json_encode($answer);
+        $json_answer = wp_json_encode($answer);
         echo $json_answer;
         die;
 

@@ -8,16 +8,14 @@
 		class  = classes for the parent element (optional, default: none)
 		value  = link text (optional, default: "Reset form")
 		url    = the URL where your form is displayed (can use %%current%% for current URL)
-		custom = any attributes or custom code for the link element
 	
 */
 function usp_reset_button_shortcode($args) {
 	
 	extract(shortcode_atts(array(
-		'class'  => '',
-		'value'  => __('Reset form', 'usp'),
-		'url'    => '#please-check-shortcode',
-		'custom' => '',
+		'class' => '',
+		'value' => __('Reset form', 'usp'),
+		'url'   => '#please-check-shortcode',
 	), $args));
 	
 	$protocol = is_ssl() ? 'https://' : 'http://';
@@ -34,7 +32,7 @@ function usp_reset_button_shortcode($args) {
 	
 	$class = empty($class) ? '' : ' class="'. esc_attr($class) .'"';
 	
-	$output = '<p'. $class .'><a href="'. esc_url($href) .'"'. $custom .'>'. esc_html($value) .'</a></p>';
+	$output = '<p'. $class .'><a href="'. esc_url($href) .'">'. esc_html($value) .'</a></p>';
 	
 	return $output;
 	
@@ -58,14 +56,15 @@ add_shortcode('usp-reset-button', 'usp_reset_button_shortcode');
 		https://plugin-planet.com/usp-pro-display-list-submitted-posts/
 	
 */
-function usp_display_posts($attr, $content = null) {
+function usp_display_posts($attr = array(), $content = null) {
 	
 	global $post;
 	
 	extract(shortcode_atts(array(
 		
-		'userid'   => 'all',
-		'numposts' => -1
+		'userid'    => 'all',
+		'post_type' => 'post',
+		'numposts'  => -1,
 		
 	), $attr));
 	
@@ -74,6 +73,7 @@ function usp_display_posts($attr, $content = null) {
 		$args = array(
 			'author'         => $userid,
 			'posts_per_page' => $numposts,
+			'post_type'      => $post_type,
 			'meta_key'       => 'is_submission',
 			'meta_value'     => '1'
 		);
@@ -82,6 +82,7 @@ function usp_display_posts($attr, $content = null) {
 		
 		$args = array(
 			'posts_per_page' => $numposts,
+			'post_type'      => $post_type,
 			'meta_key'       => 'is_submission',
 			'meta_value'     => '1'
 		);
@@ -91,6 +92,7 @@ function usp_display_posts($attr, $content = null) {
 		$args = array(
 			'author'         => get_current_user_id(),
 			'posts_per_page' => $numposts,
+			'post_type'      => $post_type,
 			'meta_key'       => 'is_submission',
 			'meta_value'     => '1'
 		);
@@ -99,6 +101,7 @@ function usp_display_posts($attr, $content = null) {
 		
 		$args = array(
 			'posts_per_page' => $numposts,
+			'post_type'      => $post_type,
 			
 			'meta_query' => array(
 				
@@ -117,9 +120,9 @@ function usp_display_posts($attr, $content = null) {
 		
 	}
 	
+	$args = apply_filters('usp_display_posts_args', $args);
+	
 	$submitted_posts = get_posts($args);
-
-	error_log(var_export($args,true));
 	
 	$display_posts = '<ul>';
 	
@@ -132,7 +135,7 @@ function usp_display_posts($attr, $content = null) {
 	}
 	
 	$display_posts .= '</ul>';
-	error_log("Hey there, this is PeterY");	
+	
 	wp_reset_postdata();
 	
 	return $display_posts;
@@ -145,77 +148,74 @@ add_shortcode('usp_display_posts', 'usp_display_posts');
 /* 
 	Shortcode: [usp_gallery]
 	Displays a gallery of submitted images for the current post
-	Syntax: [usp_gallery size="" before="" after="" number="" id=""]
-	Notes: 
-		Use curly brackets to output angle brackets
-		Use single quotes in before/after attributes
-		See usp_get_images() for inline notes and more infos
+	Syntax: [usp_gallery size="" format="" target="" class="" number="" id=""]
+	Notes: See usp_get_images() for inline notes and more infos
 */
 if (!function_exists('usp_gallery')) :
 
-    /**
-     * @param $attr
-     * @param null $content
-     * @return string
-     */
-    function usp_gallery($attr, $content = null) {
+function usp_gallery($attr, $content = null) {
 	
 	extract(shortcode_atts(array(
 		
-		'size'   => 'thumbnail',
-		'before' => '{a href="%%url%%"}{img src="',
-		'after'  => '" /}{/a}',
-		'number' => false,
-		'id'     => false,
+		'size'    => 'thumbnail',
+		'format'  => 'image',
+		'target'  => 'blank',
+		'class'   => '',
+		'number'  => 100,
+		'id'      => false,
 		
 	), $attr));
-	// PeterY code starts here
-	#error_log("the permalink is ". get_the_permalink());
-	#$user_profile_data = get_userdata( 50 );
-	#error_log(gettype( $user_profile_data ));
-	#$user_division = $user_profile_data->__get( 'division_drop_down'  );
-	#error_log("the user division is");
-	#error_log( $user_division );
-	$the_current_user_temp = wp_get_current_user();
-	$the_current_user_id = esc_html( $the_current_user_temp->ID );
-	$the_current_user_login_id = get_the_author_meta( 'user_login', $the_current_user_id );	
-	$args = array(
-		'author' 	=> $the_current_user_id,
-		'orderby' 	=> 'post_date',
-		'order'		=> 'ASC',
-		'lang'		=> '',
-		'posts_per_page'	=> 5
-		);
-	$current_user_posts = get_posts( $args );
-	$total = count( $current_user_posts );
-	error_log($total);
-	//error_log(var_export( $current_user_posts));
-	//error_log(var_export($current_user_posts[1]->ID));
-	$gallery = '';
-	foreach ($current_user_posts as $item) {
-		error_log("Logging item");
-		error_log($item->ID);
-		$images = usp_get_images($size, $before, $after, $number, $item->ID);
-		foreach ($images as $image) $gallery .= $image;
-        	$gallery = $gallery ? '<div class="usp-image-gallery">'. $gallery .'</div><H1>'. $item->post_title .'</H1><input type="button" name="'. $item->ID .'" id="delete_button" value="Delete" /><br><br>' : '';
-		}
-	error_log($the_current_user_login_id);
-	//PeterY code ends here
-	//$images = usp_get_images('thumbnail');
-	
-	//foreach ($images as $image) $gallery .= $image;
-	
-	//$gallery = $gallery ? '<div class="usp-image-gallery">'. $gallery .'</div>' : '';
 
-    error_log("The gallery value is");
-    error_log($gallery);
-    if ($gallery == "") {
-        return "<div id='photo_not_exist'><p style=\"font-size:1.5em\">You have not uploaded any photos</p></div>";
-    } else {
-        $photo_exists = "<div id='photo_exist'><p style=\"font-size:1.5em\">To view the actual photo that was uploaded, please click on image.</p></div><br><br>";
-        $gallery = $photo_exists.$gallery;
-	    return $gallery;
+    // PeterY code starts here
+    #error_log("the permalink is ". get_the_permalink());
+    #$user_profile_data = get_userdata( 50 );
+    #error_log(gettype( $user_profile_data ));
+    #$user_division = $user_profile_data->__get( 'division_drop_down'  );
+    #error_log("the user division is");
+    #error_log( $user_division );
+    $the_current_user_temp = wp_get_current_user();
+    echo( "the current user ID is " . $the_current_user_temp->ID . "<br>");
+    $the_current_user_id = esc_html( $the_current_user_temp->ID );
+    $the_current_user_login_id = get_the_author_meta( 'user_login', $the_current_user_id );
+    echo( "the current author meta id is " . $the_current_user_login_id . "<br>");
+    $args = array(
+        'author' 	=> $the_current_user_id,
+        'orderby' 	=> 'post_date',
+        'order'		=> 'ASC',
+        'lang'		=> '',
+        'posts_per_page'	=> 5
+    );
+    $current_user_posts = get_posts( $args );
+    $total = count( $current_user_posts );
+    echo( "the total is photos submitted is  ". $total . "<br>" );
+    error_log($total);
+    //error_log(var_export( $current_user_posts));
+    //error_log(var_export($current_user_posts[1]->ID));
+    $gallery = '';
+    foreach ($current_user_posts as $item) {
+        error_log("Logging item");
+        error_log($item->ID);
+        echo( "the item post ID is " . $item->ID . "<br>");
+        //petery code start
+        $images = usp_get_images($size, $format, $target, $class, $number, $item->ID);
+        //petery code finish
+        foreach ($images as $image) {
+            echo("the imeage is " . $image);
+            $gallery .= $image;
+            echo("The title is " . $item->post_title . "<br>");
+            $gallery = $gallery ? '<div class="usp-image-gallery">' . $gallery . '</div><H1>' . $item->post_title . '</H1><input type="button" name="' . $item->ID . '" id="delete_button" value="Delete" /><br><br>' : '';
+        }
     }
+    error_log($the_current_user_login_id);
+    //PeterY code ends here
+    //$images = usp_get_images('thumbnail');
+
+    //foreach ($images as $image) $gallery .= $image;
+
+    //$gallery = $gallery ? '<div class="usp-image-gallery">'. $gallery .'</div>' : '';
+	
+	return $gallery;
+	
 }
 add_shortcode('usp_gallery', 'usp_gallery');
 

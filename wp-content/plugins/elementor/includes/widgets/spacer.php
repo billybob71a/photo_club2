@@ -39,7 +39,7 @@ class Widget_Spacer extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return __( 'Spacer', 'elementor' );
+		return esc_html__( 'Spacer', 'elementor' );
 	}
 
 	/**
@@ -86,53 +86,65 @@ class Widget_Spacer extends Widget_Base {
 		return [ 'space' ];
 	}
 
+	protected function is_dynamic_content(): bool {
+		return false;
+	}
+
+	/**
+	 * Get style dependencies.
+	 *
+	 * Retrieve the list of style dependencies the widget requires.
+	 *
+	 * @since 3.24.0
+	 * @access public
+	 *
+	 * @return array Widget style dependencies.
+	 */
+	public function get_style_depends(): array {
+		return [ 'widget-spacer' ];
+	}
+
+	public function has_widget_inner_wrapper(): bool {
+		return ! Plugin::$instance->experiments->is_feature_active( 'e_optimized_markup' );
+	}
+
 	/**
 	 * Register spacer widget controls.
 	 *
 	 * Adds different input fields to allow the user to change and customize the widget settings.
 	 *
-	 * @since 1.0.0
+	 * @since 3.1.0
 	 * @access protected
 	 */
-	protected function _register_controls() {
+	protected function register_controls() {
 		$this->start_controls_section(
 			'section_spacer',
 			[
-				'label' => __( 'Spacer', 'elementor' ),
+				'label' => esc_html__( 'Spacer', 'elementor' ),
 			]
 		);
 
 		$this->add_responsive_control(
 			'space',
 			[
-				'label' => __( 'Space', 'elementor' ),
+				'label' => esc_html__( 'Space', 'elementor' ),
 				'type' => Controls_Manager::SLIDER,
 				'default' => [
 					'size' => 50,
 				],
-				'size_units' => [ 'px', 'vh', 'em' ],
+				'size_units' => [ 'px', 'em', 'rem', 'vh', 'custom' ],
 				'range' => [
 					'px' => [
-						'min' => 10,
 						'max' => 600,
 					],
 					'em' => [
-						'min' => 0.1,
 						'max' => 20,
 					],
 				],
+				'render_type' => 'template',
 				'selectors' => [
-					'{{WRAPPER}} .elementor-spacer-inner' => 'height: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}}' => '--spacer-size: {{SIZE}}{{UNIT}};',
 				],
-			]
-		);
-
-		$this->add_control(
-			'view',
-			[
-				'label' => __( 'View', 'elementor' ),
-				'type' => Controls_Manager::HIDDEN,
-				'default' => 'traditional',
 			]
 		);
 
@@ -148,6 +160,11 @@ class Widget_Spacer extends Widget_Base {
 	 * @access protected
 	 */
 	protected function render() {
+		$settings = $this->get_settings_for_display();
+
+		if ( empty( $settings['space'] ) || empty( $settings['space']['size'] ) || 0 === $settings['space']['size'] ) {
+			return;
+		}
 		?>
 		<div class="elementor-spacer">
 			<div class="elementor-spacer-inner"></div>
@@ -165,6 +182,11 @@ class Widget_Spacer extends Widget_Base {
 	 */
 	protected function content_template() {
 		?>
+		<#
+		if ( '' === settings.space || '' === settings.space.size || 0 === settings.space.size ) {
+			return;
+		}
+		#>
 		<div class="elementor-spacer">
 			<div class="elementor-spacer-inner"></div>
 		</div>

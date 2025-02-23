@@ -41,7 +41,27 @@ class Control_Exit_Animation extends Control_Animation {
 	 * @return array Control type.
 	 */
 	public static function get_animations() {
-		$animations = [
+		$additional_animations = [];
+
+		/**
+		 * Exit animations.
+		 *
+		 * Filters the animations list displayed in the exit animations control.
+		 *
+		 * This hook can be used to register new animations in addition to the
+		 * basic Elementor exit animations.
+		 *
+		 * @since 2.5.0
+		 *
+		 * @param array $additional_animations Additional animations array.
+		 */
+		$additional_animations = apply_filters( 'elementor/controls/exit-animations/additional_animations', $additional_animations );
+
+		return array_merge( static::get_default_animations(), $additional_animations );
+	}
+
+	public static function get_default_animations(): array {
+		return [
 			'Fading' => [
 				'fadeIn' => 'Fade Out',
 				'fadeInDown' => 'Fade Out Up',
@@ -76,16 +96,15 @@ class Control_Exit_Animation extends Control_Animation {
 				'rollIn' => 'Roll Out',
 			],
 		];
+	}
 
-		/**
-		 * Element appearance animations list.
-		 *
-		 * @since 2.5.0
-		 *
-		 * @param array $additional_animations Additional Animations array.
-		 */
-		$additional_animations = apply_filters( 'elementor/controls/exit-animations/additional_animations', [] );
+	public static function get_assets( $setting ) {
+		if ( ! $setting || 'none' === $setting ) {
+			return [];
+		}
 
-		return array_merge( $animations, $additional_animations );
+		return [
+			'styles' => [ 'e-animation-' . $setting ],
+		];
 	}
 }

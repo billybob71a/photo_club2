@@ -4,203 +4,479 @@
     *   Javascript Functions
     *   ------------------------------------------------
     *   WP Mobile Menu
-    *   Copyright WP Mobile Menu 2017 - http://www.wpmobilemenu.com
-    *
+    *   Copyright WP Mobile Menu 2018 - http://www.wpmobilemenu.com
     *
     */
 
-    
-   "use strict";
-    
-   (function ($) {
-      jQuery( document ).ready( function() {
-
-        jQuery( document ).on( 'click', '.show-nav-right .mobmenu-push-wrap,  .show-nav-right .mobmenu-overlay', function ( e ) { 
+    "use strict";
+    function getSelector(el){
+      var $el = jQuery(el);
   
-          e.preventDefault();
-          jQuery( '.mobmenu-right-bt' ).first().trigger( 'click' );
-          e.stopPropagation();
+      var id = $el.attr("id");
+      if (id) { //"should" only be one of these if theres an ID
+          return "#"+ id;
+      }
   
-        });
-          
-        jQuery( document ).on( 'click', '.show-nav-left .mobmenu-push-wrap,  .show-nav-left .mobmenu-overlay', function ( e ) { 
+      var selector = $el.parents()
+                  .map(function() { return this.tagName; })
+                  .get().reverse().join(" ");
   
-          e.preventDefault();
-          jQuery( '.mobmenu-left-bt' ).first().trigger( 'click' );
-          e.stopPropagation();
+      if (selector) {
+          selector += " "+ $el[0].nodeName;
+      }
   
-        });
-    
-        
-        if ( jQuery( 'body' ).find( '.mobmenu-push-wrap' ).length <= 0 &&  jQuery( 'body' ).hasClass( 'mob-menu-slideout' ) ) {
-          jQuery( 'body' ).wrapInner( '<div class="mobmenu-push-wrap"></div>' );
-          jQuery( '.mobmenu-push-wrap' ).after( jQuery( '.mob-menu-left-panel' ).detach() );
-          jQuery( '.mobmenu-push-wrap' ).after( jQuery( '.mob-menu-right-panel' ).detach() );
-          jQuery( '.mobmenu-push-wrap' ).after( jQuery( '.mob-menu-header-holder' ).detach() ); 
-          
-          if ( jQuery('.mob-menu-header-holder' ).attr( 'data-detach-el' ) != '' ) {
-            jQuery( '.mobmenu-push-wrap' ).after( jQuery(   jQuery('.mob-menu-header-holder' ).attr( 'data-detach-el' ) ).detach() ); 
+      var classNames = $el.attr("class");
+      if (classNames) {
+          selector += "." + jQuery.trim(classNames).replace(/\s/gi, ".");
+      }
+  
+      var name = $el.attr('name');
+      if (name) {
+          selector += "[name='" + name + "']";
+      }
+      if (!name){
+          var index = $el.index();
+          if (index) {
+              index = index + 1;
+              selector += ":nth-child(" + index + ")";
           }
-  
-          // Double Check the the menu display classes where added to the body.
-          var menu_display_type = jQuery( '.mob-menu-header-holder' ).attr( 'data-menu-display' );
-  
-          if ( menu_display_type != '' && !jQuery( 'body' ).hasClass( menu_display_type ) ) {
-            jQuery( 'body' ).addClass( menu_display_type );
-          }
-  
-          jQuery( '#wpadminbar' ).appendTo( 'body' );
+      }
+      return selector;
+    }
 
-          jQuery( 'video' ).each( function(){
-            if( 'autoplay' === jQuery( this ).attr('autoplay') ) {
-              jQuery( this )[0].play();
-            }
-          });
+    function enableMobileMenuElementPicker(){
+      const p = new Picker({
+          elm: document.getElementById('elm1'),
+          mode: 'cover',
+          excludeElmName: ['body'],
+          events: [{
+              key: 'contextmenu',
+              fn(event) {
+                  event.preventDefault();
+              },
+          }],
+          onInit() {
+          },
+          onClick(event) {
+            var selector = getSelector(event.target).toLowerCase();
+            window.parent.receivePickedElement(selector);
+            jQuery(selector).hide();
+          },
+          onHover(event) {
+          },
+      });
+
+      document.getElementById('m_on').addEventListener('click', () => {
+          p.on();
+      });
+
+      document.getElementById('m_off').addEventListener('click', () => {
+          p.off();
+      });
+
+      document.getElementById('m_cover').addEventListener('click', () => {
+          p.changeMode('cover');
+      });
+
+      document.getElementById('m_target').addEventListener('click', () => {
+          p.changeMode('target');
+      });
+
+    }
+    jQuery( document ).ready( function($) {
+
+      const urlParams = new URLSearchParams( window.location.search );
+
+      if ( urlParams.get( 'mobmenu-action' ) == 'find-element' ) {
+        enableMobileMenuElementPicker();
+      }
+
+      function mobmenuOpenSubmenus( menu ) {
+        var submenu = $(menu).parent().next();
+
+        if ( $(menu).parent().next().hasClass( 'show-sub-menu' )  ) {
+          $(menu).find('.show-sub-menu' ).hide();
+          $(menu).toggleClass( 'show-sub');
+        } else {
+          if ( ! $( menu ).parents('.show-sub-menu').prev().hasClass('mob-expand-submenu') && submenu[0] !== $('.show-sub-menu')[0] && $( menu ).parent('.sub-menu').length <= 0 ) {
   
+            $(menu).parent().find( '.show-submenu' ).first().hide().toggleClass( 'show-sub-menu' );
+            $(menu).toggleClass( 'show-sub');
   
+          }
         }
 
-        jQuery( document ).on( 'click',  '.mobmenu-left-bt, .mob-menu-left-panel .mobmenu_content a, .show-nav-left .mob-cancel-button' , function ( e ) {  
+        if ( !$( menu ).parent().next().hasClass( 'show-sub-menu' ) ) {
+          submenu.fadeIn( 'slow' );
+        } else {  
+          submenu.hide();
+        }
 
-          // Parent Link open submenu(1st Level).
-          if ( jQuery(this).parent().parent().parent().parent().hasClass( 'mobmenu-parent-link' ) || jQuery(this).parent().parent().parent().parent().parent().hasClass( 'mobmenu-parent-link' ) ) {
-            if( 'mobmenuleft' ===  jQuery(this).parent().parent().attr('id') && jQuery(this).parent().find( '.mob-expand-submenu' ).length > 0 )  { 
-              jQuery(this).parent().find( '.mob-expand-submenu' ).first().trigger( 'click' );
-              return false;
-            }
-          }
-          // Parent Link open submenu(2nd Level).
-          if ( $(this).parent().parent().parent().parent().parent().parent().parent().hasClass( 'mobmenu-parent-link-2nd-level' )  ) {
-            if( 'mobmenuleft' ===  $(this).parent().parent().parent().parent().attr('id') && $(this).parent().find( '.mob-expand-submenu' ).length > 0 )  { 
-              $(this).parent().find( '.mob-expand-submenu' ).first().trigger( 'click' );
-              return false;
-            }
-          }
+        if ( ! $('body').hasClass('mob-menu-sliding-menus') ) {
+          $( menu ).find('.open-icon').toggleClass('hide');
+          $( menu ).find('.close-icon').toggleClass('hide');
+        }
 
-          jQuery('body').toggleClass('show-nav-left'); 
+        submenu.toggleClass( 'show-sub-menu');
+        
 
-          if ( !jQuery( 'body' ).hasClass( 'show-nav-left') ){  
-            jQuery( 'html' ).removeClass( 'hidden-overflow' );
-            if ( jQuery( this ).hasClass( 'mob-cancel-button') || jQuery( this ).hasClass( 'mobmenu-left-bt' ) ) {
-              return false;
-            }
-  
-          } else {
-            jQuery( 'html' ).addClass( 'hidden-overflow' );
-            e.preventDefault();
-           
-          }
-  
+      }
+
+      if ( $( 'body' ).find( '.mobmenu-push-wrap' ).length <= 0 &&  $( 'body' ).hasClass('mob-menu-slideout') ) {
+
+        $( 'body' ).wrapInner( '<div class="mobmenu-push-wrap"></div>' );
+        $( '.mobmenu-push-wrap' ).after( $( '.mobmenu-left-alignment' ).detach() );
+        $( '.mobmenu-push-wrap' ).after( $( '.mobmenu-right-alignment' ).detach() );
+        $( '.mobmenu-push-wrap' ).after( $( '.mob-menu-header-holder' ).detach() ); 
+        $( '.mobmenu-push-wrap' ).after( $( '.mobmenu-footer-menu-holder' ).detach() ); 
+        $( '.mobmenu-push-wrap' ).after( $( '.mobmenu-overlay' ).detach() ); 
+        $( '.mobmenu-push-wrap' ).after( $( '#wpadminbar' ).detach() );
+
+        if ( $('.mob-menu-header-holder' ).attr( 'data-detach-el' ) != '' ) {
+          $( '.mobmenu-push-wrap' ).after( $(   $('.mob-menu-header-holder' ).attr( 'data-detach-el' ) ).detach() );
+        }
+
+      }
+      // Double Check the the menu display classes where added to the body.
+      var menu_display_type = $( '.mob-menu-header-holder' ).attr( 'data-menu-display' );
+
+      if ( menu_display_type != '' && !$( 'body' ).hasClass( 'mob-menu-slideout' ) && !$( 'body' ).hasClass( 'mob-menu-slideout-over' ) && !$( 'body' ).hasClass( 'mob-menu-slideout-top' ) && !$( 'body' ).hasClass( 'mob-menu-overlay' ) ) {
+        $( 'body' ).addClass( menu_display_type );
+      }
+
+      // Only force autoplay videos in desktop
+      if(! ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) ){
+        $( 'video' ).each( function(){
+          if( 'autoplay' === $( this ).attr('autoplay') ) {
+            $( this )[0].play();
+          } 
         });
+      }
+
+      var submenu_open_icon  = $( '.mob-menu-header-holder' ).attr( 'data-open-icon' );
+      var submenu_close_icon = $( '.mob-menu-header-holder' ).attr( 'data-close-icon' );
+
+      $( '.mobmenu-content .sub-menu' ).each( function(){
+
+        $( this ).prev().append('<div class="mob-expand-submenu"><i class="mob-icon-' + submenu_open_icon + ' open-icon"></i><i class="mob-icon-' + submenu_close_icon + ' close-icon hide"></i></div>');
+
+        if ( 0 < $( this ).parents( '.mobmenu-parent-link' ).length  ) {
+          $( this ).prev().attr('href', '#');
+        }
+
+      });
+      
+      $( document ).on( 'click', '.mobmenu-parent-link .menu-item-has-children' , function ( e ) {
+        
+        if ( e.target.parentElement != this) return;
+        
+        e.preventDefault();
+        $(this).find('a').find('.mob-expand-submenu').first().trigger('click');
+        e.stopPropagation();
+        
+      });
+      $( document ).on( 'click', '.show-nav-left .mobmenu-push-wrap,  .show-nav-left .mobmenu-overlay', function ( e ) { 
   
-        jQuery( document ).on( 'click', '.mobmenu-right-bt, .mob-menu-right-panel .mobmenu_content a, .show-nav-right .mob-cancel-button' , function ( e ) {
-  
-          if ( jQuery(this).parent().parent().parent().parent().hasClass( 'mobmenu-parent-link' ) || jQuery(this).parent().parent().parent().parent().parent().hasClass( 'mobmenu-parent-link' ) ) {
-            if( 'mobmenuright' ===  jQuery(this).parent().parent().attr('id') && jQuery(this).parent().find( '.mob-expand-submenu' ).length > 0 )  { 
-              jQuery(this).parent().find( '.mob-expand-submenu' ).first().trigger( 'click' );
-              return false;
+        e.preventDefault();
+        $( '.mobmenu-left-bt' ).first().trigger( 'click' );
+        e.stopPropagation();
+
+      });
+      
+      $( document ).on( 'click', '.mob-expand-submenu' , function ( e ) {
+
+        // Check if any menu is open and close it.
+        if ( 1 == $( '.mob-menu-header-holder' ).attr( 'data-autoclose-submenus' ) && ! $(this).parent().next().hasClass( 'show-sub-menu' ) ) {
+          if ( 0 < $( '.mob-expand-submenu.show-sub' ).length &&  $(this).parents('.show-sub-menu').length <= 0 ) {
+            mobmenuOpenSubmenus( $( '.mob-expand-submenu.show-sub' ) );
+          }
+        }
+
+        mobmenuOpenSubmenus( $(this) );
+        e.preventDefault();
+        e.stopPropagation();
+
+      });
+
+      $( document ).on( 'keyup', '.mobmenu-left-bt', function(e){
+        if( e.type != 'click' && e.which != 13 || e.which == 9 || jQuery(this).hasClass( 'mobmenu-trigger-action' ) ) {
+          return;
+        }
+
+        mobmenuClosePanel( 'mobmenu-left-panel' );
+        e.stopPropagation();
+      });
+
+      $( document ).on( 'keyup', '.mobmenu-right-bt', function(e){
+        if( e.type != 'click' && e.which != 13 || e.which == 9 || jQuery(this).hasClass( 'mobmenu-trigger-action' ) ) {
+          return;
+        }
+
+        mobmenuClosePanel( 'mobmenu-right-panel' );
+        e.stopPropagation();
+      });
+
+      
+     
+      $( document ).on( 'click', '.mobmenu-panel.show-panel .mob-cancel-button, .show-nav-right .mobmenu-overlay, .show-nav-left .mobmenu-overlay', function ( e ) { 
+        
+        
+
+        e.preventDefault();
+        mobmenuClosePanel( 'show-panel' );
+        if ( $('body').hasClass('mob-menu-sliding-menus') ) {
+          $( '.mobmenu-trigger-action .hamburger' ).toggleClass('is-active');
+        }
+
+      });
+
+      $( document ).on( 'click', '.mobmenu-trigger-action', function(e){
+        e.preventDefault();
+        
+        var targetPanel = $( this ).attr( 'data-panel-target' );
+        
+        if ( ! $( 'body' ).hasClass( 'show-nav-left' ) &&  ! $( 'body' ).hasClass( 'show-nav-right' )  ) {
+          if ( 'mobmenu-filter-panel' !==  targetPanel ) {
+            mobmenuOpenPanel( targetPanel );
+          }
+        }
+
+      });
+
+      $( document ).on( 'click', '.hamburger', function(e){
+        var targetPanel = $(this).parent().attr('data-panel-target');
+        e.preventDefault();
+        e.stopPropagation();
+        
+        $(this).toggleClass( 'is-active' );
+        
+        setTimeout(function(){ 
+          if ( $( 'body' ).hasClass('show-nav-left') ) {
+            if ( $('body').hasClass('mob-menu-sliding-menus') ) {
+              $( '.mobmenu-trigger-action .hamburger' ).toggleClass('is-active');
             }
-          }
-
-          // Parent Link open submenu(2nd Level).
-          if ( $(this).parent().parent().parent().parent().parent().parent().parent().hasClass( 'mobmenu-parent-link-2nd-level' )  ) {
-            if( 'mobmenuright' ===  $(this).parent().parent().parent().parent().attr('id') && $(this).parent().find( '.mob-expand-submenu' ).length > 0 )  { 
-              $(this).parent().find( '.mob-expand-submenu' ).first().trigger( 'click' );
-              return false;
-            }
-          }
-  
-          jQuery('body').toggleClass('show-nav-right'); 
-          
-          if ( !jQuery( 'body' ).hasClass( 'show-nav-right') ){
-            jQuery( 'html' ).removeClass( 'hidden-overflow' );
-            if ( jQuery( this ).hasClass( 'mob-cancel-button') || jQuery( this ).hasClass( 'mobmenu-right-bt' ) ) {
-                return false;
-            }
-
-          } else {
-            jQuery( 'html' ).addClass( 'hidden-overflow' );
-            e.preventDefault();
-          }
-
-        });
-        var submenu_open_icon  = jQuery( '.mob-menu-header-holder' ).attr( 'data-open-icon' );
-        var submenu_close_icon = jQuery( '.mob-menu-header-holder' ).attr( 'data-close-icon' );
-        jQuery( '.mobmenu_content .sub-menu' ).each( function(){
-
-          jQuery( this ).before('<div class="mob-expand-submenu"><i class="mob-icon-' + submenu_open_icon + ' open-icon"></i><i class="mob-icon-' + submenu_close_icon + ' close-icon hide"></i></div>');
-  
-        });
-
-        jQuery( document ).on( 'click', '.mob-expand-submenu' , function ( e ) {
-  
-          e.stopPropagation();
-
-          if ( jQuery( this ).next().hasClass( 'show-sub-menu' )  ) {
-            jQuery(this).find('.show-sub-menu' ).hide();
-          }
-          if ( ! jQuery( this ).parents('.show-sub-menu').prev().hasClass('mob-expand-submenu') && jQuery( this ).next()[0] !== jQuery('.show-sub-menu')[0] && jQuery( this ).parent('.sub-menu').length <= 0 ) {
-            jQuery(this).find('.open-icon').removeClass('hide');
-            jQuery(this).find('.close-icon').addClass('hide');
-            jQuery(this).find( '.show-submenu' ).hide().toggleClass( 'show-sub-menu' );
+            mobmenuClosePanel( targetPanel );
             
-          }
-
-          jQuery( this ).find('.open-icon').toggleClass('hide');
-          jQuery( this ).find('.close-icon').toggleClass('hide');
-          
-          if ( !jQuery( this ).next().hasClass( 'show-sub-menu' ) ) {  
-            jQuery(this).next().fadeIn( 'slow' );
           } else {
-            jQuery(this).next().hide();
+            mobmenuOpenPanel( targetPanel );
           }
+            
+        }, 400);
+        
+
+      });
+     
+      $('.mobmenu a[href*="#"], .mobmenu-panel a[href*="#"]')
+        // Remove links that don't actually link to anything
+        .not('[href="#0"]')
+        .on( 'click', function(event) {
+          // On-page links  
   
-          jQuery(this).next().toggleClass( 'show-sub-menu');
+        if (
+          location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') 
+          && 
+          location.hostname == this.hostname
+          &&
+          $(this).parents('.mobmenu-content').length > 0
+        ) {
+          // Figure out element to scroll to.
+          var target;
 
-        });
+          try {
+	          target = decodeURIComponent( this.hash );
+          } catch(e) {
+ 	          target = this.hash;
+          }
 
-        $('.mobmenu a[href*="#"]')
-    // Remove links that don't actually link to anything
-    .not('[href="#"]')
-    .not('[href="#0"]')
-    .on( 'click', function(event) {
-      // On-page links
-      if (
-        location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') 
-        && 
-        location.hostname == this.hostname
-        &&
-        $(this).parents('.mobmenu_content').length > 0
-      ) {
-        // Figure out element to scroll to
-        var target = $(this.hash);
-        target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
-        // Does a scroll target exist?
-        if (target.length) {
-          // Only prevent default if animation is actually gonna happen
-          event.preventDefault();
-          event.stopPropagation();
-          $( '.show-nav-left .mobmenu-left-bt').first().click();
-          $( '.show-nav-right .mobmenu-right-bt').first().trigger( 'click' );
           $( 'html' ).css( 'overflow', '' );
 
-          $('body').animate({
-            scrollTop: target.offset().top
-          }, 1000, function() {
-            // Callback after animation
-            // Must change focus!
-            var $target = $(target);
-            $target.focus();
-            if ($target.is(":focus")) { // Checking if the target was focused
-              return false;
-            } else {
-              $target.attr('tabindex','-1'); // Adding tabindex for elements not focusable
-              $target.focus(); // Set focus again
-            };
-          });
+          // Does a scroll target exist?
+          if (target.length) {
+
+            
+          if ( 0 < $(this).parents('.mobmenu-left-panel').length ) {
+            mobmenuClosePanel( 'mobmenu-left-panel' );
+          } else {
+            mobmenuClosePanel( 'mobmenu-right-panel' );
+          }
+
+            target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+
+            $('body,html').animate({
+              scrollTop: target.offset().top - $(".mob-menu-header-holder").height() - 50
+            }, 1000);
+          }
         }
+      });
+      function mobmenuClosePanel( target ) {
+
+        $( '.' + target ).toggleClass( 'show-panel' );
+        $( 'html' ).removeClass( 'show-mobmenu-filter-panel' );
+        $( 'body' ).removeClass( 'show-nav-right' );
+        $( 'body' ).removeClass( 'show-nav-left' );
+        $( 'html' ).removeClass( 'mob-menu-no-scroll' ); 
+
+        setTimeout(function(){
+          $( '.mob-menu-sliding-menus [data-menu-level]' ).scrollTop( '0' );
+          if ( 1 == $( '.mob-menu-header-holder' ).attr( 'data-autoclose-submenus' )  ) {
+            $( '.mob-expand-submenu.show-sub' ).click();
+            $( '.mobmenu-content .show-sub-menu' ).removeClass( 'show-sub-menu' );
+          }
+          
+        }, 400);
+
+      }
+    
+      function mobmenuOpenPanel( target) {
+        $( '.mobmenu-content' ).scrollTop(0);
+        $( 'html' ).addClass( 'mob-menu-no-scroll' ); 
+    
+        if ( $('.' + target ).hasClass( 'mobmenu-left-alignment' ) ) {
+          $('body').addClass('show-nav-left');
+        }
+        if ( $('.' + target ).hasClass( 'mobmenu-right-alignment' ) ) {
+          $('body').addClass('show-nav-right');
+        }
+    
+        $('.' + target ).addClass( 'show-panel' );
+    
       }
     });
+
+window.Picker = class Picker {
+  constructor(options = {}) {
+      this.elm = options.elm || document.querySelector('body');
+      this.mode = options.mode || 'target';
+      this.excludeElmName = options.excludeElmName || [];
+      this.switch = typeof options.switch === 'boolean' ? options.switch : true;
+
+      this.events = options.events || [];
+      this.onInit = options.onInit;
+      this.onClick = options.onClick ? options.onClick.bind(this) : null;
+      this.onHover = options.onHover ? options.onHover.bind(this) : null;
+
+
+      // Internal handler
+      this.fn_bind_clickHandle = null;
+      this.fn_bind_hoverHandle = null;
+      this.fn_bind_contextmenuHandle = null;
+      this._init();
+  }
+  on() {
+      this.switch = true;
+  }
+  off() {
+      this.switch = false;
+      this._removeTargetShowPos();
+      this._removeCoverShowPos();
+  }
+  changeMode(mode) {
+      let modeArr = ['cover', 'target'];
+      if (modeArr.includes(mode)) {
+          this.mode = mode;
+          this._removeTargetShowPos();
+          this._removeCoverShowPos();
+      } else {
+          console.error(`Mode error, only includes [ ${modeArr.join(" | ")} ]`);
+      }
+  }
+  destroy() {
+      this.events.forEach((eo) => {
+          eo.fn_bind = eo.fn.bind(this);
+          this.elm.removeEventListener(eo.key, this[`_${eo.key}_Handle`], false);
+      });
+
+      this.elm.removeEventListener('mouseover', this.fn_bind_hoverHandle, false);
+      this.elm.removeEventListener('click', this.fn_bind_clickHandle, false);
+
+      this._removeTargetShowPos();
+      document.querySelector("#_picker_cover_wrap_box").remove();
+  }
+  _init() {
+      let wrapDom = document.createElement('div');
+      wrapDom.setAttribute("id", "_picker_cover_wrap_box");
+      wrapDom.innerHTML = '<svg></svg>';
+      document.body.appendChild(wrapDom);
+      this._initEvent();
+      this.onInit && this.onInit();
+  }
+  _initEvent() {
+      this.events.forEach((eo) => {
+          this[`_${eo.key}_Handle`] = (event) => {
+              if (this._triggerEvent(event) === false) return;
+              eo.fn && eo.fn(event);
+          };
+          eo.fn_bind = this[`_${eo.key}_Handle`].bind(this);
+          this.elm.addEventListener(eo.key, this[`_${eo.key}_Handle`], false);
+      });
+
+      this.fn_bind_hoverHandle = this._hoverHandle.bind(this);
+      this.fn_bind_clickHandle = this._clickHandle.bind(this);
+
+      this.elm.addEventListener('mouseover', this.fn_bind_hoverHandle, false);
+      this.elm.addEventListener('click', this.fn_bind_clickHandle, false);
+
+  }
+  _triggerEvent(event) {
+      let tipsDom = document.querySelector("#_pick_tips_content");
+      if (
+          this.switch &&
+          !this.excludeElmName.includes(event.target.localName.toLocaleLowerCase()) &&
+          !(tipsDom ? tipsDom.contains(event.target) : 0)
+      ) {
+          event.stopPropagation();
+          event.preventDefault();
+          return true;
+      } else {
+          return false;
+      }
+  }
+  _hoverHandle(event) {
+      if (this._triggerEvent(event) === false) return;
+      switch (this.mode) {
+          case 'cover':
+              this._coverShowPos(event);
+              break;
+          case 'target':
+              this._targetShowPos(event);
+              break;
+      }
+      this.onHover && this.onHover(event);
+  }
+  _clickHandle(event) {
+      if (this._triggerEvent(event) === false) return;
+      this.onClick && this.onClick(event);
+  }
+  _targetShowPos(event) {
+      this._removeTargetShowPos();
+      if (event.target.localName === 'body') return;
+      event.target.classList.add("_picker_target_elm");
+  }
+  _removeTargetShowPos() {
+      document.querySelectorAll("._picker_target_elm").forEach((elm) => {
+          elm.classList.remove("_picker_target_elm");
+      });
+  }
+  _coverShowPos(event) {
+      let elm = event.target;
+      let W_W = window.screen.availWidth;
+      let W_H = window.screen.availHeight;
+      let pos = elm.getBoundingClientRect();
+      let p = {
+          tX: pos.left > 0 ? pos.left : 0,
+          tY: pos.top > 0 ? pos.top : 0,
+          w: pos.right - pos.left,
+          h: pos.bottom - pos.top,
+      };
+      let path_W = `M 0 0 h ${W_W} v ${W_H} h -${W_W} Z`;
+      let path_box = `M ${p.tX} ${p.tY} h ${p.w} v ${p.h} h -${p.w} Z`;
+      let elm_path1 = `<path d="${path_W} ${path_box}"></path>`;
+      let elm_path2 = `<path d="${path_box}"></path>`;
+      document.querySelector("#_picker_cover_wrap_box svg").innerHTML = elm_path1 + elm_path2;
+  }
+  _removeCoverShowPos() {
+      document.querySelector("#_picker_cover_wrap_box svg").innerHTML = '';
+  }
+};
   
-  });
-  }(jQuery));  
+
