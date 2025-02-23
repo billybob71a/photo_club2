@@ -115,13 +115,7 @@ abstract class Base_Control extends Base_Object {
 		<script type="text/html" id="tmpl-elementor-control-<?php echo esc_attr( $this->get_type() ); ?>-content">
 			<div class="elementor-control-content">
 				<?php
-				// TODO: This is for backwards compatibility starting from 2.9.0
-				// This `if` statement should be removed when the method is removed
-				if ( method_exists( $this, '_content_template' ) ) {
-					$this->_content_template();
-				} else {
-					$this->content_template();
-				}
+				$this->content_template();
 				?>
 			</div>
 		</script>
@@ -141,5 +135,22 @@ abstract class Base_Control extends Base_Object {
 	 */
 	protected function get_default_settings() {
 		return [];
+	}
+
+	public static function get_assets( $setting ) {
+		return [];
+	}
+
+	/**
+	 * Update value of control that needs to be updated after import.
+	 *
+	 * @param mixed $value
+	 * @param array $control_args
+	 * @param array $config
+	 *
+	 * @return mixed
+	 */
+	public function on_import_update_settings( $value, array $control_args, array $config ) {
+		return $value;
 	}
 }

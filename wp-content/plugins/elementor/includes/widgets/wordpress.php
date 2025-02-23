@@ -32,22 +32,14 @@ class Widget_WordPress extends Widget_Base {
 	 */
 	private $_widget_instance = null;
 
-	/**
-	 * Whether the widget is a Pojo widget or not.
-	 *
-	 * @since 2.0.0
-	 * @access private
-	 *
-	 * @return bool
-	 */
-	private function is_pojo_widget() {
-		return $this->get_widget_instance() instanceof \Pojo_Widget_Base;
+	public function hide_on_search() {
+		return true;
 	}
 
 	/**
 	 * Get widget name.
 	 *
-	 * Retrieve WordPress/Pojo widget name.
+	 * Retrieve WordPress widget name.
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -61,7 +53,7 @@ class Widget_WordPress extends Widget_Base {
 	/**
 	 * Get widget title.
 	 *
-	 * Retrieve WordPress/Pojo widget title.
+	 * Retrieve WordPress widget title.
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -75,38 +67,30 @@ class Widget_WordPress extends Widget_Base {
 	/**
 	 * Get widget categories.
 	 *
-	 * Retrieve the list of categories the WordPress/Pojo widget belongs to.
+	 * Retrieve the list of categories the WordPress widget belongs to.
 	 *
 	 * Used to determine where to display the widget in the editor.
 	 *
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @return array Widget categories. Returns either a WordPress category or Pojo category.
+	 * @return array Widget categories. Returns either a WordPress category.
 	 */
 	public function get_categories() {
-		if ( $this->is_pojo_widget() ) {
-			$category = 'pojo';
-		} else {
-			$category = 'wordpress';
-		}
-		return [ $category ];
+		return [ 'wordpress' ];
 	}
 
 	/**
 	 * Get widget icon.
 	 *
-	 * Retrieve WordPress/Pojo widget icon.
+	 * Retrieve WordPress widget icon.
 	 *
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @return string Widget icon. Returns either a WordPress icon or Pojo icon.
+	 * @return string Widget icon. Returns either a WordPress icon.
 	 */
 	public function get_icon() {
-		if ( $this->is_pojo_widget() ) {
-			return 'eicon-pojome';
-		}
 		return 'eicon-wordpress';
 	}
 
@@ -122,6 +106,34 @@ class Widget_WordPress extends Widget_Base {
 	 */
 	public function get_keywords() {
 		return [ 'wordpress', 'widget' ];
+	}
+
+	/**
+	 * Get style dependencies.
+	 *
+	 * Retrieve the list of style dependencies the widget requires.
+	 *
+	 * @since 3.26.0
+	 * @access public
+	 *
+	 * @return array Widget style dependencies.
+	 */
+	public function get_style_depends(): array {
+		return [ 'e-swiper' ];
+	}
+
+	/**
+	 * Get script dependencies.
+	 *
+	 * Retrieve the list of script dependencies the widget requires.
+	 *
+	 * @since 3.27.0
+	 * @access public
+	 *
+	 * @return array Widget script dependencies.
+	 */
+	public function get_script_depends(): array {
+		return [ 'swiper' ];
 	}
 
 	public function get_help_url() {
@@ -143,7 +155,7 @@ class Widget_WordPress extends Widget_Base {
 	}
 
 	/**
-	 * Retrieve WordPress/Pojo widget form.
+	 * Retrieve WordPress widget form.
 	 *
 	 * Returns the WordPress widget form, to be used in Elementor.
 	 *
@@ -168,7 +180,7 @@ class Widget_WordPress extends Widget_Base {
 	}
 
 	/**
-	 * Retrieve WordPress/Pojo widget instance.
+	 * Retrieve WordPress widget instance.
 	 *
 	 * Returns an instance of WordPress widget, to be used in Elementor.
 	 *
@@ -193,7 +205,7 @@ class Widget_WordPress extends Widget_Base {
 	}
 
 	/**
-	 * Retrieve WordPress/Pojo widget parsed settings.
+	 * Retrieve WordPress widget parsed settings.
 	 *
 	 * Returns the WordPress widget settings, to be used in Elementor.
 	 *
@@ -208,6 +220,7 @@ class Widget_WordPress extends Widget_Base {
 		if ( ! empty( $settings['wp'] ) ) {
 			$widget = $this->get_widget_instance();
 			$instance = $widget->update( $settings['wp'], [] );
+			/** This filter is documented in wp-includes/class-wp-widget.php */
 			$settings['wp'] = apply_filters( 'widget_update_callback', $instance, $settings['wp'], [], $widget );
 		}
 
@@ -215,18 +228,18 @@ class Widget_WordPress extends Widget_Base {
 	}
 
 	/**
-	 * Register WordPress/Pojo widget controls.
+	 * Register WordPress widget controls.
 	 *
 	 * Adds different input fields to allow the user to change and customize the widget settings.
 	 *
-	 * @since 1.0.0
+	 * @since 3.1.0
 	 * @access protected
 	 */
-	protected function _register_controls() {
+	protected function register_controls() {
 		$this->add_control(
 			'wp',
 			[
-				'label' => __( 'Form', 'elementor' ),
+				'label' => esc_html__( 'Form', 'elementor' ),
 				'type' => Controls_Manager::WP_WIDGET,
 				'widget' => $this->get_name(),
 				'id_base' => $this->get_widget_instance()->id_base,
@@ -235,7 +248,7 @@ class Widget_WordPress extends Widget_Base {
 	}
 
 	/**
-	 * Render WordPress/Pojo widget output on the frontend.
+	 * Render WordPress widget output on the frontend.
 	 *
 	 * Written in PHP and used to generate the final HTML.
 	 *
@@ -276,7 +289,7 @@ class Widget_WordPress extends Widget_Base {
 	}
 
 	/**
-	 * Render WordPress/Pojo widget output in the editor.
+	 * Render WordPress widget output in the editor.
 	 *
 	 * Written as a Backbone JavaScript template and used to generate the live preview.
 	 *
@@ -286,7 +299,7 @@ class Widget_WordPress extends Widget_Base {
 	protected function content_template() {}
 
 	/**
-	 * WordPress/Pojo widget constructor.
+	 * WordPress widget constructor.
 	 *
 	 * Used to run WordPress widget constructor.
 	 *
@@ -303,7 +316,7 @@ class Widget_WordPress extends Widget_Base {
 	}
 
 	/**
-	 * Render WordPress/Pojo widget as plain content.
+	 * Render WordPress widget as plain content.
 	 *
 	 * Override the default render behavior, don't render widget content.
 	 *

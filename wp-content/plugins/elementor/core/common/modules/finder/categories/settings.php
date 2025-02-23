@@ -3,6 +3,7 @@
 namespace Elementor\Core\Common\Modules\Finder\Categories;
 
 use Elementor\Core\Common\Modules\Finder\Base_Category;
+use Elementor\Modules\ElementManager\Module as ElementManagerModule;
 use Elementor\Settings as ElementorSettings;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -25,7 +26,11 @@ class Settings extends Base_Category {
 	 * @return string
 	 */
 	public function get_title() {
-		return __( 'Settings', 'elementor' );
+		return esc_html__( 'Settings', 'elementor' );
+	}
+
+	public function get_id() {
+		return 'settings';
 	}
 
 	/**
@@ -39,23 +44,41 @@ class Settings extends Base_Category {
 	 * @return array
 	 */
 	public function get_category_items( array $options = [] ) {
-		$settings_url = ElementorSettings::get_url();
-
 		return [
 			'general-settings' => [
-				'title' => __( 'General Settings', 'elementor' ),
-				'url' => $settings_url,
+				'title' => esc_html__( 'General Settings', 'elementor' ),
+				'url' => ElementorSettings::get_settings_tab_url( 'general' ),
 				'keywords' => [ 'general', 'settings', 'elementor' ],
 			],
-			'style' => [
-				'title' => __( 'Style', 'elementor' ),
-				'url' => $settings_url . '#tab-style',
-				'keywords' => [ 'style', 'settings', 'elementor' ],
+			'integrations' => [
+				'title' => esc_html__( 'Integrations', 'elementor' ),
+				'url' => ElementorSettings::get_settings_tab_url( 'integrations' ),
+				'keywords' => [ 'integrations', 'settings', 'elementor' ],
 			],
 			'advanced' => [
-				'title' => __( 'Advanced', 'elementor' ),
-				'url' => $settings_url . '#tab-advanced',
+				'title' => esc_html__( 'Advanced', 'elementor' ),
+				'url' => ElementorSettings::get_settings_tab_url( 'advanced' ),
 				'keywords' => [ 'advanced', 'settings', 'elementor' ],
+			],
+			'performance' => [
+				'title' => esc_html__( 'Performance', 'elementor' ),
+				'url' => ElementorSettings::get_settings_tab_url( 'performance' ),
+				'keywords' => [ 'performance', 'settings', 'elementor' ],
+			],
+			'experiments' => [
+				'title' => esc_html__( 'Experiments', 'elementor' ),
+				'url' => ElementorSettings::get_settings_tab_url( 'experiments' ),
+				'keywords' => [ 'settings', 'elementor', 'experiments' ],
+			],
+			'features' => [
+				'title' => esc_html__( 'Features', 'elementor' ),
+				'url' => ElementorSettings::get_settings_tab_url( 'experiments' ),
+				'keywords' => [ 'settings', 'elementor', 'features' ],
+			],
+			'element-manager' => [
+				'title' => esc_html__( 'Element Manager', 'elementor' ),
+				'url' => admin_url( 'admin.php?page=' . ElementManagerModule::PAGE_ID ),
+				'keywords' => [ 'settings', 'elements', 'widgets', 'manager' ],
 			],
 		];
 	}

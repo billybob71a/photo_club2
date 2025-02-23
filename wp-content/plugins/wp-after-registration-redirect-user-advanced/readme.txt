@@ -1,9 +1,9 @@
 === After Registration Redirect ===
 Contributors: sajjad67
-Tags: user,user-registration,ajax,wp-registration,wp-custom-registration,redirect,wp-redirect,user-redirect,after-registration-redirect,custom-redirect,filters,redirect-to,wp-user-registration,wp-registration-customize,auto-complete
-Requires at least: 4.0
-Tested up to: 5.3
-Stable tag: 1.0.1
+Tags: wp-registration,wp-custom-registration,registration-redirect,custom-redirect,wp-registration-customize
+Requires at least: 5.6
+Tested up to: 6.6
+Stable tag: trunk
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,6 +49,14 @@ Just activate After Registration Redirect plugin, and go to plugin page called R
 1. Registration Redirect Filter Add.
 
 == Changelog ==
+= 1.0.4 =
+- Compatibility check for wp v6.6!
+= 1.0.3 =
+- Compatibility check for wp v6.3!
+= 1.0.2 =
+- Compatibility check for wp v6.0!
+= 1.0.1 =
+- Increased filter value to max 99 so that it still works if any other plugin tries to overwrite redirect url via filter
 = 1.0.0 =
 - Initial release.
 

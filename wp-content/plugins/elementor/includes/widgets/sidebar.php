@@ -39,7 +39,7 @@ class Widget_Sidebar extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return __( 'Sidebar', 'elementor' );
+		return esc_html__( 'Sidebar', 'elementor' );
 	}
 
 	/**
@@ -70,23 +70,27 @@ class Widget_Sidebar extends Widget_Base {
 		return [ 'sidebar', 'widget' ];
 	}
 
+	public function has_widget_inner_wrapper(): bool {
+		return ! Plugin::$instance->experiments->is_feature_active( 'e_optimized_markup' );
+	}
+
 	/**
 	 * Register sidebar widget controls.
 	 *
 	 * Adds different input fields to allow the user to change and customize the widget settings.
 	 *
-	 * @since 1.0.0
+	 * @since 3.1.0
 	 * @access protected
 	 */
-	protected function _register_controls() {
+	protected function register_controls() {
 		global $wp_registered_sidebars;
 
 		$options = [];
 
 		if ( ! $wp_registered_sidebars ) {
-			$options[''] = __( 'No sidebars were found', 'elementor' );
+			$options[''] = esc_html__( 'No sidebars were found', 'elementor' );
 		} else {
-			$options[''] = __( 'Choose Sidebar', 'elementor' );
+			$options[''] = esc_html__( 'Choose Sidebar', 'elementor' );
 
 			foreach ( $wp_registered_sidebars as $sidebar_id => $sidebar ) {
 				$options[ $sidebar_id ] = $sidebar['name'];
@@ -99,16 +103,19 @@ class Widget_Sidebar extends Widget_Base {
 		$this->start_controls_section(
 			'section_sidebar',
 			[
-				'label' => __( 'Sidebar', 'elementor' ),
+				'label' => esc_html__( 'Sidebar', 'elementor' ),
 			]
 		);
 
-		$this->add_control( 'sidebar', [
-			'label' => __( 'Choose Sidebar', 'elementor' ),
-			'type' => Controls_Manager::SELECT,
-			'default' => $default_key,
-			'options' => $options,
-		] );
+		$this->add_control(
+			'sidebar',
+			[
+				'label' => esc_html__( 'Choose Sidebar', 'elementor' ),
+				'type' => Controls_Manager::SELECT,
+				'default' => $default_key,
+				'options' => $options,
+			]
+		);
 
 		$this->end_controls_section();
 	}

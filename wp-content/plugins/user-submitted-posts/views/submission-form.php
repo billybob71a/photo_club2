@@ -2,38 +2,13 @@
 
 if (!defined('ABSPATH')) die();
 
-if ($usp_options['logged_in_users'] && !is_user_logged_in()) : 
-
+if (isset($usp_options['logged_in_users']) && $usp_options['logged_in_users'] && !is_user_logged_in()) : 
+	
 	echo usp_login_required_message();
-
+	
 else : 
-
-	$usp_current_user = wp_get_current_user();
-	$usp_user_name    = $usp_current_user->user_login;
-	$usp_user_url     = $usp_current_user->user_url;
 	
-	if ($usp_options['disable_required']) {
-		
-		$usp_required = ''; 
-		$usp_captcha  = '';
-		
-	} else {
-		
-		$usp_required = ' data-required="true" required';
-		$usp_captcha  = ' user-submitted-captcha';
-		
-	} 
-	
-	$usp_display_name = (is_user_logged_in() && $usp_options['usp_use_author']) ? false : true;
-	$usp_display_url  = (is_user_logged_in() && $usp_options['usp_use_url'])    ? false : true;
-	
-	$usp_recaptcha_public  = (isset($usp_options['recaptcha_public'])  && !empty($usp_options['recaptcha_public']))  ? true : false;
-	$usp_recaptcha_private = (isset($usp_options['recaptcha_private']) && !empty($usp_options['recaptcha_private'])) ? true : false;
-	
-	$usp_data_sitekey = isset($usp_options['recaptcha_public']) ? $usp_options['recaptcha_public'] : '';
-	
-	$usp_custom_name  = isset($usp_options['custom_name'])  ? $usp_options['custom_name']  : '';
-	$usp_custom_label = isset($usp_options['custom_label']) ? $usp_options['custom_label'] : '';
+	extract(usp_get_form_vars());
 	
 ?>
 
@@ -56,17 +31,17 @@ else :
 			<label for="user-submitted-name"><?php esc_html_e('Your Name', 'usp'); ?></label>
 			<input id="user-submitted-name" name="user-submitted-name" type="text" value="" placeholder="<?php esc_attr_e('Your Name', 'usp'); ?>"<?php if (usp_check_required('usp_name')) echo $usp_required; ?> class="usp-input">
 		</fieldset>
+		<?php } if (($usp_options['usp_email'] == 'show' || $usp_options['usp_email'] == 'optn') && ($usp_display_email)) { ?>
+		
+		<fieldset class="usp-email">
+			<label for="user-submitted-email"><?php esc_html_e('Your Email', 'usp'); ?></label>
+			<input id="user-submitted-email" name="user-submitted-email" type="email" data-parsley-type="email" value="" placeholder="<?php esc_attr_e('Your Email', 'usp'); ?>"<?php if (usp_check_required('usp_email')) echo $usp_required; ?> class="usp-input">
+		</fieldset>
 		<?php } if (($usp_options['usp_url'] == 'show' || $usp_options['usp_url'] == 'optn') && ($usp_display_url)) { ?>
 		
 		<fieldset class="usp-url">
 			<label for="user-submitted-url"><?php esc_html_e('Your URL', 'usp'); ?></label>
-			<input id="user-submitted-url" name="user-submitted-url" type="text" value="" placeholder="<?php esc_attr_e('Your URL', 'usp'); ?>"<?php if (usp_check_required('usp_url')) echo $usp_required; ?> class="usp-input">
-		</fieldset>
-		<?php } if ($usp_options['usp_email'] == 'show' || $usp_options['usp_email'] == 'optn') { ?>
-		
-		<fieldset class="usp-email">
-			<label for="user-submitted-email"><?php esc_html_e('Your Email', 'usp'); ?></label>
-			<input id="user-submitted-email" name="user-submitted-email" type="text" value="Hello@hello.com" placeholder="<?php esc_attr_e('Your Email', 'usp'); ?>"<?php if (usp_check_required('usp_email')) echo $usp_required; ?> class="usp-input">
+			<input id="user-submitted-url" name="user-submitted-url" type="url" data-parsley-type="url" value="" placeholder="<?php esc_attr_e('Your URL', 'usp'); ?>"<?php if (usp_check_required('usp_url')) echo $usp_required; ?> class="usp-input">
 		</fieldset>
 		<?php } if ($usp_options['usp_title'] == 'show' || $usp_options['usp_title'] == 'optn') { ?>
 		
@@ -75,16 +50,33 @@ else :
 			<input id="user-submitted-title" name="user-submitted-title" type="text" value="" placeholder="<?php esc_attr_e('Post Title', 'usp'); ?>"<?php if (usp_check_required('usp_title')) echo $usp_required; ?> class="usp-input">
 		</fieldset>
 		<?php } if ($usp_options['usp_tags'] == 'show' || $usp_options['usp_tags'] == 'optn') { ?>
+		<?php if ($usp_existing_tags) { ?>
+		
+		<fieldset class="usp-tags">
+			<label for="user-submitted-tags"><?php esc_html_e('Post Tags', 'usp'); ?></label>
+			<select id="user-submitted-tags" name="user-submitted-tags[]"<?php if (usp_check_required('usp_tags')) echo $usp_required; ?> class="usp-select usp-multiple" multiple="multiple">
+				<option value="" disabled><?php esc_attr_e('Please select some tags..', 'usp'); ?></option>
+				<?php echo usp_get_tag_options(); ?>
+			</select>
+		</fieldset>
+		<?php } else { ?>
 		
 		<fieldset class="usp-tags">
 			<label for="user-submitted-tags"><?php esc_html_e('Post Tags', 'usp'); ?></label>
 			<input id="user-submitted-tags" name="user-submitted-tags" type="text" value="" placeholder="<?php esc_attr_e('Post Tags', 'usp'); ?>"<?php if (usp_check_required('usp_tags')) echo $usp_required; ?> class="usp-input">
 		</fieldset>
+		<?php } ?>
 		<?php } if ($usp_options['custom_field'] == 'show' || $usp_options['custom_field'] == 'optn') { ?>
 		
 		<fieldset class="usp-custom">
 			<label for="user-submitted-custom"><?php echo esc_html($usp_custom_label); ?></label>
 			<input id="user-submitted-custom" name="<?php echo esc_attr($usp_custom_name); ?>" type="text" value="" placeholder="<?php echo esc_attr($usp_custom_label); ?>"<?php if (usp_check_required('custom_field')) echo $usp_required; ?> class="usp-input">
+		</fieldset>
+		<?php } if ($usp_options['custom_field_2'] == 'show' || $usp_options['custom_field_2'] == 'optn') { ?>
+		
+		<fieldset class="usp-custom-2">
+			<label for="user-submitted-custom-2"><?php echo esc_html($usp_custom_label_2); ?></label>
+			<input id="user-submitted-custom-2" name="<?php echo esc_attr($usp_custom_name_2); ?>" type="text" value="" placeholder="<?php echo esc_attr($usp_custom_label_2); ?>"<?php if (usp_check_required('custom_field_2')) echo $usp_required; ?> class="usp-input">
 		</fieldset>
 		<?php } if ($usp_options['usp_captcha'] == 'show') { ?>
 		
@@ -96,13 +88,9 @@ else :
 		
 		<fieldset class="usp-category">
 			<label for="user-submitted-category"><?php esc_html_e('Post Category', 'usp'); ?></label>
-			<select id="user-submitted-category" name="user-submitted-category"<?php if (usp_check_required('usp_category')) echo $usp_required; ?> class="usp-select">
-				<option value=""><?php esc_html_e('Please select a category..', 'usp'); ?></option>
-				<?php foreach($usp_options['categories'] as $categoryId) { $category = get_category($categoryId); if (!$category) { continue; } ?>
-				
-				<option value="<?php echo $categoryId; ?>"><?php $category = get_category($categoryId); echo sanitize_text_field($category->name); ?></option>
-				<?php } ?>
-				
+			<select id="user-submitted-category"<?php if (usp_check_required('usp_category')) echo $usp_required; echo $multiple_cats . $category_class; ?> name="user-submitted-category[]">
+				<option value="" selected="true" disabled><?php esc_html_e('Please select a category..', 'usp'); ?></option>
+				<?php echo usp_get_cat_options(); ?>
 			</select>
 		</fieldset>
 		<?php } if ($usp_options['usp_content'] == 'show' || $usp_options['usp_content'] == 'optn') { ?>
@@ -137,11 +125,12 @@ else :
 			<?php } ?>
 			
 		</fieldset>
-		<?php } if ($usp_recaptcha_public && $usp_recaptcha_private && $usp_options['usp_recaptcha'] == 'show') { ?>
+		<?php } if ($usp_recaptcha_public && $usp_recaptcha_private && $usp_recaptcha_display == 'show' && $usp_recaptcha_version == 2) { ?>
 		
-		<label for="g-recaptcha"><?php esc_html_e('Verification', 'usp'); ?></label>
-		<div id="g-recaptcha" class="g-recaptcha" data-sitekey="<?php echo esc_attr($usp_data_sitekey); ?>"></div>
-		
+		<fieldset class="usp-recaptcha">
+			<label for="g-recaptcha"><?php esc_html_e('Verification', 'usp'); ?></label>
+			<div id="g-recaptcha" class="g-recaptcha" data-sitekey="<?php echo esc_attr($usp_data_sitekey); ?>"></div>
+		</fieldset>
 		<?php } if ($usp_options['usp_images'] == 'show') { ?>
 		<?php if ($usp_options['max-images'] !== 0) { ?>
 		
@@ -160,12 +149,12 @@ else :
 			if ($usp_minImages > 0) : ?>
 				<?php for ($i = 0; $i < $usp_minImages; $i++) : ?>
 						
-				<input name="user-submitted-image[]" type="file" size="25"<?php echo $usp_required; ?> class="usp-input usp-clone">
+				<input name="user-submitted-image[]" type="file" size="25"<?php echo $usp_required; ?> class="usp-input usp-clone" accept="image/*">
 				<?php endfor; ?>
 				<?php if ($usp_minImages < $usp_maxImages) : echo $usp_addAnother; endif; ?>
 			<?php else : ?>
 				
-				<input name="user-submitted-image[]" type="file" size="25" class="usp-input usp-clone" data-parsley-excluded="true">
+				<input name="user-submitted-image[]" type="file" size="25" class="usp-input usp-clone" data-parsley-excluded="true" accept="image/*">
 				<?php echo $usp_addAnother; ?>
 			<?php endif; ?>
 				
@@ -184,21 +173,25 @@ else :
 		<?php echo usp_display_custom_checkbox(); ?>
 		
 		<div id="usp-submit">
-			<?php if (!empty($usp_options['redirect-url'])) { ?>
+			<?php if (isset($usp_options['redirect-url']) && !empty($usp_options['redirect-url'])) { ?>
 			
-			<input type="hidden" class="usp-hidden" name="redirect-override" value="<?php echo $usp_options['redirect-url']; ?>">
+			<input type="hidden" class="usp-hidden" name="redirect-override" value="<?php echo esc_url($usp_options['redirect-url']); ?>">
 			<?php } ?>
 			<?php if (!$usp_display_name) { ?>
 			
-			<input type="hidden" class="usp-hidden" name="user-submitted-name" value="<?php echo $usp_user_name; ?>">
+			<input type="hidden" class="usp-hidden" name="user-submitted-name" value="<?php echo esc_attr($usp_user_name); ?>">
+			<?php } ?>
+			<?php if (!$usp_display_email) { ?>
+			
+			<input type="hidden" class="usp-hidden" name="user-submitted-email" value="<?php echo sanitize_email($usp_user_email); ?>">
 			<?php } ?>
 			<?php if (!$usp_display_url) { ?>
 			
-			<input type="hidden" class="usp-hidden" name="user-submitted-url" value="<?php echo $usp_user_url; ?>">
+			<input type="hidden" class="usp-hidden" name="user-submitted-url" value="<?php echo esc_url($usp_user_url); ?>">
 			<?php } ?>
-			<?php if ($usp_options['usp_use_cat'] == true) { ?>
+			<?php if (isset($usp_options['usp_use_cat']) && $usp_options['usp_use_cat'] == true) { ?>
 			
-			<input type="hidden" class="usp-hidden" name="user-submitted-category" value="<?php echo $usp_options['usp_use_cat_id']; ?>">
+			<input type="hidden" class="usp-hidden" name="user-submitted-category" value="<?php echo esc_attr($usp_options['usp_use_cat_id']); ?>">
 			<?php } ?>
 			
 			<input type="submit" class="usp-submit" id="user-submitted-post" name="user-submitted-post" value="<?php esc_attr_e('Submit Post', 'usp'); ?>">

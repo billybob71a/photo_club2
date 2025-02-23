@@ -4,7 +4,7 @@
 	Shortcode: require login based on capability
 	Syntax: [usp_access cap="read" deny=""][/usp_access]
 	Can use {tag} to output <tag>
-	See @ http://codex.wordpress.org/Roles_and_Capabilities#Capabilities
+	See @ https://codex.wordpress.org/Roles_and_Capabilities#Capabilities
 */
 if (!function_exists('usp_access')) :
 function usp_access($attr, $content = null) {
@@ -16,11 +16,15 @@ function usp_access($attr, $content = null) {
 	$deny = str_replace("{", "<", $deny);
 	$deny = str_replace("}", ">", $deny);
 	
+	$deny    = htmlspecialchars($deny, ENT_QUOTES);
+	$content = htmlspecialchars($content, ENT_QUOTES);
+	
 	$caps = array_map('trim', explode(',', $cap));
 	
 	foreach ($caps as $c) {
 		if (current_user_can($c) && !is_null($content) && !is_feed()) return do_shortcode($content);
 	}
+	
 	return $deny;
 }
 add_shortcode('usp_access', 'usp_access');
@@ -42,7 +46,11 @@ function usp_visitor($attr, $content = null) {
 	$deny = str_replace("{", "<", $deny);
 	$deny = str_replace("}", ">", $deny);
 	
+	$deny    = htmlspecialchars($deny, ENT_QUOTES);
+	$content = htmlspecialchars($content, ENT_QUOTES);
+	
 	if ((!is_user_logged_in() && !is_null($content)) || is_feed()) return do_shortcode($content);
+	
 	return $deny;
 }
 add_shortcode('usp_visitor', 'usp_visitor');
@@ -64,7 +72,11 @@ function usp_member($attr, $content = null) {
 	$deny = str_replace("{", "<", $deny);
 	$deny = str_replace("}", ">", $deny);
 	
+	$deny    = htmlspecialchars($deny, ENT_QUOTES);
+	$content = htmlspecialchars($content, ENT_QUOTES);
+	
 	if (is_user_logged_in() && !is_null($content) && !is_feed()) return do_shortcode($content);
+	
 	return $deny;
 }
 add_shortcode('usp_member', 'usp_member');

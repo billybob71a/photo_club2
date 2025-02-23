@@ -5,6 +5,11 @@
  * @since 1.0
  */
 
+// Bail if called directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ! class_exists( 'RDA_Remove_Access' ) ) {
 class RDA_Remove_Access {
 
@@ -87,7 +92,9 @@ class RDA_Remove_Access {
 		/** @global array $menu */
 		global $menu;
 
-		$menu_ids = array();
+		if ( ! $menu || ! is_array( $menu ) ) {
+			return;
+		}
 
 		// Gather menu IDs (minus profile.php).
 		foreach ( $menu as $index => $values ) {
@@ -113,10 +120,138 @@ class RDA_Remove_Access {
 		/** @global string $pagenow */
 		global $pagenow;
 
-		if ( 'profile.php' != $pagenow || ! $this->settings['enable_profile'] ) {
+		if ( $this->is_allowed_page() ) {
+			return;
+		}
+
+		if ( ( $pagenow && 'profile.php' !== $pagenow ) || ( defined( 'IS_PROFILE_PAGE' ) && ! IS_PROFILE_PAGE ) || ! $this->settings['enable_profile'] ) {
 			wp_redirect( $this->settings['redirect_url'] );
 			exit;
 		}
+	}
+
+	/**
+	 * Returns an array of admin pages that are allowed.
+	 *
+	 * @since 1.2
+	 *
+	 * @return array Allowlist of admin pages.
+	 */
+	private function get_allowlist() {
+
+		$allowlist = array(
+			'admin.php' => array(
+				array(
+					'page' => 'WFLS', // Wordfence Login Security 2FA
+				),
+			),
+		);
+
+		/**
+		 * Filter the allowlist of admin pages.
+		 * The function returns an associative array with $pagenow as the key and a nested array of key => value pairs
+		 * where the key is the $_GET variable and the value is the allowed value.
+		 *
+		 * Example: To allow the Wordfence Login Security 2FA page, with a URL of admin.php?page=WFLS, the array would be:
+		 *
+		 *  array(
+		 *     'admin.php' => array(
+		 *         array(
+		 *           'page' => 'WFLS',
+		 *         ),
+		 *     ),
+		 *  );
+		 *
+		 * You can also allow relative paths to be defined as either the key or value.
+		 *
+		 * Example: To allow the Wordfence Login Security 2FA page, with a URL of admin.php?page=WFLS, the array would be:
+		 *
+		 * array(
+		 *    'admin.php?page=WFLS' => array(),
+		 * );
+		 *
+		 * @param array $allowlist The allowlist of admin pages.
+		 */
+		$allowlist = apply_filters( 'rda_allowlist', $allowlist );
+
+		return $allowlist;
+	}
+
+	/**
+	 * Checks if the current page is allowed.
+	 *
+	 * @since 1.2
+	 *
+	 * @return bool True if the current page is in the allowlist, false otherwise.
+	 */
+	private function is_allowed_page() {
+
+		$allowlist = $this->get_allowlist();
+
+		// Allow full URLs to be defined as either the key or value.
+		foreach ( $allowlist as $allowed_url_key => $allowed_url_value ) {
+
+			if ( empty( $_SERVER['REQUEST_URI'] ) ) {
+				continue;
+			}
+
+			if ( $allowed_url_key === $_SERVER['REQUEST_URI'] ) {
+				return true;
+			}
+
+			if ( $allowed_url_value === $_SERVER['REQUEST_URI'] ) {
+				return true;
+			}
+		}
+
+		/** @global string $pagenow */
+		global $pagenow;
+
+		if ( empty( $pagenow ) ) {
+			return false;
+		}
+
+		if ( ! array_key_exists( $pagenow, $allowlist ) ) {
+			return false;
+		}
+
+		// Iterate over each set of allowed GET parameters for the current page.
+		foreach ( $allowlist[ $pagenow ] as $allowed_params_set ) {
+			if ( $this->is_params_set_allowed( $allowed_params_set ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Checks if a set of parameters matches the current $_GET parameters.
+	 *
+	 * @since 1.2
+	 *
+	 * @param array $allowed_params_set A set of allowed GET parameters.
+	 * @return bool True if the current $_GET parameters match the allowed set, false otherwise.
+	 */
+	private function is_params_set_allowed( $allowed_params_set ) {
+
+		if ( ! is_array( $_GET ) || ! is_array( $allowed_params_set ) ) {
+			return false;
+		}
+
+		// Check if the number of parameters in both arrays is the same. This prevents sub-pages from being allowed,
+		// e.g. admin.php?page=example&subpage=secure-thing.
+		if ( count( $_GET ) !== count( $allowed_params_set ) ) {
+			return false;
+		}
+
+		foreach ( $allowed_params_set as $param_key => $param_value ) {
+			if ( ! isset( $_GET[ $param_key ] ) || $_GET[ $param_key ] !== $param_value ) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
@@ -138,7 +273,7 @@ class RDA_Remove_Access {
 		foreach ( $nodes as $id ) {
 			$wp_admin_bar->remove_menu( $id );
 		}
-	}	
+	}
 
 } // RDA_Remove_Access
 

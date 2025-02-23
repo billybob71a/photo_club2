@@ -1,6 +1,7 @@
 <?php
 namespace Elementor;
 
+use Elementor\Core\Utils\Hints;
 use Elementor\Modules\DynamicTags\Module as TagsModule;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -46,6 +47,7 @@ class Control_Media extends Control_Base_Multiple {
 		return [
 			'url' => '',
 			'id' => '',
+			'size' => '',
 		];
 	}
 
@@ -77,6 +79,23 @@ class Control_Media extends Control_Base_Multiple {
 		}
 
 		return $settings;
+	}
+
+	/**
+	 * Support SVG and JSON Import
+	 *
+	 * Called by the 'upload_mimes' filter. Adds SVG and JSON mime types to the list of WordPress' allowed mime types.
+	 *
+	 * @since 3.4.6
+	 * @deprecated 3.5.0
+	 *
+	 * @param $mimes
+	 * @return mixed
+	 */
+	public function support_svg_and_json_import( $mimes ) {
+		Plugin::$instance->modules_manager->get_modules( 'dev-tools' )->deprecation->deprecated_function( __METHOD__, '3.5.0' );
+
+		return $mimes;
 	}
 
 	/**
@@ -128,61 +147,202 @@ class Control_Media extends Control_Base_Multiple {
 	 */
 	public function content_template() {
 		?>
+		<#
+			// For BC.
+			if ( data.media_type ) {
+				data.media_types = [ data.media_type ];
+			}
+
+			if ( data.should_include_svg_inline_option ) {
+				data.media_types.push( 'svg' );
+			}
+
+			// Determine if the current media type is viewable.
+			const isViewable = () => {
+				const viewable = [
+					'image',
+					'video',
+					'svg',
+				];
+
+				// Make sure that all media types are viewable.
+				return data.media_types.every( ( type ) => viewable.includes( type ) );
+			};
+
+			// Get the preview type for the current media type.
+			const getPreviewType = () => {
+				if ( data.media_types.includes( 'video' ) ) {
+					return 'video';
+				}
+
+				if ( data.media_types.includes( 'image' ) || data.media_types.includes( 'svg' ) ) {
+					return 'image';
+				}
+
+				return 'none';
+			}
+
+			// Retrieve a button label by media type.
+			const getButtonLabel = ( mediaType ) => {
+				switch( mediaType ) {
+					case 'image':
+						return '<?php esc_html_e( 'Choose Image', 'elementor' ); ?>';
+
+					case 'video':
+						return '<?php esc_html_e( 'Choose Video', 'elementor' ); ?>';
+
+					case 'svg':
+						return '<?php esc_html_e( 'Choose SVG', 'elementor' ); ?>';
+
+					default:
+						return '<?php esc_html_e( 'Choose File', 'elementor' ); ?>';
+				}
+			}
+		#>
 		<div class="elementor-control-field elementor-control-media">
 			<label class="elementor-control-title">{{{ data.label }}}</label>
-			<# if ( 'image' === data.media_type || 'video' === data.media_type ) { #>
-			<div class="elementor-control-input-wrapper elementor-aspect-ratio-219">
-				<div class="elementor-control-media__content elementor-control-tag-area elementor-control-preview-area elementor-fit-aspect-ratio">
-					<div class="elementor-control-media-upload-button elementor-control-media__content__upload-button elementor-fit-aspect-ratio">
-						<i class="eicon-plus-circle" aria-hidden="true"></i>
-					</div>
-					<div class="elementor-control-media-area elementor-fit-aspect-ratio">
-						<div class="elementor-control-media__remove elementor-control-media__content__remove" title="<?php echo __( 'Remove', 'elementor' ); ?>">
-							<i class="eicon-trash"></i>
+			<#
+			if ( isViewable() ) {
+				let inputWrapperClasses = 'elementor-control-input-wrapper';
+
+				if ( ! data.label_block ) {
+					inputWrapperClasses += ' elementor-control-unit-5';
+				}
+			#>
+				<div class="{{{ inputWrapperClasses }}}">
+					<div class="elementor-control-media__content elementor-control-tag-area elementor-control-preview-area">
+						<div class="elementor-control-media-area">
+							<div class="elementor-control-media__remove elementor-control-media__content__remove" title="<?php echo esc_attr__( 'Remove', 'elementor' ); ?>">
+								<i class="eicon-trash-o" aria-hidden="true"></i>
+								<span class="elementor-screen-only"><?php echo esc_html__( 'Remove', 'elementor' ); ?></span>
+							</div>
+							<#
+								switch( getPreviewType() ) {
+									case 'image':
+										#>
+										<div class="elementor-control-media__preview"></div>
+										<#
+										break;
+
+									case 'video':
+										#>
+										<video class="elementor-control-media-video" preload="metadata"></video>
+										<i class="eicon-video-camera" aria-hidden="true"></i>
+										<#
+										break;
+								}
+							#>
 						</div>
-						<# if( 'image' === data.media_type ) { #>
-						<div class="elementor-control-media__preview elementor-fit-aspect-ratio"></div>
-						<# } else if( 'video' === data.media_type ) { #>
-						<video class="elementor-control-media-video" preload="metadata"></video>
-						<i class="eicon-video-camera"></i>
-						<# } #>
-					</div>
-					<div class="elementor-control-media__tools elementor-control-dynamic-switcher-wrapper">
-						<# if( 'image' === data.media_type ) { #>
-						<div class="elementor-control-media__tool elementor-control-media__replace"><?php echo __( 'Choose Image', 'elementor' ); ?></div>
-						<# } else if( 'video' === data.media_type ) { #>
-						<div class="elementor-control-media__tool elementor-control-media__replace"><?php echo __( 'Choose Video', 'elementor' ); ?></div>
-						<# } #>
-					</div>
-				</div>
-			</div>
-			<# } else { #>
-			<div class="elementor-control-media__file elementor-control-preview-area">
-				<div class="elementor-control-media__file__content">
-					<div class="elementor-control-media__file__content__label"><?php echo __( 'Click the media icon to upload file', 'elementor' ); ?></div>
-					<div class="elementor-control-media__file__content__info">
-						<div class="elementor-control-media__file__content__info__icon">
-							<i class="eicon-document-file"></i>
+						<div class="elementor-control-media-upload-button elementor-control-media__content__upload-button">
+							<i class="eicon-plus-circle" aria-hidden="true"></i>
+							<span class="elementor-screen-only"><?php echo esc_html__( 'Add', 'elementor' ); ?></span>
 						</div>
-						<div class="elementor-control-media__file__content__info__name"></div>
+						<div class="elementor-control-media__tools elementor-control-dynamic-switcher-wrapper">
+							<#
+								data.media_types.forEach( ( type ) => {
+									#>
+									<div class="elementor-control-media__tool elementor-control-media__replace" data-media-type="{{{ type }}}">{{{ getButtonLabel( type ) }}}</div>
+									<#
+								} );
+							#>
+						</div>
+					</div>
+
+					<?php /* ?>
+					<div class="elementor-control-media__warnings" role="alert" style="display: none;">
+						<?php
+						Hints::get_notice_template( [
+							'type' => 'warning',
+							'content' => esc_html__( 'This image doesn’t contain ALT text - which is necessary for accessibility and SEO.', 'elementor' ),
+							'icon' => true,
+						] );
+						?>
+					</div>
+					<?php */ ?>
+
+					<?php if ( Hints::should_display_hint( 'image-optimization' ) ) : ?>
+					<div class="elementor-control-media__promotions" role="alert" style="display: none;">
+						<?php
+						Hints::get_notice_template( [
+							'display' => ! Hints::is_dismissed( 'image-optimization' ),
+							'type' => 'info',
+							'content' => __( 'Optimize your images to enhance site performance by using Image Optimizer.', 'elementor' ),
+							'icon' => true,
+							'dismissible' => 'image_optimizer_hint',
+							'button_text' => Hints::is_plugin_installed( 'image-optimization' ) ? __( 'Activate Plugin', 'elementor' ) : __( 'Install Plugin', 'elementor' ),
+							'button_event' => 'image_optimizer_hint',
+							'button_data' => [
+								'action_url' => Hints::get_plugin_action_url( 'image-optimization' ),
+							],
+						] ); ?>
+					</div>
+					<?php endif; ?>
+
+				</div>
+			<# } /* endif isViewable() */ else { #>
+				<div class="elementor-control-media__file elementor-control-preview-area">
+					<div class="elementor-control-media__file__content">
+						<div class="elementor-control-media__file__content__label"><?php echo esc_html__( 'Click the media icon to upload file', 'elementor' ); ?></div>
+						<div class="elementor-control-media__file__content__info">
+							<div class="elementor-control-media__file__content__info__icon">
+								<i class="eicon-document-file"></i>
+							</div>
+							<div class="elementor-control-media__file__content__info__name"></div>
+						</div>
+					</div>
+					<div class="elementor-control-media__file__controls">
+						<div class="elementor-control-media__remove elementor-control-media__file__controls__remove" title="<?php echo esc_attr__( 'Remove', 'elementor' ); ?>">
+							<i class="eicon-trash-o" aria-hidden="true"></i>
+							<span class="elementor-screen-only"><?php echo esc_html__( 'Remove', 'elementor' ); ?></span>
+						</div>
+						<div class="elementor-control-media__file__controls__upload-button elementor-control-media-upload-button" title="<?php echo esc_attr__( 'Upload', 'elementor' ); ?>">
+							<i class="eicon-upload" aria-hidden="true"></i>
+							<span class="elementor-screen-only"><?php echo esc_html__( 'Upload', 'elementor' ); ?></span>
+						</div>
 					</div>
 				</div>
-				<div class="elementor-control-media__file__controls">
-					<div class="elementor-control-media__remove elementor-control-media__file__controls__remove" title="<?php echo __( 'Remove', 'elementor' ); ?>">
-						<i class="eicon-trash-o"></i>
-					</div>
-					<div class="elementor-control-media__file__controls__upload-button elementor-control-media-upload-button" title="<?php echo __( 'Upload', 'elementor' ); ?>">
-						<i class="eicon-upload"></i>
-					</div>
-				</div>
-			</div>
 			<# } #>
 			<# if ( data.description ) { #>
-			<div class="elementor-control-field-description">{{{ data.description }}}</div>
+				<div class="elementor-control-field-description">{{{ data.description }}}</div>
 			<# } #>
+
+			<# if ( data.has_sizes ) { #>
+			<div class="elementor-control-type-select e-control-image-size">
+				<div class="elementor-control-field">
+					<label class="elementor-control-title" data-e-responsive-switcher-sibling="false" for="<?php $this->print_control_uid( 'size' ); ?>"><?php echo esc_html__( 'Image Resolution', 'elementor' ); ?></label>
+					<div class="elementor-control-input-wrapper elementor-control-unit-5">
+						<select class="e-image-size-select" id="<?php $this->print_control_uid( 'size' ); ?>" data-setting="size">
+							<?php foreach ( $this->get_image_sizes() as $size_key => $size_title ) : ?>
+								<option value="<?php echo esc_attr( $size_key ); ?>"><?php echo esc_html( $size_title ); ?></option>
+							<?php endforeach; ?>
+						</select>
+					</div>
+				</div>
+			</div>
+			<# } #>
+
 			<input type="hidden" data-setting="{{ data.name }}"/>
 		</div>
 		<?php
+	}
+
+	private function get_image_sizes() : array {
+		$wp_image_sizes = Group_Control_Image_Size::get_all_image_sizes();
+
+		$image_sizes = [];
+
+		foreach ( $wp_image_sizes as $size_key => $size_attributes ) {
+			$control_title = ucwords( str_replace( '_', ' ', $size_key ) );
+			if ( is_array( $size_attributes ) ) {
+				$control_title .= sprintf( ' - %d x %d', $size_attributes['width'], $size_attributes['height'] );
+			}
+
+			$image_sizes[ $size_key ] = $control_title;
+		}
+
+		$image_sizes[''] = esc_html_x( 'Full', 'Image Size Control', 'elementor' );
+
+		return $image_sizes;
 	}
 
 	/**
@@ -199,7 +359,15 @@ class Control_Media extends Control_Base_Multiple {
 	protected function get_default_settings() {
 		return [
 			'label_block' => true,
-			'media_type' => 'image',
+			'has_sizes' => false,
+			'ai' => [
+				'active' => true,
+				'type' => 'media',
+				'category' => 'photographic',
+			],
+			'media_types' => [
+				'image',
+			],
 			'dynamic' => [
 				'categories' => [ TagsModule::IMAGE_CATEGORY ],
 				'returnType' => 'object',
@@ -243,7 +411,8 @@ class Control_Media extends Control_Base_Multiple {
 	 */
 	public static function get_image_alt( $instance ) {
 		if ( empty( $instance['id'] ) ) {
-			return '';
+			// For `Insert From URL` images.
+			return isset( $instance['alt'] ) ? trim( self::sanitise_text( $instance['alt'] ) ) : '';
 		}
 
 		$attachment_id = $instance['id'];
@@ -258,11 +427,31 @@ class Control_Media extends Control_Base_Multiple {
 
 		$alt = get_post_meta( $attachment_id, '_wp_attachment_image_alt', true );
 		if ( ! $alt ) {
+			if ( Utils::has_invalid_post_permissions( $attachment ) ) {
+				return '';
+			}
+
 			$alt = $attachment->post_excerpt;
 			if ( ! $alt ) {
 				$alt = $attachment->post_title;
 			}
 		}
-		return trim( strip_tags( $alt ) );
+		return trim( self::sanitise_text( $alt ) );
+	}
+
+	public function get_style_value( $css_property, $control_value, array $control_data ) {
+		if ( 'URL' !== $css_property || empty( $control_value['id'] ) ) {
+			return parent::get_style_value( $css_property, $control_value, $control_data );
+		}
+
+		if ( empty( $control_value['size'] ) ) {
+			$control_value['size'] = 'full';
+		}
+
+		return wp_get_attachment_image_url( $control_value['id'], $control_value['size'] );
+	}
+
+	public static function sanitise_text( $string ) {
+		return esc_attr( strip_tags( $string ) );
 	}
 }

@@ -5,8 +5,6 @@ use Elementor\Controls_Manager;
 use Elementor\Core\Base\Document;
 use Elementor\Group_Control_Background;
 use Elementor\Plugin;
-use Elementor\Settings;
-use Elementor\Core\Settings\Manager as SettingsManager;
 use Elementor\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -16,9 +14,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 abstract class PageBase extends Document {
 
 	/**
+	 * Get Properties
+	 *
+	 * Return the document configuration properties.
+	 *
 	 * @since 2.0.8
 	 * @access public
 	 * @static
+	 *
+	 * @return array
 	 */
 	public static function get_properties() {
 		$properties = parent::get_properties();
@@ -40,8 +44,11 @@ abstract class PageBase extends Document {
 			'theme-elements',
 			[
 				'theme-elements-single' => [
-					'title' => __( 'Single', 'elementor' ),
+					'title' => esc_html__( 'Single', 'elementor' ),
 					'active' => false,
+					'promotion' => [
+						'url' => esc_url( 'https://go.elementor.com/go-pro-section-single-widget-panel/' ),
+					],
 				],
 			]
 		);
@@ -56,17 +63,17 @@ abstract class PageBase extends Document {
 	}
 
 	/**
-	 * @since 2.0.0
+	 * @since 3.1.0
 	 * @access protected
 	 */
-	protected function _register_controls() {
-		parent::_register_controls();
+	protected function register_controls() {
+		parent::register_controls();
 
-		self::register_hide_title_control( $this );
+		static::register_hide_title_control( $this );
 
-		self::register_post_fields_control( $this );
+		static::register_post_fields_control( $this );
 
-		self::register_style_controls( $this );
+		static::register_style_controls( $this );
 	}
 
 	/**
@@ -76,14 +83,6 @@ abstract class PageBase extends Document {
 	 * @param Document $document
 	 */
 	public static function register_hide_title_control( $document ) {
-		$page_title_selector = SettingsManager::get_settings_managers( 'general' )->get_model()->get_settings( 'elementor_page_title_selector' );
-
-		if ( ! $page_title_selector ) {
-			$page_title_selector = 'h1.entry-title';
-		}
-
-		$page_title_selector .= ', .elementor-page-title';
-
 		$document->start_injection( [
 			'of' => 'post_status',
 			'fallback' => [
@@ -94,15 +93,17 @@ abstract class PageBase extends Document {
 		$document->add_control(
 			'hide_title',
 			[
-				'label' => __( 'Hide Title', 'elementor' ),
+				'label' => esc_html__( 'Hide Title', 'elementor' ),
 				'type' => Controls_Manager::SWITCHER,
 				'description' => sprintf(
-					/* translators: %s: Setting page link */
-					__( 'Not working? You can set a different selector for the title in the <a href="%s" target="_blank">Settings page</a>.', 'elementor' ),
-					Settings::get_url() . '#tab-style'
+					/* translators: 1: Link open tag, 2: Link close tag. */
+					esc_html__( 'Set a different selector for the title in the %1$sLayout panel%2$s.', 'elementor' ),
+					'<a href="javascript: $e.run( \'panel/global/open\' ).then( () => $e.route( \'panel/global/settings-layout\' ) )">',
+					'</a>'
 				),
+				'separator' => 'before',
 				'selectors' => [
-					'{{WRAPPER}} ' . $page_title_selector => 'display: none',
+					':root' => '--page-title-display: none',
 				],
 			]
 		);
@@ -120,8 +121,32 @@ abstract class PageBase extends Document {
 		$document->start_controls_section(
 			'section_page_style',
 			[
-				'label' => __( 'Body Style', 'elementor' ),
+				'label' => esc_html__( 'Body Style', 'elementor' ),
 				'tab' => Controls_Manager::TAB_STYLE,
+			]
+		);
+
+		$document->add_responsive_control(
+			'margin',
+			[
+				'label' => esc_html__( 'Margin', 'elementor' ),
+				'type' => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
+				'selectors' => [
+					'{{WRAPPER}}' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}',
+				],
+			]
+		);
+
+		$document->add_responsive_control(
+			'padding',
+			[
+				'label' => esc_html__( 'Padding', 'elementor' ),
+				'type' => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
+				'selectors' => [
+					'{{WRAPPER}}' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}',
+				],
 			]
 		);
 
@@ -129,6 +154,7 @@ abstract class PageBase extends Document {
 			Group_Control_Background::get_type(),
 			[
 				'name'  => 'background',
+				'separator' => 'before',
 				'fields_options' => [
 					'image' => [
 						// Currently isn't supported.
@@ -140,21 +166,32 @@ abstract class PageBase extends Document {
 			]
 		);
 
-		$document->add_responsive_control(
-			'padding',
-			[
-				'label' => __( 'Padding', 'elementor' ),
-				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', 'em', '%' ],
-				'selectors' => [
-					'{{WRAPPER}}' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}',
-				],
-			]
-		);
-
 		$document->end_controls_section();
 
 		Plugin::$instance->controls_manager->add_custom_css_controls( $document );
+	}
+
+	public static function get_labels() : array {
+		$plural_label   = static::get_plural_title();
+		$singular_label = static::get_title();
+
+		$labels = [
+			'name' => $plural_label, // Already translated.
+			'singular_name' => $singular_label, // Already translated.
+			'all_items' => sprintf( __( 'All %s', 'elementor' ), $plural_label ),
+			'add_new' => esc_html__( 'Add New', 'elementor' ),
+			'add_new_item' => sprintf( __( 'Add New %s', 'elementor' ), $singular_label ),
+			'edit_item' => sprintf( __( 'Edit %s', 'elementor' ), $singular_label ),
+			'new_item' => sprintf( __( 'New %s', 'elementor' ), $singular_label ),
+			'view_item' => sprintf( __( 'View %s', 'elementor' ), $singular_label ),
+			'search_items' => sprintf( __( 'Search %s', 'elementor' ), $plural_label ),
+			'not_found' => sprintf( __( 'No %s found.', 'elementor' ), strtolower( $plural_label ) ),
+			'not_found_in_trash' => sprintf( __( 'No %s found in Trash.', 'elementor' ), strtolower( $plural_label ) ),
+			'parent_item_colon' => '',
+			'menu_name' => $plural_label,
+		];
+
+		return $labels;
 	}
 
 	/**
@@ -175,9 +212,13 @@ abstract class PageBase extends Document {
 			$document->add_control(
 				'post_excerpt',
 				[
-					'label' => __( 'Excerpt', 'elementor' ),
+					'label' => esc_html__( 'Excerpt', 'elementor' ),
 					'type' => Controls_Manager::TEXTAREA,
 					'default' => $document->post->post_excerpt,
+					'separator' => 'before',
+					'ai' => [
+						'type' => 'excerpt',
+					],
 				]
 			);
 		}
@@ -186,12 +227,38 @@ abstract class PageBase extends Document {
 			$document->add_control(
 				'post_featured_image',
 				[
-					'label' => __( 'Featured Image', 'elementor' ),
+					'label' => esc_html__( 'Featured Image', 'elementor' ),
 					'type' => Controls_Manager::MEDIA,
 					'default' => [
 						'id' => get_post_thumbnail_id(),
 						'url' => (string) get_the_post_thumbnail_url( $document->post->ID ),
 					],
+					'separator' => 'before',
+				]
+			);
+		}
+
+		if ( is_post_type_hierarchical( $document->post->post_type ) ) {
+			$document->add_control(
+				'menu_order',
+				[
+					'label' => esc_html__( 'Order', 'elementor' ),
+					'type' => Controls_Manager::NUMBER,
+					'default' => $document->post->menu_order,
+					'separator' => 'before',
+				]
+			);
+		}
+
+		if ( post_type_supports( $document->post->post_type, 'comments' ) ) {
+			$document->add_control(
+				'comment_status',
+				[
+					'label' => esc_html__( 'Allow Comments', 'elementor' ),
+					'type' => Controls_Manager::SWITCHER,
+					'return_value' => 'open',
+					'default' => $document->post->comment_status,
+					'separator' => 'before',
 				]
 			);
 		}
@@ -225,8 +292,8 @@ abstract class PageBase extends Document {
 		$config = parent::get_remote_library_config();
 
 		$config['category'] = '';
-		$config['type'] = 'page';
-		$config['default_route'] = 'templates/pages';
+		$config['type'] = 'block';
+		$config['default_route'] = 'templates/blocks';
 
 		return $config;
 	}

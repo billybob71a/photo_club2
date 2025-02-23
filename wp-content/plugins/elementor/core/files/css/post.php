@@ -2,6 +2,8 @@
 namespace Elementor\Core\Files\CSS;
 
 use Elementor\Controls_Stack;
+use Elementor\Core\DynamicTags\Dynamic_CSS;
+use Elementor\Core\Kits\Manager;
 use Elementor\Element_Base;
 use Elementor\Plugin;
 
@@ -35,6 +37,10 @@ class Post extends Base {
 	 */
 	private $post_id;
 
+	protected function is_global_parsing_supported() {
+		return true;
+	}
+
 	/**
 	 * Post CSS file constructor.
 	 *
@@ -48,7 +54,7 @@ class Post extends Base {
 	public function __construct( $post_id ) {
 		$this->post_id = $post_id;
 
-		parent::__construct( self::FILE_PREFIX . $post_id . '.css' );
+		parent::__construct( static::FILE_PREFIX . $post_id . '.css' );
 	}
 
 	/**
@@ -186,7 +192,9 @@ class Post extends Base {
 	 * @access public
 	 */
 	public function enqueue() {
-		if ( ! Plugin::$instance->db->is_built_with_elementor( $this->post_id ) ) {
+		$document = Plugin::$instance->documents->get( $this->post_id );
+
+		if ( ! $document || ! $document->is_built_with_elementor() ) {
 			return;
 		}
 
@@ -285,9 +293,8 @@ class Post extends Base {
 		 */
 		do_action( 'elementor/element/before_parse_css', $this, $element );
 
-		$element_settings = $element->get_settings();
-
-		$this->add_controls_stack_style_rules( $element, $element->get_style_controls( null, $element->get_parsed_dynamic_settings() ), $element_settings, [ '{{ID}}', '{{WRAPPER}}' ], [ $element->get_id(), $this->get_element_unique_selector( $element ) ] );
+		$this->render_element_global_styles( $element );
+		$this->render_element_styles( $element );
 
 		/**
 		 * After element parse CSS.
@@ -300,5 +307,80 @@ class Post extends Base {
 		 * @param Element_Base $element The element.
 		 */
 		do_action( 'elementor/element/parse_css', $this, $element );
+	}
+
+	private function render_element_styles( Element_Base $element ) {
+		$this->add_controls_stack_style_rules(
+			$element,
+			$this->get_style_controls( $element, null, $element->get_parsed_dynamic_settings() ),
+			$element->get_settings(),
+			[ '{{ID}}', '{{WRAPPER}}' ],
+			[ $element->get_id(), $this->get_element_unique_selector( $element ) ]
+		);
+	}
+
+	private function render_element_global_styles( Element_Base $element ) {
+		if ( $this instanceof Dynamic_CSS ) {
+			return;
+		}
+
+		/** @var Manager $module */
+		$kits_manager = Plugin::$instance->kits_manager;
+		$custom_colors_enabled = $kits_manager->is_custom_colors_enabled();
+		$custom_typography_enabled = $kits_manager->is_custom_typography_enabled();
+
+		$controls = $element->get_controls();
+		$global_controls = [];
+		$global_values['__globals__'] = [];
+
+		foreach ( $controls as $control ) {
+			$this->build_global_controls_and_values(
+				$control,
+				$controls,
+				$global_controls,
+				$global_values,
+				$custom_colors_enabled,
+				$custom_typography_enabled
+			);
+		}
+
+		foreach ( $global_controls as $control ) {
+			$this->add_control_rules(
+				$control,
+				$controls,
+				function( $control ) {},
+				[ '{{WRAPPER}}' ],
+				[ '.elementor-widget-' . $element->get_name() ],
+				$global_values
+			);
+		}
+	}
+
+	private function build_global_controls_and_values( $control, $controls, &$global_controls, &$global_values, $custom_colors_enabled, $custom_typography_enabled ) {
+		$is_color_control = 'color' === $control['type'];
+		$is_typography_control = isset( $control['groupType'] ) && 'typography' === $control['groupType'];
+
+		// If it is a color/typography control and default colors/typography are disabled,
+		// don't add the default CSS.
+		if ( ( $is_color_control && ! $custom_colors_enabled ) || ( $is_typography_control && ! $custom_typography_enabled ) ) {
+			return;
+		}
+
+		$global_control = $control;
+
+		// Handle group controls that don't have a default global property.
+		if ( ! empty( $control['groupType'] ) ) {
+			$global_control = $controls[ $control['groupPrefix'] . $control['groupType'] ];
+		}
+
+		// If the control has a default global defined, add it to the globals array
+		// that is used in add_control_rules.
+		if ( ! empty( $control['global']['default'] ) ) {
+			$global_values['__globals__'][ $control['name'] ] = $global_control['global']['default'];
+		}
+
+		if ( ! empty( $global_control['global']['default'] ) ) {
+			$global_controls[] = $control;
+		}
 	}
 }

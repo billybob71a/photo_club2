@@ -142,52 +142,40 @@ function usp_author_link() {
 /*
 	Function: usp_get_images()
 	Returns an array of image URLs, wrapped in optional HTML
-	Syntax: <?php if (function_exists('usp_get_images')) $images = usp_get_images($size, $before, $after, $number, $postId); ?>
+	
+	Syntax: <?php if (function_exists('usp_get_images')) $images = usp_get_images($size, $format, $target, $class, $number, $post_id); ?>
 	Usage:  <?php if (function_exists('usp_get_images')) $images = usp_get_images(); foreach ($images as $image) echo $image; ?>
 	
 	Parameters:
-		$size   = image size as thumbnail, medium, large or full -> default = thumbnail
-		$before = text/markup displayed before the image URL     -> default = {img src="
-		$after  = text/markup displayed after the image URL      -> default = " /}
-		$number = the number of images to display for each post  -> default = false (display all)
-		$postId = an optional post ID to use                     -> default = false (uses global/current post)
-		
-	Notes:
-		For $before/$after parameters, use curly brackets instead of angle brackets, for example:
-		usp_get_images('thumbnail', '{img src="', '" /}'); // results in each image URL wrapped like: <img src="[image URL]" />
-		
-		For $before/$after parameters, use %%url%% to get the URL of the full-size image, for example:
-		usp_get_images('thumbnail', '{a href="%%url%%"}{img src="', '" /}{/a}'); // outputs for each image: <a href="[full-size image URL]"><img src="[image URL]" /></a>
+		$size    = image size as thumbnail, medium, large or full -> default = thumbnail
+		$format  = whether to make the image a linked image       -> default = image (can use image or image_link)
+		$target  = whether to open linked image in new tab        -> default = blank (can use blank or self)
+		$class   = optional custom class name(s)                  -> default = none
+		$number  = the number of images to display for each post  -> default = 100
+		$post_id = an optional post ID to use                     -> default = false (uses global/current post)
 */
 if (!function_exists('usp_get_images')) :
 
-function usp_get_images($size = false, $before = false, $after = false, $number = false, $postId = false) {
+function usp_get_images($size = false, $format = false, $target = false, $class = false, $number = false, $post_id = false) {
 	
 	global $post;
-	error_log("Petery in the usp_get images function");
-	if (false === $postId || !is_numeric($postId)) $postId = $post->ID;
-	if (false === $number || !is_numeric($number)) $number = apply_filters('usp_image_attachments', 100);
-	if (false === $size)                           $size   = 'thumbnail';
-	if (false === $before)                         $before = '{img src="';
-	if (false === $after)                          $after  = '" /}';
-	error_log("the post id is ", $postId);	
-	$args = compact('before', 'after');
 	
-	$new = array();
+	$post_id = ($post_id && is_numeric($post_id)) ? $post_id : $post->ID;
 	
-	foreach ($args as $key => $value) {
-		
-		$value = str_replace("{", "<", $value);
-		$value = str_replace("}", ">", $value);
-		
-		if (isset($value)) $new[$key] = $value;
-		
-	}
+	$number  = (is_numeric($number)) ? intval($number) : intval(apply_filters('usp_image_attachments', 100));
+	
+	$class   = ($class) ? ' '. sanitize_html_class($class) : '';
+	
+	$target  = ($target === 'blank') ? ' target="_blank" rel="noopener noreferrer"' : '';
+	
+	$format  = ($format === 'image' || $format === 'image_link') ? $format : 'image';
+	
+	$size    = ($size === 'thumbnail' || $size === 'medium' || $size === 'large' || $size === 'full') ? $size : 'thumbnail';
 	
 	$args = array(
 			'post_status'    => 'publish', 
 			'post_type'      => 'attachment', 
-			'post_parent'    => $postId, 
+			'post_parent'    => $post_id, 
 			'post_status'    => 'inherit', 
 			'posts_per_page' => $number,
 			'fields'         => 'ids'
@@ -197,7 +185,9 @@ function usp_get_images($size = false, $before = false, $after = false, $number 
 	
 	$image_ids = get_posts($args);
 	
-	$urls = array(); $i = 1;
+	$urls = array(); 
+	
+	$i = 1;
 	
 	foreach ($image_ids as $id) {
 		
@@ -205,15 +195,21 @@ function usp_get_images($size = false, $before = false, $after = false, $number 
 		
 		$original = wp_get_attachment_image_src($id, 'full');
 		
-		if ($url !== false && $original !== false) {
+		if ($url && $original) {
 			
-			$before = isset($new['before']) ? $new['before'] : '';
-			$after  = isset($new['after'])  ? $new['after']  : '';
-			
-			$before = str_replace("%%url%%", $original[0], $before);
-			$after  = str_replace("%%url%%", $original[0], $after);
-			
-			$urls[] = isset($url[0]) ? $before . $url[0] . $after : '';
+			if ($format === 'image' && isset($url[0])) {
+				
+				$urls[] = '<img src="'. sanitize_url($url[0]) .'" class="usp-gallery-image'. $class .'" alt="">';
+				
+			} elseif ($format === 'image_link' && isset($url[0]) && isset($original[0])) {
+				
+				$linked_image = '<a href="'. sanitize_url($original[0]) .'" class="usp-gallery-image-link'. $class .'"'. $target .'>';
+				
+				$linked_image .= '<img src="'. sanitize_url($url[0]) .'" class="usp-gallery-image" alt=""></a>';
+				
+				$urls[] = $linked_image;
+				
+			}
 			
 			if ($i == intval($number)) break;
 			

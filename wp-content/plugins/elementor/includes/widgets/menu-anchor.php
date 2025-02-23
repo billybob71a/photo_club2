@@ -40,7 +40,7 @@ class Widget_Menu_Anchor extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return __( 'Menu Anchor', 'elementor' );
+		return esc_html__( 'Menu Anchor', 'elementor' );
 	}
 
 	/**
@@ -71,39 +71,71 @@ class Widget_Menu_Anchor extends Widget_Base {
 		return [ 'menu', 'anchor', 'link' ];
 	}
 
+	protected function is_dynamic_content(): bool {
+		return false;
+	}
+
+	/**
+	 * Get style dependencies.
+	 *
+	 * Retrieve the list of style dependencies the widget requires.
+	 *
+	 * @since 3.24.0
+	 * @access public
+	 *
+	 * @return array Widget style dependencies.
+	 */
+	public function get_style_depends(): array {
+		return [ 'widget-menu-anchor' ];
+	}
+
+	public function has_widget_inner_wrapper(): bool {
+		return ! Plugin::$instance->experiments->is_feature_active( 'e_optimized_markup' );
+	}
+
 	/**
 	 * Register menu anchor widget controls.
 	 *
 	 * Adds different input fields to allow the user to change and customize the widget settings.
 	 *
-	 * @since 1.0.0
+	 * @since 3.1.0
 	 * @access protected
 	 */
-	protected function _register_controls() {
+	protected function register_controls() {
 		$this->start_controls_section(
 			'section_anchor',
 			[
-				'label' => __( 'Anchor', 'elementor' ),
+				'label' => esc_html__( 'Menu Anchor', 'elementor' ),
 			]
 		);
 
 		$this->add_control(
 			'anchor',
 			[
-				'label' => __( 'The ID of Menu Anchor.', 'elementor' ),
+				'label' => esc_html__( 'The ID of Menu Anchor.', 'elementor' ),
 				'type' => Controls_Manager::TEXT,
-				'placeholder' => __( 'For Example: About', 'elementor' ),
-				'description' => __( 'This ID will be the CSS ID you will have to use in your own page, Without #.', 'elementor' ),
+				'ai' => [
+					'active' => false,
+				],
+				'placeholder' => esc_html__( 'For Example: About', 'elementor' ),
+				'description' => esc_html__( 'This ID will be the CSS ID you will have to use in your own page, Without #.', 'elementor' ),
 				'label_block' => true,
+				'dynamic' => [
+					'active' => true,
+				],
 			]
 		);
 
 		$this->add_control(
 			'anchor_note',
 			[
-				'type' => Controls_Manager::RAW_HTML,
-				'raw' => sprintf( __( 'Note: The ID link ONLY accepts these chars: %s', 'elementor' ), '`A-Z, a-z, 0-9, _ , -`' ),
-				'content_classes' => 'elementor-panel-alert elementor-panel-alert-warning',
+				'type' => Controls_Manager::ALERT,
+				'alert_type' => 'warning',
+				'content' => sprintf(
+					/* translators: %s: Accepted chars. */
+					esc_html__( 'Note: The ID link ONLY accepts these chars: %s', 'elementor' ),
+					'`A-Z, a-z, 0-9, _ , -`'
+				),
 			]
 		);
 
@@ -121,13 +153,19 @@ class Widget_Menu_Anchor extends Widget_Base {
 	protected function render() {
 		$anchor = $this->get_settings_for_display( 'anchor' );
 
-		if ( ! empty( $anchor ) ) {
-			$this->add_render_attribute( 'inner', 'id', sanitize_html_class( $anchor ) );
+		if ( empty( $anchor ) ) {
+			return;
 		}
 
-		$this->add_render_attribute( 'inner', 'class', 'elementor-menu-anchor' );
+		$this->add_render_attribute(
+			'inner',
+			[
+				'class' => 'elementor-menu-anchor',
+				'id' => sanitize_html_class( $anchor ),
+			]
+		);
 		?>
-		<div <?php echo $this->get_render_attribute_string( 'inner' ); ?>></div>
+		<div <?php $this->print_render_attribute_string( 'inner' ); ?>></div>
 		<?php
 	}
 
@@ -141,7 +179,26 @@ class Widget_Menu_Anchor extends Widget_Base {
 	 */
 	protected function content_template() {
 		?>
-		<div class="elementor-menu-anchor"{{{ settings.anchor ? ' id="' + settings.anchor + '"' : '' }}}></div>
+		<#
+		if ( '' === settings.anchor ) {
+			return;
+		}
+
+		view.addRenderAttribute(
+			'inner',
+			{
+				'class': 'elementor-menu-anchor',
+				'id': settings.anchor,
+			}
+		);
+		#>
+		<div {{{ view.getRenderAttributeString( 'inner' ) }}}></div>
 		<?php
+	}
+
+	protected function on_save( array $settings ) {
+		$settings['anchor'] = sanitize_html_class( $settings['anchor'] );
+
+		return $settings;
 	}
 }

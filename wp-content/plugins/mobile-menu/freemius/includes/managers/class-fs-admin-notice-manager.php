@@ -160,7 +160,10 @@
                             false,
                             isset( $msg['wp_user_id'] ) ? $msg['wp_user_id'] : null,
                             ! empty( $msg['plugin'] ) ? $msg['plugin'] : null,
-                            $is_network_and_blog_admins
+                            $is_network_and_blog_admins,
+                            isset( $msg['dismissible'] ) ?
+                                $msg['dismissible'] :
+                                null
                         );
                     }
                 }
@@ -175,7 +178,12 @@
          *
          */
         function dismiss_notice_ajax_callback() {
-            $this->_sticky_storage->remove( $_POST['message_id'] );
+            check_admin_referer( 'fs_dismiss_notice_action' );
+
+            if ( ! is_numeric( $_POST['message_id'] ) ) {
+                $this->_sticky_storage->remove( $_POST['message_id'] );
+            }
+
             wp_die();
         }
 
@@ -186,8 +194,14 @@
          * @since  1.0.7
          */
         static function _add_sticky_dismiss_javascript() {
+            $sticky_admin_notice_js_template_name = 'sticky-admin-notice-js.php';
+
+            if ( ! file_exists( fs_get_template_path( $sticky_admin_notice_js_template_name ) ) ) {
+                return;
+            }
+
             $params = array();
-            fs_require_once_template( 'sticky-admin-notice-js.php', $params );
+            fs_require_once_template( $sticky_admin_notice_js_template_name, $params );
         }
 
         private static $_added_sticky_javascript = false;
@@ -226,6 +240,49 @@
                     }
                 }
 
+                /**
+                 * Added a filter to control the visibility of admin notices.
+                 *
+                 * Usage example:
+                 *
+                 *     /**
+                 *      * @param bool  $show
+                 *      * @param array $msg {
+                 *      *     @var string $message The actual message.
+                 *      *     @var string $title An optional message title.
+                 *      *     @var string $type The type of the message ('success', 'update', 'warning', 'promotion').
+                 *      *     @var string $id The unique identifier of the message.
+                 *      *     @var string $manager_id The unique identifier of the notices manager. For plugins it would be the plugin's slug, for themes - `<slug>-theme`.
+                 *      *     @var string $plugin The product's title.
+                 *      *     @var string $wp_user_id An optional WP user ID that this admin notice is for.
+                 *      * }
+                 *      *
+                 *      * @return bool
+                 *      *\/
+                 *      function my_custom_show_admin_notice( $show, $msg ) {
+                 *          if ('trial_promotion' != $msg['id']) {
+                 *              return false;
+                 *          }
+                 *
+                 *          return $show;
+                 *      }
+                 *
+                 *      my_fs()->add_filter( 'show_admin_notice', 'my_custom_show_admin_notice', 10, 2 );
+                 *
+                 * @author Vova Feldman
+                 * @since 2.2.0
+                 */
+                $show_notice = call_user_func_array( 'fs_apply_filter', array(
+                    $this->_module_unique_affix,
+                    'show_admin_notice',
+                    $this->show_admin_notices(),
+                    $msg
+                ) );
+
+                if ( true !== $show_notice ) {
+                    continue;
+                }
+
                 fs_require_template( 'admin-notice.php', $msg );
 
                 if ( $msg['sticky'] ) {
@@ -245,6 +302,58 @@
         }
 
         /**
+         * Check if the current page is the Gutenberg block editor.
+         *
+         * @author Vova Feldman (@svovaf)
+         * @since  2.2.3
+         *
+         * @return bool
+         */
+        function is_gutenberg_page() {
+            if ( function_exists( 'is_gutenberg_page' ) &&
+                 is_gutenberg_page()
+            ) {
+                // The Gutenberg plugin is on.
+                return true;
+            }
+
+            $current_screen = get_current_screen();
+
+            if ( method_exists( $current_screen, 'is_block_editor' ) &&
+                 $current_screen->is_block_editor()
+            ) {
+                // Gutenberg page on 5+.
+                return true;
+            }
+
+            return false;
+        }
+
+        /**
+         * Check if admin notices should be shown on page. E.g., we don't want to show notices in the Visual Editor.
+         *
+         * @author Xiaheng Chen (@xhchen)
+         * @since  2.4.2
+         *
+         * @return bool
+         */
+        function show_admin_notices() {
+            global $pagenow;
+
+            if ( 'about.php' === $pagenow ) {
+                // Don't show admin notices on the About page.
+                return false;
+            }
+
+            if ( $this->is_gutenberg_page() ) {
+                // Don't show admin notices in Gutenberg (visual editor).
+                return false;
+            }
+
+            return true;
+        }
+
+        /**
          * Add admin message to admin messages queue, and hook to admin_notices / all_admin_notices if not yet hooked.
          *
          * @author Vova Feldman (@svovaf)
@@ -260,6 +369,8 @@
          * @param string|null $plugin_title
          * @param bool        $is_network_and_blog_admins Whether or not the message should be shown both on network
          *                                                and blog admin pages.
+         * @param bool|null   $is_dismissible
+         * @param array       $data
          *
          * @uses   add_action()
          */
@@ -272,7 +383,9 @@
             $store_if_sticky = true,
             $wp_user_id = null,
             $plugin_title = null,
-            $is_network_and_blog_admins = false
+            $is_network_and_blog_admins = false,
+            $is_dismissible = null,
+            $data = array()
         ) {
             $notices_type = $this->get_notices_type();
 
@@ -292,14 +405,16 @@
             }
 
             $message_object = array(
-                'message'    => $message,
-                'title'      => $title,
-                'type'       => $type,
-                'sticky'     => $is_sticky,
-                'id'         => $id,
-                'manager_id' => $this->_id,
-                'plugin'     => ( ! is_null( $plugin_title ) ? $plugin_title : $this->_title ),
-                'wp_user_id' => $wp_user_id,
+                'message'     => $message,
+                'title'       => $title,
+                'type'        => $type,
+                'sticky'      => $is_sticky,
+                'id'          => $id,
+                'manager_id'  => $this->_id,
+                'plugin'      => ( ! is_null( $plugin_title ) ? $plugin_title : $this->_title ),
+                'wp_user_id'  => $wp_user_id,
+                'dismissible' => $is_dismissible,
+                'data'        => $data
             );
 
             if ( $is_sticky && $store_if_sticky ) {
@@ -314,15 +429,16 @@
          * @since  1.0.7
          *
          * @param string|string[] $ids
+         * @param bool            $store
          */
-        function remove_sticky( $ids ) {
+        function remove_sticky( $ids, $store = true ) {
             if ( ! is_array( $ids ) ) {
                 $ids = array( $ids );
             }
 
             foreach ( $ids as $id ) {
                 // Remove from sticky storage.
-                $this->_sticky_storage->remove( $id );
+                $this->_sticky_storage->remove( $id, $store );
 
                 if ( isset( $this->_notices[ $id ] ) ) {
                     unset( $this->_notices[ $id ] );
@@ -358,14 +474,32 @@
          * @param string|null $plugin_title
          * @param bool        $is_network_and_blog_admins Whether or not the message should be shown both on network
          *                                                and blog admin pages.
+         * @param bool        $is_dimissible
+         * @param array       $data
          */
-        function add_sticky( $message, $id, $title = '', $type = 'success', $wp_user_id = null, $plugin_title = null, $is_network_and_blog_admins = false ) {
+        function add_sticky( $message, $id, $title = '', $type = 'success', $wp_user_id = null, $plugin_title = null, $is_network_and_blog_admins = false, $is_dimissible = true, $data = array() ) {
             if ( ! empty( $this->_module_unique_affix ) ) {
                 $message = fs_apply_filter( $this->_module_unique_affix, "sticky_message_{$id}", $message );
                 $title   = fs_apply_filter( $this->_module_unique_affix, "sticky_title_{$id}", $title );
             }
 
-            $this->add( $message, $title, $type, true, $id, true, $wp_user_id, $plugin_title, $is_network_and_blog_admins );
+            $this->add( $message, $title, $type, true, $id, true, $wp_user_id, $plugin_title, $is_network_and_blog_admins, $is_dimissible, $data );
+        }
+
+        /**
+         * Retrieves the data of an sticky notice.
+         *
+         * @author Leo Fajardo (@leorw)
+         * @since  2.4.3
+         *
+         * @param string $id Message ID.
+         *
+         * @return array|null
+         */
+        function get_sticky( $id ) {
+            return isset( $this->_sticky_storage->{$id} ) ?
+                $this->_sticky_storage->{$id} :
+                null;
         }
 
         /**
@@ -373,9 +507,15 @@
          *
          * @author Vova Feldman (@svovaf)
          * @since  1.0.8
+         *
+         * @param bool $is_temporary @since 2.5.1
          */
-        function clear_all_sticky() {
-            $this->_sticky_storage->clear_all();
+        function clear_all_sticky( $is_temporary = false ) {
+            if ( $is_temporary ) {
+                $this->_notices = array();
+            } else {
+                $this->_sticky_storage->clear_all();
+            }
         }
 
         #--------------------------------------------------------------------------------

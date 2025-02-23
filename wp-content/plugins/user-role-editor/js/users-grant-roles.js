@@ -3,13 +3,26 @@
  * User Role Editor: support of 'Grant Roles' button for Users page (wp-admin/users.php)
  */
 
-jQuery(document).ready(function() {
+jQuery(function() {
     jQuery('#ure_grant_roles').click(function() {
         ure_prepare_grant_roles_dialog();
     });
     jQuery('#ure_grant_roles_2').click(function() {
         ure_prepare_grant_roles_dialog();
     });
+    jQuery('#ure_add_role_button').click(function() {
+        ure_add_role( 1 );
+    });
+    jQuery('#ure_add_role_button_2').click(function() {
+        ure_add_role( 2 );
+    });
+    jQuery('#ure_revoke_role_button').click(function() {
+        ure_revoke_role( 1 );
+    });
+    jQuery('#ure_revoke_role_button_2').click(function() {
+        ure_revoke_role( 2 );
+    });
+
     
     if (ure_users_grant_roles_data.show_wp_change_role!=1) {        
         jQuery('#new_role').hide();
@@ -33,11 +46,11 @@ function ure_show_grant_roles_dialog_pre_selected(response) {
         alert(response.message);
         return;
     }
-    if (response.primary_role.length>0 && jQuery('#primary_role').length>0) {
+    if (response.primary_role!==null && response.primary_role.length>0 && jQuery('#primary_role').length>0) {
         jQuery('#primary_role').val(response.primary_role);
     }
     
-    if (response.other_roles.length>0) {
+    if (response.other_roles!==null && response.other_roles.length>0) {
         for(i=0;i<response.other_roles.length;i++) {
             jQuery('#wp_role_'+ response.other_roles[i]).prop('checked', true);
         }
@@ -93,7 +106,7 @@ function ure_show_grant_roles_dialog() {
         modal: true,
         autoOpen: true,
         closeOnEscape: true,
-        width: 400,
+        width: 600,
         height: 400,
         resizable: false,
         title: ure_users_grant_roles_data.dialog_title,
@@ -123,7 +136,64 @@ function ure_grant_roles() {
         'users': users, 
         'primary_role': primary_role,
         'other_roles': other_roles,
-        'wp_nonce': ure_users_grant_roles_data.wp_nonce};
+        'wp_nonce': ure_users_grant_roles_data.wp_nonce
+    };
+    jQuery.post(ajaxurl, data, ure_page_reload, 'json');
+    
+    return true;
+}
+
+
+function ure_add_role( control_number ) {    
+    var users = ure_get_selected_checkboxes('users');
+    if ( users.length===0 ) {
+        alert( ure_users_grant_roles_data.select_users_to_add_role );
+        return;
+    }
+    
+    var modifier = ( control_number===2 ) ? '_2' : '';
+    var role = jQuery('#ure_add_role'+ modifier).val();
+    if ( role.length===0 ) {
+         alert( ure_users_grant_roles_data.select_role_first );
+         return;
+    }
+    
+    jQuery('#ure_task_status').show();    
+    var data = {
+        'action': 'ure_ajax',
+        'sub_action':'add_role_to_user',
+        'users': users, 
+        'role': role,
+        'wp_nonce': ure_users_grant_roles_data.wp_nonce
+    };
+    jQuery.post(ajaxurl, data, ure_page_reload, 'json');
+    
+    return true;
+}
+
+
+function ure_revoke_role( control_number ) {    
+    var users = ure_get_selected_checkboxes('users');
+    if ( users.length===0 ) {
+        alert( ure_users_grant_roles_data.select_users_to_revoke_role );
+        return;
+    }
+    
+    var modifier = ( control_number===2 ) ? '_2' : '';
+    var role = jQuery('#ure_revoke_role'+ modifier).val();
+    if ( role.length===0 ) {
+         alert( ure_users_grant_roles_data.select_role_first );
+         return;
+    }
+    
+    jQuery('#ure_task_status').show();    
+    var data = {
+        'action': 'ure_ajax',
+        'sub_action':'revoke_role_from_user',
+        'users': users, 
+        'role': role,
+        'wp_nonce': ure_users_grant_roles_data.wp_nonce
+    };
     jQuery.post(ajaxurl, data, ure_page_reload, 'json');
     
     return true;
@@ -163,4 +233,5 @@ function ure_page_reload(response) {
     
     var url = ure_set_url_arg('update', 'promote');
     document.location = url;
+    
 }

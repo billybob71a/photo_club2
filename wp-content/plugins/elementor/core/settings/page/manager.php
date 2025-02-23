@@ -1,13 +1,13 @@
 <?php
 namespace Elementor\Core\Settings\Page;
 
+use Elementor\Core\Base\Document;
 use Elementor\Core\Files\CSS\Base;
 use Elementor\Core\Files\CSS\Post;
 use Elementor\Core\Files\CSS\Post_Preview;
 use Elementor\Core\Settings\Base\CSS_Manager;
 use Elementor\Core\Utils\Exceptions;
 use Elementor\Core\Settings\Base\Model as BaseModel;
-use Elementor\DB;
 use Elementor\Plugin;
 use Elementor\Utils;
 
@@ -29,24 +29,6 @@ class Manager extends CSS_Manager {
 	 * Meta key for the page settings.
 	 */
 	const META_KEY = '_elementor_page_settings';
-
-	/**
-	 * Is CPT supports custom templates.
-	 *
-	 * Whether the Custom Post Type supports templates.
-	 *
-	 * @since 1.6.0
-	 * @deprecated 2.0.0 Use `Utils::is_cpt_custom_templates_supported()` method instead.
-	 * @access public
-	 * @static
-	 *
-	 * @return bool True is templates are supported, False otherwise.
-	 */
-	public static function is_cpt_custom_templates_supported() {
-		_deprecated_function( __METHOD__, '2.0.0', 'Utils::is_cpt_custom_templates_supported()' );
-
-		return Utils::is_cpt_custom_templates_supported();
-	}
 
 	/**
 	 * Get manager name.
@@ -119,7 +101,7 @@ class Manager extends CSS_Manager {
 			throw new \Exception( 'Invalid post.', Exceptions::NOT_FOUND );
 		}
 
-		if ( ! current_user_can( 'edit_post', $id ) ) {
+		if ( ! Utils::is_wp_cli() && ! current_user_can( 'edit_post', $id ) ) {
 			throw new \Exception( 'Access denied.', Exceptions::FORBIDDEN );
 		}
 
@@ -132,15 +114,23 @@ class Manager extends CSS_Manager {
 			$post->post_excerpt = $data['post_excerpt'];
 		}
 
+		if ( isset( $data['menu_order'] ) && is_post_type_hierarchical( $post->post_type ) ) {
+			$post->menu_order = $data['menu_order'];
+		}
+
 		if ( isset( $data['post_status'] ) ) {
 			$this->save_post_status( $id, $data['post_status'] );
 			unset( $post->post_status );
 		}
 
+		if ( isset( $data['comment_status'] ) && post_type_supports( $post->post_type, 'comments' ) ) {
+			$post->comment_status = $data['comment_status'];
+		}
+
 		wp_update_post( $post );
 
 		// Check updated status
-		if ( DB::STATUS_PUBLISH === get_post_status( $id ) ) {
+		if ( Document::STATUS_PUBLISH === get_post_status( $id ) ) {
 			$autosave = wp_get_post_autosave( $post->ID );
 			if ( $autosave ) {
 				wp_delete_post_revision( $autosave->ID );
@@ -148,6 +138,11 @@ class Manager extends CSS_Manager {
 		}
 
 		if ( isset( $data['post_featured_image'] ) && post_type_supports( $post->post_type, 'thumbnail' ) ) {
+			// Check if the user is at least an Author before allowing them to modify the thumbnail
+			if ( ! current_user_can( 'publish_posts' ) ) {
+				throw new \Exception( 'You do not have permission to modify the featured image.', Exceptions::FORBIDDEN );
+			}
+
 			if ( empty( $data['post_featured_image']['id'] ) ) {
 				delete_post_thumbnail( $post->ID );
 			} else {
@@ -183,14 +178,15 @@ class Manager extends CSS_Manager {
 
 		if ( Object.values( tabs ).length > 1 ) { #>
 		<div class="elementor-panel-navigation">
-			<# _.each( tabs, function( tabTitle, tabSlug ) { #>
-			<div class="elementor-component-tab elementor-panel-navigation-tab elementor-tab-control-{{ tabSlug }}" data-tab="{{ tabSlug }}">
-				<a href="#">{{{ tabTitle }}}</a>
-			</div>
+			<# _.each( tabs, function( tabTitle, tabSlug ) {
+			$e.bc.ensureTab( 'panel/page-settings', tabSlug ); #>
+			<button class="elementor-component-tab elementor-panel-navigation-tab elementor-tab-control-{{ tabSlug }}" data-tab="{{ tabSlug }}">
+				<span>{{{ tabTitle }}}</span>
+			</button>
 			<# } ); #>
 		</div>
 		<# } #>
-		<div id="elementor-panel-<?php echo $name; ?>-settings-controls"></div>
+		<div id="elementor-panel-<?php echo esc_attr( $name ); ?>-settings-controls"></div>
 		<?php
 	}
 
@@ -325,6 +321,8 @@ class Manager extends CSS_Manager {
 			'template',
 			'post_excerpt',
 			'post_featured_image',
+			'menu_order',
+			'comment_status',
 		];
 	}
 
@@ -349,6 +347,12 @@ class Manager extends CSS_Manager {
 
 		$allowed_post_statuses = get_post_statuses();
 
+		if ( $this->is_contributor_user() && $this->has_invalid_post_status_for_contributor( $status ) ) {
+			// If the status is not allowed, set it to 'pending' by default
+			$status = 'pending';
+			$post->post_status = $status;
+		}
+
 		if ( isset( $allowed_post_statuses[ $status ] ) ) {
 			$post_type_object = get_post_type_object( $post->post_type );
 			if ( 'publish' !== $status || current_user_can( $post_type_object->cap->publish_posts ) ) {
@@ -358,4 +362,13 @@ class Manager extends CSS_Manager {
 
 		wp_update_post( $post );
 	}
+
+	private function is_contributor_user(): bool {
+		return current_user_can( 'edit_posts' ) && ! current_user_can( 'publish_posts' );
+	}
+
+	private function has_invalid_post_status_for_contributor( $status ): bool {
+		return 'draft' !== $status && 'pending' !== $status;
+	}
+
 }

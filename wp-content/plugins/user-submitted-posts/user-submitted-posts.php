@@ -3,16 +3,16 @@
 	Plugin Name: User Submitted Posts
 	Plugin URI: https://perishablepress.com/user-submitted-posts/
 	Description: Enables your visitors to submit posts and images from anywhere on your site.
-	Tags: guest post, user post, anonymous post, frontend post, guest author,  frontend content, frontend post, frontend upload, generated content, guest blog, guest blogging, guest publish, guest upload, post sharing, post submission, public post, share posts, submit post, user generated, user submit, user submitted post, visitor post
+	Tags: frontend post, submit post, guest post, visitor post, public post
 	Author: Jeff Starr
 	Author URI: https://plugin-planet.com/
 	Donate link: https://monzillamedia.com/donate.html
 	Contributors: specialk
-	Requires at least: 4.1
-	Tested up to: 4.9
-	Stable tag: 20180822
-	Version: 20180822
-	Requires PHP: 5.2
+	Requires at least: 4.6
+	Tested up to: 6.7
+	Stable tag: 20241026
+	Version:    20241026
+	Requires PHP: 5.6.20
 	Text Domain: usp
 	Domain Path: /languages
 	License: GPL v2 or later
@@ -32,36 +32,77 @@
 	You should have received a copy of the GNU General Public License
 	with this program. If not, visit: https://www.gnu.org/licenses/
 	
-	Copyright 2018 Monzilla Media. All rights reserved.
+	Copyright 2024 Monzilla Media. All rights reserved.
 */
 
 if (!defined('ABSPATH')) die();
 
-
-
-define('USP_WP_VERSION', '4.1');
-define('USP_VERSION', '20180822');
-define('USP_PLUGIN', esc_html__('User Submitted Posts', 'usp'));
-define('USP_PATH', plugin_basename(__FILE__));
+if (!defined('USP_WP_VERSION')) define('USP_WP_VERSION', '4.6');
+if (!defined('USP_VERSION'))    define('USP_VERSION', '20241026');
+if (!defined('USP_PLUGIN'))     define('USP_PLUGIN', esc_html__('User Submitted Posts', 'usp'));
+if (!defined('USP_FILE'))       define('USP_FILE', plugin_basename(__FILE__));
+if (!defined('USP_PATH'))       define('USP_PATH', plugin_dir_path(__FILE__));
+if (!defined('USP_URL'))        define('USP_URL',  plugin_dir_url (__FILE__));
 
 $usp_options = get_option('usp_options');
 
 require_once('library/core-functions.php');
+require_once('library/form-functions.php');
 require_once('library/enqueue-scripts.php');
+require_once('library/plugin-display.php');
 require_once('library/plugin-settings.php');
 require_once('library/shortcode-access.php');
 require_once('library/shortcode-login.php');
 require_once('library/shortcode-misc.php');
 require_once('library/template-tags.php');
 
+register_activation_hook(__FILE__, 'usp_add_defaults');
+register_activation_hook(__FILE__, 'usp_dismiss_notice_activate');
 
+if (isset($usp_options['default_options']) && $usp_options['default_options'] == 1) {
+	
+	register_deactivation_hook(__FILE__, 'usp_delete_plugin_options');
+	
+}
+
+//
 
 function usp_i18n_init() {
 	
-	load_plugin_textdomain('usp', false, dirname(plugin_basename(__FILE__)) .'/languages/');
+	$domain = 'usp';
+	
+	$locale = apply_filters('usp_locale', get_locale(), $domain);
+	
+	$dir    = trailingslashit(WP_LANG_DIR);
+	
+	$file   = $domain .'-'. $locale .'.mo';
+	
+	$path_1 = $dir . $file;
+	
+	$path_2 = $dir . $domain .'/'. $file;
+	
+	$path_3 = $dir .'plugins/'. $file;
+	
+	$path_4 = $dir .'plugins/'. $domain .'/'. $file;
+	
+	$paths = array($path_1, $path_2, $path_3, $path_4);
+	
+	foreach ($paths as $path) {
+		
+		if ($loaded = load_textdomain($domain, $path)) {
+			
+			return $loaded;
+			
+		} else {
+			
+			return load_plugin_textdomain($domain, false, dirname(USP_FILE) .'/languages/');
+			
+		}
+		
+	}
 	
 }
-add_action('plugins_loaded', 'usp_i18n_init');
+add_action('init', 'usp_i18n_init');
 
 
 
@@ -73,9 +114,9 @@ function usp_require_wp_version() {
 		
 		if (version_compare($wp_version, USP_WP_VERSION, '<')) {
 			
-			if (is_plugin_active(USP_PATH)) {
+			if (is_plugin_active(USP_FILE)) {
 				
-				deactivate_plugins(USP_PATH);
+				deactivate_plugins(USP_FILE);
 				
 				$msg  = '<strong>'. USP_PLUGIN .'</strong> ';
 				$msg .= esc_html__('requires WordPress ', 'usp') . USP_WP_VERSION;
@@ -94,6 +135,18 @@ function usp_require_wp_version() {
 	
 }
 add_action('admin_init', 'usp_require_wp_version');
+
+
+
+if (!current_theme_supports('post-thumbnails')) {
+	
+	if (isset($usp_options['usp_featured_images']) && $usp_options['usp_featured_images']) {
+		
+		add_theme_support('post-thumbnails');
+		
+	}
+	
+}
 
 
 
@@ -118,13 +171,37 @@ function usp_check_required($field) {
 
 
 
+function usp_get_date_time() {
+	
+	$date_format = get_option('date_format');
+	
+	$time_format = get_option('time_format');
+	
+	if (function_exists('current_datetime')) {
+		
+		$format = $date_format .' \@ '. $time_format;
+		
+		$date = current_datetime()->format($format);
+		
+	} else {
+		
+		$date = date_i18n($date_format, current_time('timestamp')) .' \@ '. date_i18n($time_format, current_time('timestamp'));
+		
+	}
+	
+	return apply_filters('usp_date_time', $date);
+
+}
+
+
+
 function usp_get_default_title() {
 	
-	$time = date_i18n('Ymd', current_time('timestamp')) .'-'. date_i18n('His', current_time('timestamp'));
+	$date = usp_get_date_time();
 	
 	$title = esc_html__('User Submitted Post', 'usp');
 	
-	$title = apply_filters('usp_default_title', $title, $time);
+	$title = apply_filters('usp_default_title', $title, $date);
 	
 	return $title;
 	
@@ -140,7 +217,14 @@ function usp_get_submitted_title() {
 	
 	$title = usp_get_default_title();
 	
-	if (isset($_POST['user-submitted-title'])) $title = sanitize_text_field($_POST['user-submitted-title']);
+	$allow_tags   = apply_filters('usp_title_tags_allow', false);
+	$allowed_tags = apply_filters('usp_title_tags_allowed', '<em><i><strong><b>');
+	
+	if (isset($_POST['user-submitted-title'])) {
+		
+		$title = $allow_tags ? strip_tags($_POST['user-submitted-title'], $allowed_tags) : sanitize_text_field($_POST['user-submitted-title']);
+		
+	}
 	
 	if ($option === 'optn' && empty($title)) $title = usp_get_default_title();
 	
@@ -164,6 +248,20 @@ function usp_get_custom_field() {
 
 
 
+function usp_get_custom_field_2() {
+	
+	global $usp_options;
+	
+	$name = isset($usp_options['custom_name_2']) ? $usp_options['custom_name_2'] : '';
+	
+	$custom = isset($_POST[$name]) ? usp_sanitize_content($_POST[$name]) : '';
+	
+	return $custom;
+	
+}
+
+
+
 function usp_get_custom_checkbox() {
 	
 	global $usp_options;
@@ -173,6 +271,84 @@ function usp_get_custom_checkbox() {
 	$custom = isset($_POST[$name]) ? usp_sanitize_content($_POST[$name]) : '';
 	
 	return $custom;
+	
+}
+
+
+
+function usp_get_comment_status() {
+	
+	global $usp_options;
+	
+	$post_type = isset($usp_options['usp_post_type']) ? $usp_options['usp_post_type'] : 'post';
+	
+	$post_type = apply_filters('usp_post_type', $post_type);
+	
+	$default = get_default_comment_status($post_type);
+	
+	return isset($_POST['user-submitted-comments']) ? 'closed' : $default;
+	
+}
+
+
+
+function usp_get_submitted_category() {
+	
+	$category = isset($_POST['user-submitted-category']) ? $_POST['user-submitted-category'] : '';
+	
+	if (is_array($category)) {
+		
+		$cats = array();
+		
+		foreach ($category as $cat) $cats[] = sanitize_text_field($cat);
+		
+	} else {
+		
+		if (strpos($category, ',') !== false) {
+			
+			$cats = array_map('trim', explode(',', $category));
+			
+		} else {
+			
+			$cats = sanitize_text_field($category);
+			
+		}
+		
+	}
+	
+	return $cats;
+	
+}
+
+
+
+function usp_get_submitted_tags() {
+	
+	$submitted_tags = isset($_POST['user-submitted-tags']) ? $_POST['user-submitted-tags'] : '';
+	
+	$tags = array();
+	
+	if (is_array($submitted_tags)) {
+		
+		foreach ($submitted_tags as $tag) $tags[] = sanitize_text_field($tag);
+		
+	} else {
+		
+		if (strpos($submitted_tags, ',') !== false) {
+			
+			$tag_array = array_map('trim', explode(',', $submitted_tags));
+			
+			foreach ($tag_array as $tag) $tags[] = sanitize_text_field($tag);
+			
+		} else {
+			
+			$tags[] = sanitize_text_field($submitted_tags);
+			
+		}
+		
+	}
+	
+	return $tags;
 	
 }
 
@@ -220,7 +396,9 @@ function usp_checkForPublicSubmission() {
 	
 	$is_submitted = (isset($_POST['usp-nonce']) && wp_verify_nonce($_POST['usp-nonce'], 'usp-nonce')) ? true : false;
 	
-	if ($is_submitted) {
+	$is_allowed = apply_filters('usp_check_if_allowed', true);
+	
+	if ($is_submitted && $is_allowed) {
 		
 		$title = usp_get_submitted_title();
 		
@@ -228,20 +406,26 @@ function usp_checkForPublicSubmission() {
 		
 		$custom = usp_get_custom_field();
 		
+		$custom_2 = usp_get_custom_field_2();
+		
 		$checkbox = usp_get_custom_checkbox();
+		
+		$comments = usp_get_comment_status();
+		
+		$category = usp_get_submitted_category();
+		
+		$tags = usp_get_submitted_tags();
 		
 		$files = isset($_FILES['user-submitted-image']) ? $_FILES['user-submitted-image'] : array();
 		
 		$author   = isset($_POST['user-submitted-name'])     ? sanitize_text_field($_POST['user-submitted-name'])     : '';
 		$url      = isset($_POST['user-submitted-url'])      ? esc_url($_POST['user-submitted-url'])                  : '';
 		$email    = isset($_POST['user-submitted-email'])    ? sanitize_text_field($_POST['user-submitted-email'])    : '';
-		$tags     = isset($_POST['user-submitted-tags'])     ? sanitize_text_field($_POST['user-submitted-tags'])     : '';
 		$captcha  = isset($_POST['user-submitted-captcha'])  ? sanitize_text_field($_POST['user-submitted-captcha'])  : '';
 		$verify   = isset($_POST['user-submitted-verify'])   ? sanitize_text_field($_POST['user-submitted-verify'])   : '';
 		$content  = isset($_POST['user-submitted-content'])  ? usp_sanitize_content($_POST['user-submitted-content']) : '';
-		$category = isset($_POST['user-submitted-category']) ? intval($_POST['user-submitted-category'])              : '';
 		
-		$result = usp_createPublicSubmission($title, $files, $ip, $author, $url, $email, $tags, $captcha, $verify, $content, $category, $custom, $checkbox);
+		$result = usp_createPublicSubmission($title, $files, $ip, $author, $url, $email, $tags, $captcha, $verify, $content, $category, $custom, $custom_2, $checkbox, $comments);
 		
 		$post_id = false; 
 		
@@ -251,7 +435,20 @@ function usp_checkForPublicSubmission() {
 			
 			/* Polylang plugin */
 			if (function_exists('pll_set_post_language') && function_exists('pll_default_language')) {
-				pll_set_post_language($post_id, pll_default_language());
+				
+				$default_or_current = 'default';
+				$default_or_current = apply_filters('usp_pll_set_post_language', $default_or_current);
+				
+				if ($default_or_current === 'default') {
+					
+					pll_set_post_language($post_id, pll_default_language());
+					
+				} else {
+					
+					pll_set_post_language($post_id, pll_current_language());
+					
+				}
+				
 			}
 			/* Polylang plugin */
 			
@@ -259,7 +456,7 @@ function usp_checkForPublicSubmission() {
 		
 		$error = false;
 		
-		if (isset($result['error'])) $error = array_filter(array_unique($result['error']));
+		if (isset($result['error']) && !empty($result['error'])) $error = array_filter(array_unique($result['error']));
 		
 		if ($error) {
 			
@@ -314,30 +511,48 @@ add_action('parse_request', 'usp_checkForPublicSubmission', 1);
 
 
 
+function usp_check_recaptcha_keys() {
+	
+	global $usp_options;
+	
+	$public  = isset($usp_options['recaptcha_public'])  ? $usp_options['recaptcha_public']  : '';
+	$private = isset($usp_options['recaptcha_private']) ? $usp_options['recaptcha_private'] : '';
+	
+	if (empty($public) || empty($private)) return false;
+	
+	return true;
+	
+}
+
+
+
 function usp_verify_recaptcha() {
 	
 	global $usp_options;
 	
-	$public  = isset($usp_options['recaptcha_public'])  ? $usp_options['recaptcha_public']  : false;
-	$private = isset($usp_options['recaptcha_private']) ? $usp_options['recaptcha_private'] : false;
+	$private = isset($usp_options['recaptcha_private']) ? $usp_options['recaptcha_private'] : '';
+	$version = isset($usp_options['recaptcha_version']) ? $usp_options['recaptcha_version'] : 2;
 	
-	if (empty($public) || empty($private)) return false;
+	if (!usp_check_recaptcha_keys()) return false;
 	
-	if (isset($_POST['g-recaptcha-response'])) {
+	if ($version == 3) {
 		
-		if (version_compare(phpversion(), '5.3.0', '>=')) {
-			
-			return require_once(plugin_dir_path(__FILE__) .'recaptcha/connect-new.php');
-			
-		} else {
-			
-			return require_once(plugin_dir_path(__FILE__) .'recaptcha/connect-old.php');
-			
-		}
+		$response = isset($_POST['recaptcha_response']) ? $_POST['recaptcha_response'] : null;
+		
+		$recaptcha = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='. $private .'&response='. $response);
+		$recaptcha = json_decode($recaptcha);
+		
+		$score = apply_filters('usp_recaptcha_score', 0.5);
+		
+		return (($recaptcha->success == true) && ($recaptcha->score >= $score)) ? true : false;
+		
+	} else {
+		
+		if (isset($_POST['g-recaptcha-response'])) return require_once(USP_PATH .'recaptcha/connect.php');
+		
+		return false;
 		
 	}
-	
-	return false;
 	
 }
 
@@ -351,11 +566,22 @@ function usp_sanitize_content($content) {
 	
 	$allowed_tags = apply_filters('usp_content_allowed', $allowed_tags);
 	
-	$patterns = array('/target="_blank"/i', "/target='_blank'/i");
+	$patterns = array(
+					'/target="_blank"/i', 
+					"/target='_blank'/i", 
+					'/user-submitted-posts/i', 
+					'/usp-login-form/i', 
+					'/usp_display_posts/i', 
+					'/usp_gallery/i',
+					'/usp-reset-button/i', 
+					'/usp_access/i', 
+					'/usp_visitor/i', 
+					'/usp_member/i'
+				);
 	
 	$patterns = apply_filters('usp_content_patterns', $patterns);
 	
-	$replacements = array('', '');
+	$replacements = array('', '', '', '', '', '', '', '', '', '');
 	
 	$replacements = apply_filters('usp_content_replacements', $replacements);
 	
@@ -369,50 +595,6 @@ function usp_sanitize_content($content) {
 
 
 
-if (!current_theme_supports('post-thumbnails')) {
-	
-	add_theme_support('post-thumbnails');
-	
-}
-function usp_display_featured_image() {
-	
-	global $post, $usp_options;
-	
-	if (is_object($post) && usp_is_public_submission($post->ID)) {
-		
-		if ((!has_post_thumbnail()) && ($usp_options['usp_featured_images'] == 1)) {
-			
-			$args = array(
-				'post_type'      => 'attachment', 
-				'post_mime_type' =>'image', 
-				'posts_per_page' => 0, 
-				'post_parent'    => $post->ID, 
-				'order'          =>'ASC'
-			);
-			
-			$attachments = get_posts($args);
-			
-			if ($attachments) {
-				
-				foreach ($attachments as $attachment) {
-					
-					set_post_thumbnail($post->ID, $attachment->ID);
-					
-					break;
-					
-				}
-				
-			}
-			
-		}
-		
-	}
-	
-}
-add_action('wp', 'usp_display_featured_image');
-
-
-
 function usp_add_meta_box() {
 	
 	global $post;
@@ -420,6 +602,7 @@ function usp_add_meta_box() {
 	if (usp_is_public_submission()) {
 		
 		$screens = array('post', 'page');
+		$screens = apply_filters('usp_meta_box_post_types', $screens);
 		
 		$name  = get_post_meta($post->ID, 'user_submit_name', true);
 		$email = get_post_meta($post->ID, 'user_submit_email', true);
@@ -479,9 +662,9 @@ function usp_display_form() {
 	
 	global $usp_options;
 	
-	$default = WP_PLUGIN_DIR .'/'. basename(dirname(__FILE__)) .'/views/submission-form.php';
+	$default = USP_PATH .'views/submission-form.php';
 	
-	$custom  = get_stylesheet_directory() .'/usp/submission-form.php';
+	$custom = get_stylesheet_directory() .'/usp/submission-form.php';
 	
 	ob_start();
 	
@@ -506,16 +689,22 @@ function user_submitted_posts() {
 
 function usp_outputUserSubmissionLink() {
 	
-	global $pagenow;
+	global $pagenow, $usp_options;
 	
-	$screen = get_current_screen();
+	$screen_post_type = usp_get_current_screen_post_type();
 	
-	if ($pagenow === 'edit.php' && $screen->post_type === 'post') {
+	$post_type = isset($usp_options['usp_post_type']) ? $usp_options['usp_post_type'] : 'post';
+	
+	$current = $screen_post_type ? $screen_post_type : 'post';
+	
+	if ($pagenow === 'edit.php' && $post_type === $current) {
 		
-		$link  = '<a id="usp_admin_filter_posts" class="button" ';
-		$link .= 'href="'. admin_url('edit.php?user_submitted=1') .'" ';
+		$link  = '<a id="usp-admin-filter" class="button" ';
+		$link .= 'href="'. admin_url('edit.php?post_type='. $current .'&user_submitted=1') .'" ';
 		$link .= 'title="'. esc_attr__('Show USP Posts', 'usp') .'">';
 		$link .= esc_html__('USP', 'usp') .'</a>';
+		
+		$link = apply_filters('usp_filter_posts_link', $link, $current);
 		
 		echo $link;
 		
@@ -530,12 +719,25 @@ function usp_addSubmittedStatusClause($wp_query) {
 	
 	global $pagenow;
 	
-	if (isset($_GET['user_submitted']) && $_GET['user_submitted'] === '1') {
+	if (is_admin() && $pagenow == 'edit.php' && isset($_GET['user_submitted'])) {
 		
-		if (is_admin() && $pagenow == 'edit.php') {
+		if ($_GET['user_submitted'] === '1') {
 			
 			set_query_var('meta_key', 'is_submission');
 			set_query_var('meta_value', 1);
+			
+		} elseif ($_GET['user_submitted'] === '0') {
+			
+			$meta_query = array(
+							'meta_query' => 
+								array(
+									'key' => 'is_submission',
+									'compare' => 'NOT EXISTS',
+									'value' => '',
+								)
+							);
+			
+			$wp_query->set('meta_query', $meta_query);
 			
 		}
 		
@@ -550,17 +752,21 @@ function usp_replaceAuthor($author) {
 	
 	global $post, $usp_options;
 	
-	$disable = isset($usp_options['disable_author']) ? $usp_options['disable_author'] : false;
-	
-	$isSubmission     = get_post_meta($post->ID, 'is_submission', true);
-	$submissionAuthor = get_post_meta($post->ID, 'user_submit_name', true);
-
-	if (!$disable && $isSubmission && !empty($submissionAuthor)) $author = $submissionAuthor;
+	if ($post && is_object($post) && property_exists($post, 'ID')) {
+		
+		$disable = isset($usp_options['disable_author']) ? $usp_options['disable_author'] : false;
+		
+		$isSubmission     = get_post_meta($post->ID, 'is_submission', true);
+		$submissionAuthor = get_post_meta($post->ID, 'user_submit_name', true);
+		
+		if (!$disable && $isSubmission && !empty($submissionAuthor)) $author = $submissionAuthor;
+		
+	}
 	
 	return apply_filters('usp_post_author', $author);
 	
 }
-add_filter ('the_author', 'usp_replaceAuthor');
+add_filter('the_author', 'usp_replaceAuthor');
 
 
 
@@ -652,7 +858,7 @@ function usp_check_images($files, $newPost) {
 				
 				if (!empty($name) && $value > 0) {
 						
-					error_log('WP Plugin USP: File error message '. $value .'. Info @ http://bit.ly/2uTJc4D', 0);
+					error_log('WP Plugin USP: File error message '. $value .'. Info @ https://bit.ly/2uTJc4D', 0);
 					
 					$error[] = 'file-error';
 					
@@ -719,7 +925,7 @@ function usp_check_images($files, $newPost) {
 				
 				if (isset($errr[$i]) && $errr[$i] > 0) {
 					
-					error_log('WP Plugin USP: File error message '. $errr[$i] .'. Info @ http://bit.ly/2uTJc4D', 0);
+					error_log('WP Plugin USP: File error message '. $errr[$i] .'. Info @ https://bit.ly/2uTJc4D', 0);
 					
 					$error[] = 'file-error';
 					
@@ -746,10 +952,11 @@ function usp_prepare_post($title, $content, $author_id, $author, $ip) {
 	global $usp_options;
 	
 	$postData = array();
-	$postData['post_title']   = $title;
-	$postData['post_content'] = $content;
-	$postData['post_author']  = $author_id;
-	$postData['post_status']  = apply_filters('usp_post_status', 'pending');
+	$postData['post_title']    = $title;
+	$postData['post_content']  = $content;
+	$postData['post_author']   = $author_id;
+	$postData['post_status']   = apply_filters('usp_post_status', 'pending');
+	$postData['post_name']     = sanitize_title($title);
 	
 	$postType = isset($usp_options['usp_post_type']) ? $usp_options['usp_post_type'] : 'post';
 	
@@ -800,9 +1007,23 @@ function usp_check_duplicates($title) {
 	
 	if ($usp_options['titles_unique']) {
 		
-		$check_post = get_page_by_title($title, OBJECT, 'post');
+		$args = array(
+			
+			'post_type'              => 'post',
+			'title'                  => $title,
+			'post_status'            => 'all',
+			'posts_per_page'         => 1,
+			'no_found_rows'          => true,
+			'ignore_sticky_posts'    => true,
+			'update_post_term_cache' => false,
+			'update_post_meta_cache' => false,
+			'orderby'                => 'post_date ID',
+			'order'                  => 'ASC'
+		);
 		
-		if ($check_post && $check_post->ID) return false;
+		$check_post = new WP_Query(apply_filters('usp_check_duplicates', $args));
+		
+		if (!empty($check_post->post)) return false;
 		
 	}
 	
@@ -857,53 +1078,85 @@ function usp_maybe_rotate($tmp_name, $file_local) {
 
 
 
-function usp_attach_images($post_id, $newPost, $files, $file_count) {
-	//PeterY code to allow UTF-8 chinese characters for the file name
-	setlocale(LC_ALL,'en_US.UTF-8');
-	//PeterY code
+function usp_random_string($length = 12) {
+	
+	$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	
+	$string = substr(str_shuffle($chars), 0, $length);
+	
+	return $string;
+	
+}
+
+
+
+function usp_unique_filename($file) {
+	
+	$parts = pathinfo($file); // e.g., // /www/htdocs/inc/image.jpg
+	
+	$dirname   = isset($parts['dirname'])   ? $parts['dirname']   : ''; // /www/htdocs/inc
+	$basename  = isset($parts['basename'])  ? $parts['basename']  : ''; // image.jpg
+	$extension = isset($parts['extension']) ? $parts['extension'] : ''; // jpg
+	$filename  = isset($parts['filename'])  ? $parts['filename']  : ''; // image
+	
+	$append = '-'. usp_random_string();
+	
+	$file = $dirname .'/'. $filename . $append .'.'. $extension;
+	
+	$file = apply_filters('usp_unique_filename', $file, $dirname, $basename, $extension, $filename);
+	
+	return $file;
+	
+}
+
+
+
+function usp_attach_images($post_id, $newPost, $files, $file_count, $author_data) {
+	
+	global $usp_options;
+	
 	do_action('usp_files_before', $files);
+	
 	$attach_ids = array();
 	
 	if ($files && $file_count > 0) {
 		
 		usp_include_deps();
+		
 		for ($i = 0; $i < $file_count; $i++) {
 			
 			if (isset($files['tmp_name'][$i]) && !empty($files['tmp_name'][$i])) {
+				
 				$file_local = file_get_contents($files['tmp_name'][$i]);
+				
 				$tmp_name = $files['tmp_name'][$i];
 				
 			} else {
+				
 				continue;
 				
 			}
 			
 			if (isset($files['name'][$i]) && !empty($files['name'][$i])) {
+				
 				$append = ($file_count > 1) ? '-'. $i : '';
 				
-				$append = apply_filters('usp_filename_append', $append);
-				
-				$file_name = basename($files['name'][$i]);
-				date_default_timezone_set('America/Edmonton');
-
-				$localtime_assoc = getdate();
-				//print_r($localtime_assoc);
-				$date_iso = ($localtime_assoc['year'].
-                $localtime_assoc['mon'].
-                $localtime_assoc['mday'].
-                $localtime_assoc['hours'].
-                $localtime_assoc['minutes'].
-                $localtime_assoc['seconds']);
-				
-				$file_name = $date_iso . '-' . $file_name;
+				$file_name = sanitize_file_name(basename($files['name'][$i]));
 				
 				$parts = pathinfo($file_name);
 				
 				$ext = isset($parts['extension']) ? $parts['extension'] : null;
 				
+				$append = apply_filters('usp_filename_append', $append, $file_name, $ext);
+				
+				$filename = isset($parts['filename']) ? $parts['filename'] : usp_random_string();
+				
 				$file_name = isset($parts['filename']) ? $parts['filename'] . $append .'.'. $ext : $file_name;
 				
+				$file_name = apply_filters('usp_file_name', $file_name, $filename, $append, $ext);
+				
 			} else {
+				
 				continue;
 				
 			}
@@ -928,7 +1181,9 @@ function usp_attach_images($post_id, $newPost, $files, $file_count) {
 				
 			}
 			
-			$bytes = file_put_contents($file, $file_local);
+			$file = file_exists($file) ? usp_unique_filename($file) : $file;
+			
+			if (in_array(strtolower($ext), array('jpg', 'jpeg', 'jpe', 'gif', 'png', 'bmp', 'tif', 'tiff', 'ico', 'webp', 'heic', 'heif', 'svg'))) $bytes = file_put_contents($file, $file_local);
 			
 			$file_type = isset($wp_filetype['type']) ? $wp_filetype['type'] : null;
 			
@@ -943,12 +1198,32 @@ function usp_attach_images($post_id, $newPost, $files, $file_count) {
 				'post_name'      => $file_name,
 				'post_title'     => $file_name,
 				'post_status'    => 'inherit',
-				'guid'           => $guid,
+				'guid'           => $guid
 			);
+			
+			if (!is_user_logged_in()) {
+				
+				$attachment_author_id = apply_filters('usp_attachment_author_id', 0);
+				
+				if (!$attachment_author_id) {
+					
+					$attachment_author_id = isset($author_data['author_id']) ? $author_data['author_id'] : 1;
+					
+				}
+				
+				$attachment['post_author'] = $attachment_author_id;
+				
+			}
 			
 			$attachment = apply_filters('usp_insert_attachment_data', $attachment);
 			
 			$attach_id = wp_insert_attachment($attachment, $file, $post_id);
+			
+			if (isset($usp_options['usp_featured_images']) && $usp_options['usp_featured_images']) {
+				
+				if (!has_post_thumbnail($post_id)) set_post_thumbnail($post_id, $attach_id);
+				
+			}
 			
 			$attach_data = wp_generate_attachment_metadata($attach_id, $file);
 			
@@ -974,6 +1249,20 @@ function usp_attach_images($post_id, $newPost, $files, $file_count) {
 			
 		}
 		
+	} else {
+		
+		if (isset($usp_options['usp_featured_image_default']) && !empty($usp_options['usp_featured_image_default'])) {
+			
+			$default_image = attachment_url_to_postid($usp_options['usp_featured_image_default']);
+			
+			if (!empty($default_image) && isset($usp_options['usp_featured_images']) && $usp_options['usp_featured_images']) {
+				
+				if (!has_post_thumbnail($post_id)) set_post_thumbnail($post_id, $default_image);
+				
+			}
+			
+		}
+		
 	}
 	
 	do_action('usp_files_after', $attach_ids);
@@ -984,31 +1273,49 @@ function usp_attach_images($post_id, $newPost, $files, $file_count) {
 
 
 
-function usp_createPublicSubmission($title, $files, $ip, $author, $url, $email, $tags, $captcha, $verify, $content, $category, $custom, $checkbox) {
+function usp_createPublicSubmission($title, $files, $ip, $author, $url, $email, $tags, $captcha, $verify, $content, $category, $custom, $custom_2, $checkbox, $comments) {
 	
 	global $usp_options;
 	
-	// check errors
-	$newPost = array('id' => false, 'error' => false);
+	$newPost = array('id' => null, 'error' => array());
 	
-	$author_data        = usp_get_author($author);
-	$author             = $author_data['author'];
-	$author_id          = $author_data['author_id'];
-	$newPost['error'][] = $author_data['error'];
+	$author_data = usp_get_author($author);
+	$author      = $author_data['author'];
+	$author_id   = $author_data['author_id'];
 	
-	$file_data          = usp_check_images($files, $newPost);
-	$file_count         = $file_data['file_count'];
-	$newPost['error']   = array_unique(array_merge($file_data['error'], $newPost['error']));
+	if (isset($author_data['error']) && !empty($author_data['error'])) {
+		
+		$newPost['error'][] = $author_data['error'];
+		
+	}
 	
-	if (isset($usp_options['usp_title'])    && ($usp_options['usp_title']    == 'show') && empty($title))    $newPost['error'][] = 'required-title';
-	if (isset($usp_options['usp_url'])      && ($usp_options['usp_url']      == 'show') && empty($url))      $newPost['error'][] = 'required-url';
-	if (isset($usp_options['usp_tags'])     && ($usp_options['usp_tags']     == 'show') && empty($tags))     $newPost['error'][] = 'required-tags';
-	if (isset($usp_options['usp_category']) && ($usp_options['usp_category'] == 'show') && empty($category)) $newPost['error'][] = 'required-category';
-	if (isset($usp_options['usp_content'])  && ($usp_options['usp_content']  == 'show') && empty($content))  $newPost['error'][] = 'required-content';
-	if (isset($usp_options['custom_field']) && ($usp_options['custom_field'] == 'show') && empty($custom))   $newPost['error'][] = 'required-custom';
+	$file_data  = usp_check_images($files, $newPost);
+	$file_count = $file_data['file_count'];
 	
-	if (isset($usp_options['usp_recaptcha']) && ($usp_options['usp_recaptcha'] == 'show') && !usp_verify_recaptcha())     $newPost['error'][] = 'required-recaptcha';
-	if (isset($usp_options['usp_captcha'])   && ($usp_options['usp_captcha']   == 'show') && !usp_spamQuestion($captcha)) $newPost['error'][] = 'required-captcha';
+	if (isset($file_data['error']) && !empty($file_data['error'])) {
+		
+		$newPost['error'] = array_unique(array_merge($file_data['error'], $newPost['error']));
+		
+	}
+	
+	$tags     = is_array($tags)     ? array_filter($tags)     : $tags;
+	$category = is_array($category) ? array_filter($category) : $category;
+	
+	if (isset($usp_options['usp_title'])      && ($usp_options['usp_title']      == 'show') && empty($title))    $newPost['error'][] = 'required-title';
+	if (isset($usp_options['usp_url'])        && ($usp_options['usp_url']        == 'show') && empty($url))      $newPost['error'][] = 'required-url';
+	if (isset($usp_options['usp_tags'])       && ($usp_options['usp_tags']       == 'show') && empty($tags))     $newPost['error'][] = 'required-tags';
+	if (isset($usp_options['usp_category'])   && ($usp_options['usp_category']   == 'show') && empty($category)) $newPost['error'][] = 'required-category';
+	if (isset($usp_options['usp_content'])    && ($usp_options['usp_content']    == 'show') && empty($content))  $newPost['error'][] = 'required-content';
+	if (isset($usp_options['custom_field'])   && ($usp_options['custom_field']   == 'show') && empty($custom))   $newPost['error'][] = 'required-custom';
+	if (isset($usp_options['custom_field_2']) && ($usp_options['custom_field_2'] == 'show') && empty($custom_2)) $newPost['error'][] = 'required-custom-2';
+	
+	if (usp_check_recaptcha_keys()) {
+		
+		if (isset($usp_options['usp_recaptcha']) && ($usp_options['usp_recaptcha'] == 'show') && !usp_verify_recaptcha()) $newPost['error'][] = 'required-recaptcha';
+		
+	}
+	
+	if (isset($usp_options['usp_captcha']) && ($usp_options['usp_captcha'] == 'show') && !usp_spamQuestion($captcha)) $newPost['error'][] = 'required-captcha';
 	
 	if (isset($usp_options['usp_email']) && ($usp_options['usp_email'] == 'show')) {
 		
@@ -1029,15 +1336,22 @@ function usp_createPublicSubmission($title, $files, $ip, $author, $url, $email, 
 	if (isset($usp_options['titles_unique']) && $usp_options['titles_unique'] && !usp_check_duplicates($title)) $newPost['error'][] = 'duplicate-title';
 	if (!empty($verify)) $newPost['error'][] = 'spam-verify';
 	
-	if (isset($usp_options['custom_checkbox']) && !empty($usp_options['custom_checkbox']) && empty($checkbox)) $newPost['error'][] = 'required-checkbox';
+	$checkbox_display  = (isset($usp_options['custom_checkbox'])     && !empty($usp_options['custom_checkbox']))     ? true : false;
+	$checkbox_required = (isset($usp_options['custom_checkbox_req']) && !empty($usp_options['custom_checkbox_req'])) ? true : false;
 	
-	foreach ($newPost['error'] as $e) {
+	if ($checkbox_display && $checkbox_required && empty($checkbox)) $newPost['error'][] = 'required-checkbox';
+	
+	if (isset($newPost['error']) && !empty($newPost['error'])) {
 		
-		if (!empty($e)) {
+		foreach ($newPost['error'] as $e) {
 			
-			unset($newPost['id']);
-			
-			return $newPost;
+			if (!empty($e)) {
+				
+				unset($newPost['id']);
+				
+				return $newPost;
+				
+			}
 			
 		}
 		
@@ -1045,8 +1359,8 @@ function usp_createPublicSubmission($title, $files, $ip, $author, $url, $email, 
 	
 	$postData = usp_prepare_post($title, $content, $author_id, $author, $ip);
 	
-	$new_status = (isset($postData['post_status']) && !empty($postData['post_status'])) ? sanitize_text_field($postData['post_status']) : 'draft';
-	$postData['post_status'] = 'draft';
+	$new_status = (isset($postData['post_status']) && !empty($postData['post_status'])) ? sanitize_text_field($postData['post_status']) : apply_filters('usp_post_status', 'pending');
+	$postData['post_status'] = apply_filters('usp_post_status', 'pending');
 	
 	do_action('usp_insert_before', $postData);
 	$newPost['id'] = wp_insert_post($postData);
@@ -1054,37 +1368,46 @@ function usp_createPublicSubmission($title, $files, $ip, $author, $url, $email, 
 	
 	$post_id = isset($newPost['id']) ? $newPost['id'] : null;
 	
-	if ($post_id) {
+	if ($post_id && !is_wp_error($post_id)) {
 		
 		$post = get_post($post_id);
 		
 		$post->post_status = $new_status;
 		
+		$post->comment_status = $comments;
+		
 		wp_update_post($post);
 		
-		wp_set_post_tags($post_id, $tags);
+		wp_set_post_tags($post_id, apply_filters('usp_filter_tags', $tags), apply_filters('usp_append_tags', false));
 		
-		wp_set_post_categories($post_id, array($category));
+		wp_set_post_categories($post_id, apply_filters('usp_filter_cats', $category), apply_filters('usp_append_cats', false));
 		
-		usp_send_mail_alert($post_id, $title, $content, $author, $email);
+		$newPost = usp_attach_images($post_id, $newPost, $files, $file_count, $author_data);
 		
-		$newPost = usp_attach_images($post_id, $newPost, $files, $file_count);
-		
-		if (isset($newPost['error'][0]) && empty($newPost['error'][0])) {
+		if (isset($newPost['error']) && empty($newPost['error'])) {
 			
 			update_post_meta($post_id, 'is_submission', true);
 			update_post_meta($post_id, 'usp-post-id', $post_id);
 
-			$custom_name   = isset($usp_options['custom_name'])          ? $usp_options['custom_name']          : 'usp_custom_field';
+			$custom_name   = isset($usp_options['custom_name'])   ? $usp_options['custom_name']   : 'usp_custom_field';
+			$custom_name_2 = isset($usp_options['custom_name_2']) ? $usp_options['custom_name_2'] : 'usp_custom_field_2';
+			
 			$checkbox_name = isset($usp_options['custom_checkbox_name']) ? $usp_options['custom_checkbox_name'] : 'usp_custom_checkbox';
 			
 			if (!empty($custom))   update_post_meta($post_id, $custom_name,        $custom);
+			if (!empty($custom_2)) update_post_meta($post_id, $custom_name_2,      $custom_2);
 			if (!empty($checkbox)) update_post_meta($post_id, $checkbox_name,      $checkbox);
 			if (!empty($author))   update_post_meta($post_id, 'user_submit_name',  $author);
 			if (!empty($email))    update_post_meta($post_id, 'user_submit_email', $email);
 			if (!empty($url))      update_post_meta($post_id, 'user_submit_url',   $url);
 			
 			if (!empty($ip) && !$usp_options['disable_ip_tracking']) update_post_meta($post_id, 'user_submit_ip', $ip); 
+			
+			$post_date = apply_filters('usp_post_meta_submit_time_format', get_the_time('l, F j, Y @ h:i:s a', $post_id));
+			
+			update_post_meta($post_id, 'usp-post-time', $post_date);
+			
+			usp_send_mail_alert($post_id, $title, $content, $author, $email, $url, $custom, $custom_2, $post_date);
 			
 		}
 		
@@ -1182,28 +1505,27 @@ function usp_validateEmail($email) {
 	
 }
 
-
-
-function usp_send_mail_alert($post_id, $title, $content, $author, $email) {
+function usp_send_mail_alert($post_id, $title, $content, $author, $email, $url, $custom, $custom_2, $post_date) {
 	
 	global $usp_options;
+	
 	if (isset($usp_options['usp_email_alerts']) && $usp_options['usp_email_alerts']) {
 		
-		$blog_url     = get_bloginfo('url');              // %%blog_url%%
-		$blog_name    = get_bloginfo('name');             // %%blog_name%%
-		$post_url     = get_permalink($post_id);          // %%post_url%%
-		$admin_url    = admin_url();                      // %%admin_url%%
-		$post_title   = $title;                           // %%post_title%%
-		$post_content = $content;                         // %%post_content%%
-		$post_author  = $author;                          // %%post_author%%
-		$user_email   = $email;                           // %%user_email%%
-		$edit_link    = get_edit_post_link($post_id, ''); // %%edit_link%%
-        global $wpdb;
-        error_log("the user submitting a photo is ". $post_author);
-        $querystr = "SELECT DISTINCT user_email FROM wp_users WHERE display_name = '$post_author'";
-        $user_email =  $wpdb->get_results($querystr, ARRAY_A);
-
+		$blog_url     = get_bloginfo('url');        // %%blog_url%%
+		$blog_name    = get_bloginfo('name');       // %%blog_name%%
+		$post_url     = get_permalink($post_id);    // %%post_url%%
+		$admin_url    = admin_url();                // %%admin_url%%
+		$post_title   = $title;                     // %%post_title%%
+		$post_content = $content;                   // %%post_content%%
+		$post_author  = $author;                    // %%post_author%%
+		$user_email   = $email;                     // %%user_email%%
+		$user_url     = $url;                       // %%user_url%%
+		
+		$edit_link    = usp_remote_edit_post_link($post_id);   // %%edit_link%%
+		$delete_link  = usp_remote_delete_post_link($post_id); // %%delete_link%%
+		
 		$patterns = array();
+		
 		$patterns[0]  = "/%%blog_url%%/";
 		$patterns[1]  = "/%%blog_name%%/";
 		$patterns[2]  = "/%%post_url%%/";
@@ -1212,9 +1534,15 @@ function usp_send_mail_alert($post_id, $title, $content, $author, $email) {
 		$patterns[5]  = "/%%post_content%%/";
 		$patterns[6]  = "/%%post_author%%/";
 		$patterns[7]  = "/%%user_email%%/";
-		$patterns[8]  = "/%%edit_link%%/";
+		$patterns[8]  = "/%%user_url%%/";
+		$patterns[9]  = "/%%edit_link%%/";
+		$patterns[10] = "/%%custom_field%%/";
+		$patterns[11] = "/%%custom_field_2%%/";
+		$patterns[12] = "/%%delete_link%%/";
+		$patterns[13] = "/%%post_date%%/";
 		
 		$replacements = array();
+		
 		$replacements[0]  = $blog_url;
 		$replacements[1]  = $blog_name;
 		$replacements[2]  = $post_url;
@@ -1223,7 +1551,12 @@ function usp_send_mail_alert($post_id, $title, $content, $author, $email) {
 		$replacements[5]  = $post_content;
 		$replacements[6]  = $post_author;
 		$replacements[7]  = $user_email;
-		$replacements[8]  = $edit_link;
+		$replacements[8]  = $user_url;
+		$replacements[9]  = $edit_link;
+		$replacements[10] = $custom;
+		$replacements[11] = $custom_2;
+		$replacements[12] = $delete_link;
+		$replacements[13] = $post_date;
 		
 		//
 		
@@ -1270,18 +1603,63 @@ function usp_send_mail_alert($post_id, $title, $content, $author, $email) {
 				wp_mail($address_to, $subject, $message, $headers);
 				
 			}
-			$address_to_user_email = $user_email[0]["user_email"];
-			$message_to_user = '<html><head></head><body>';
-			$message_to_user = '<p>Dear '.$post_author.'</p>';
-            $message_to_user .= '<p>You have submitted a photo called '.$post_title.'</p>';
-			$message_to_user .= "Thank you for your participation in the photo contest.".'<br><br>';
-			$message_to_user .= "Calgary Photographic Art Society";
-			$message_to_user .= '</body></html>';
-			wp_mail($address_to_user_email, "photo submission $post_title", $message_to_user, $headers);
 			
 		}
 		
 	}
+	
+}
+
+
+
+// Thanks to Delete Post plugin @ https://wordpress.org/plugins/delete-post/
+
+function usp_remote_delete_post() {
+	
+	if (isset($_GET['delete_post']) && isset($_GET['nonce'])) {
+		
+		if (wp_verify_nonce($_GET['nonce'], 'delete_post_'. $_GET['delete_post'])) {
+			
+			$post_id = intval($_GET['delete_post']);
+			
+			$post = get_post($post_id);
+			
+			if ($post && get_current_user_id() === (int) $post->post_author) {
+				
+				$force = apply_filters('usp_force_delete_post', true);
+				
+				$result = wp_delete_post($post_id, $force);
+				
+				$result = $result ? 'true' : 'false';
+				
+				$url = add_query_arg('usp-delete-post', $result, trailingslashit(home_url()));
+				
+				wp_redirect($url);
+				
+				exit;
+				
+			}
+			
+		}
+		
+	}
+	
+}
+add_action('init', 'usp_remote_delete_post');
+
+
+
+function usp_remote_delete_post_link($post_id) {
+	
+	return add_query_arg(array('delete_post' => $post_id, 'nonce' => wp_create_nonce('delete_post_'. $post_id)), trailingslashit(home_url()));
+	
+}
+
+
+
+function usp_remote_edit_post_link($post_id) {
+	
+	return admin_url('post.php?post='. $post_id .'&action=edit');
 	
 }
 
@@ -1327,7 +1705,8 @@ function usp_error_message() {
 	$min_height = ' ('. $usp_options['min-image-height'] . esc_html__(' pixels', 'usp') .')';
 	$max_height = ' ('. $usp_options['max-image-height'] . esc_html__(' pixels', 'usp') .')';
 	
-	$custom_label = isset($usp_options['custom_label']) ? $usp_options['custom_label'] : __('Custom Field', 'usp');
+	$custom_label   = isset($usp_options['custom_label'])   ? $usp_options['custom_label']   : __('Custom Field 1', 'usp');
+	$custom_label_2 = isset($usp_options['custom_label_2']) ? $usp_options['custom_label_2'] : __('Custom Field 2', 'usp');
 	
 	$checkbox_label = isset($usp_options['custom_checkbox_err']) ? $usp_options['custom_checkbox_err'] : __('Custom checkbox required', 'usp');
 	
@@ -1361,7 +1740,8 @@ function usp_error_message() {
 			elseif ($e == 'height-min')          $error[] = esc_html__('Minimum image height not met', 'usp') . $min_height;
 			elseif ($e == 'height-max')          $error[] = esc_html__('Image height exceeds maximum', 'usp') . $max_height;
 			elseif ($e == 'file-type')           $error[] = esc_html__('File type not allowed (please upload images only)', 'usp');
-			elseif ($e == 'required-custom')     $error[] = esc_html($custom_label) . esc_html__(' required', 'usp');
+			elseif ($e == 'required-custom')     $error[] = esc_html($custom_label)   . esc_html__(' required', 'usp');
+			elseif ($e == 'required-custom-2')   $error[] = esc_html($custom_label_2) . esc_html__(' required', 'usp');
 			elseif ($e == 'required-checkbox')   $error[] = esc_html($checkbox_label);
 			
 			// general error for file uploads, check error log for description.
@@ -1441,9 +1821,9 @@ function usp_login_required_message() {
 	
 	$message  = '<p>'. esc_html__('Please', 'usp');
 	$message .= ' <a href="'. esc_url($url) .'">'. esc_html__('log in', 'usp') .'</a> ';
-	$message .= esc_html__('to submit content.', 'usp') .'</p>';
+	$message .= esc_html__('to submit content!', 'usp') .'</p>';
 	
-	//$message = apply_filters('usp_require_login', $message);
+	$message = apply_filters('usp_require_login', $message);
 	
 	return $message;
 	
@@ -1453,23 +1833,17 @@ function usp_login_required_message() {
 
 function usp_clear_cookies() {
 	
-	global $usp_options;
-	
-	$custom_field = isset($usp_options['custom_name']) ? $usp_options['custom_name'] : '';
-	
-	$custom_checkbox = isset($usp_options['custom_checkbox_name']) ? $usp_options['custom_checkbox_name'] : '';
-	
 	$cookies = array(
 		'user-submitted-name',
-		'user-submitted-url',
 		'user-submitted-email',
+		'user-submitted-url',
 		'user-submitted-title',
 		'user-submitted-tags',
-		'user-submitted-captcha',
 		'user-submitted-category',
 		'user-submitted-content',
-		$custom_field,
-		$custom_checkbox
+		'user-submitted-custom',
+		'user-submitted-checkbox',
+		'user-submitted-captcha'
 	);
 	
 	foreach ($cookies as $cookie) {
@@ -1477,7 +1851,7 @@ function usp_clear_cookies() {
 		if (isset($_COOKIE[$cookie]) && !empty($_COOKIE[$cookie])) {
 			
 			unset($_COOKIE[$cookie]);
-			setcookie($cookie, null, time() - 3600, '/');
+			setcookie($cookie, '', time() - 3600, '/');
 			
 		}
 		

@@ -31,12 +31,14 @@
 
 	$VARS = isset($VARS) ? $VARS : array();
 
-	wp_enqueue_script( 'jquery' );
-	wp_enqueue_script( 'json2' );
-	fs_enqueue_local_script( 'postmessage', 'nojquery.ba-postmessage.min.js' );
-	fs_enqueue_local_script( 'fs-postmessage', 'postmessage.js' );
-?>
+    $fs = freemius( $VARS['module_id'] );
 
+    if ( ! $fs->is_whitelabeled() && ! $fs->apply_filters( 'hide_freemius_powered_by', false ) ) {
+        wp_enqueue_script( 'jquery' );
+        wp_enqueue_script( 'json2' );
+        fs_enqueue_local_script( 'postmessage', 'nojquery.ba-postmessage.js' );
+        fs_enqueue_local_script( 'fs-postmessage', 'postmessage.js' );
+    ?>
 <div id="pframe"></div>
 <script type="text/javascript">
 	(function ($) {
@@ -56,3 +58,4 @@
 		});
 	})(jQuery);
 </script>
+<?php } ?>

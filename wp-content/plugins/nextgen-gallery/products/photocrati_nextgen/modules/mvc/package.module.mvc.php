@@ -1,148 +1,38 @@
 <?php
 /**
  * Class A_MVC_Factory
+ *
  * @mixin C_Component_Factory
  * @adapts I_Component_Factory
  */
 class A_MVC_Factory extends Mixin
 {
-    function mvc_view($template, $params = array(), $engine = 'php', $context = FALSE)
+    public function mvc_view($template, $params = array(), $engine = 'php', $context = false, $new_template_path = '')
     {
-        return new C_MVC_View($template, $params, $engine, $context);
+        return new C_MVC_View($template, $params, $engine, $context, $new_template_path);
     }
 }
-/**
- * Class A_MVC_Fs
- * @mixin C_Fs
- * @adapts I_Fs
- */
-class A_MVC_Fs extends Mixin
-{
-    static $_lookups = array();
-    static $_non_minified_modules = array();
-    function _get_cache_key()
-    {
-        return C_Photocrati_Transient_Manager::create_key('MVC', 'find_static_abspath');
-    }
-    function initialize()
-    {
-        register_shutdown_function(array(&$this, 'cache_lookups'));
-        //self::$_lookups = C_Photocrati_Transient_Manager::fetch($this->_get_cache_key(), array());
-        self::$_non_minified_modules = apply_filters('ngg_non_minified_modules', array());
-    }
-    function cache_lookups()
-    {
-        C_Photocrati_Transient_Manager::update($this->_get_cache_key(), self::$_lookups);
-    }
-    /**
-     * Gets the absolute path to a static resource. If it doesn't exist, then NULL is returned
-     *
-     * @param string $path
-     * @param string|false $module (optional)
-     * @param bool $relative (optional)
-     * @param bool $found_root (optional)
-     * @return string|NULL
-     * @deprecated Use M_Static_Assets instead
-     */
-    function find_static_abspath($path, $module = FALSE, $relative = FALSE, &$found_root = FALSE)
-    {
-        $retval = NULL;
-        $key = $this->_get_static_abspath_key($path, $module, $relative);
-        // Have we looked up this resource before?
-        if (isset(self::$_lookups[$key])) {
-            $retval = self::$_lookups[$key];
-        } else {
-            // Get the module if we haven't got one yet
-            if (!$module) {
-                list($path, $module) = $this->object->parse_formatted_path($path);
-            }
-            // Lookup the module directory
-            $mod_dir = $this->object->get_registry()->get_module_dir($module);
-            $filter = has_filter('ngg_non_minified_files') ? apply_filters('ngg_non_minified_files', $path, $module) : FALSE;
-            if (!defined('SCRIPT_DEBUG')) {
-                define('SCRIPT_DEBUG', FALSE);
-            }
-            if (!SCRIPT_DEBUG && !in_array($module, self::$_non_minified_modules) && strpos($path, 'min.') === FALSE && strpos($path, 'pack.') === FALSE && strpos($path, 'packed.') === FALSE && preg_match('/\\.(js|css)$/', $path) && !$filter) {
-                $path = preg_replace("#\\.[^\\.]+\$#", ".min\\0", $path);
-            }
-            // In case NextGen is in a symlink we make $mod_dir relative to the NGG root and then rebuild it
-            // using WP_PLUGIN_DIR; without this NGG-in-symlink creates URL that reference the file abspath
-            if (is_link($this->object->join_paths(WP_PLUGIN_DIR, basename(NGG_PLUGIN_DIR)))) {
-                $mod_dir = str_replace(dirname(NGG_PLUGIN_DIR), '', $mod_dir);
-                $mod_dir = $this->object->join_paths(WP_PLUGIN_DIR, $mod_dir);
-            }
-            // Create the absolute path to the file
-            $path = $this->object->join_paths($mod_dir, C_NextGen_Settings::get_instance()->get('mvc_static_dirname'), $path);
-            $path = wp_normalize_path($path);
-            if ($relative) {
-                $original_length = strlen($path);
-                $roots = array('plugins', 'plugins_mu', 'templates', 'stylesheets');
-                $found_root = FALSE;
-                foreach ($roots as $root) {
-                    $path = str_replace($this->object->get_document_root($root), '', $path);
-                    if (strlen($path) != $original_length) {
-                        $found_root = $root;
-                        break;
-                    }
-                }
-            }
-            // Cache result
-            $retval = self::$_lookups[$key] = $path;
-        }
-        return $retval;
-    }
-    function _get_static_abspath_key($path, $module = FALSE, $relative = FALSE)
-    {
-        $key = $path;
-        if ($module) {
-            $key .= '|' . $module;
-        }
-        if ($relative) {
-            $key .= 'r';
-        }
-        global $wpdb;
-        if ($wpdb) {
-            $key .= '|' . $wpdb->blogid;
-        }
-        return $key;
-    }
-}
-if (preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) {
-    die('You are not allowed to call this page directly.');
-}
-class Mixin_MVC_Controller_Defaults extends Mixin
-{
-    // Provide a default view
-    function index_action($return = FALSE)
-    {
-        return $this->render_view('photocrati-mvc#index', array(), $return);
-    }
+// Exit if accessed directly.
+if (!defined('ABSPATH')) {
+    exit;
 }
 /**
  * Provides actions that are executed based on the requested url
- * @mixin Mixin_MVC_Controller_Defaults
+ *
  * @mixin Mixin_MVC_Controller_Instance_Methods
- * @implements I_MVC_Controller
  */
 abstract class C_MVC_Controller extends C_Component
 {
     var $_content_type = 'text/html';
     var $message = '';
-    var $debug = FALSE;
-    function define($context = FALSE)
+    var $debug = false;
+    public function define($context = false)
     {
         parent::define($context);
-        $this->add_mixin('Mixin_MVC_Controller_Defaults');
         $this->add_mixin('Mixin_MVC_Controller_Instance_Methods');
         $this->implement('I_MVC_Controller');
     }
-}
-/**
- * Adds methods for MVC Controller
- */
-class Mixin_MVC_Controller_Instance_Methods extends Mixin
-{
-    function set_content_type($type)
+    public function set_content_type($type)
     {
         switch ($type) {
             case 'html':
@@ -185,192 +75,232 @@ class Mixin_MVC_Controller_Instance_Methods extends Mixin
             case 'pdf':
                 $type = 'application/pdf';
                 break;
+            case 'webp':
+                $type = 'image/webp';
+                break;
         }
         $this->object->_content_type = $type;
         return $type;
     }
-    function do_not_cache()
+    public function expires($time)
+    {
+        $time = strtotime($time);
+        if (!headers_sent()) {
+            header('Expires: ' . strftime('%a, %d %b %Y %H:%M:%S %Z', $time));
+        }
+    }
+    public function http_error($message, $code = 501)
+    {
+        $this->message = $message;
+        $method = "http_{$code}_action";
+        $this->{$method}();
+    }
+    public function is_valid_request($method)
+    {
+        return true;
+    }
+    public function is_post_request()
+    {
+        return 'POST' == $this->object->get_router()->get_request_method();
+    }
+    public function is_get_request()
+    {
+        return 'GET' == $this->object->get_router()->get_request_method();
+    }
+    public function is_delete_request()
+    {
+        return 'DELETE' == $this->object->get_router()->get_request_method();
+    }
+    public function is_put_request()
+    {
+        return 'PUT' == $this->object->get_router()->get_request_method();
+    }
+    public function do_not_cache()
     {
         if (!headers_sent()) {
             header('Cache-Control: no-cache');
             header('Pragma: no-cache');
         }
     }
-    function expires($time)
-    {
-        $time = strtotime($time);
-        if (!headers_sent()) {
-            header('Expires: ' . strftime("%a, %d %b %Y %H:%M:%S %Z", $time));
-        }
-    }
-    function http_error($message, $code = 501)
-    {
-        $this->message = $message;
-        $method = "http_{$code}_action";
-        $this->{$method}();
-    }
-    function is_valid_request($method)
-    {
-        return TRUE;
-    }
-    function is_post_request()
-    {
-        return "POST" == $this->object->get_router()->get_request_method();
-    }
-    function is_get_request()
-    {
-        return "GET" == $this->object->get_router()->get_request_method();
-    }
-    function is_delete_request()
-    {
-        return "DELETE" == $this->object->get_router()->get_request_method();
-    }
-    function is_put_request()
-    {
-        return "PUT" == $this->object->get_router()->get_request_method();
-    }
-    function is_custom_request($type)
+    public function is_custom_request($type)
     {
         return strtolower($type) == strtolower($this->object->get_router()->get_request_method());
     }
-    function get_router()
+    /**
+     * @return \Imagely\NGG\Util\Router
+     */
+    public function get_router()
     {
-        return C_Router::get_instance();
+        return \Imagely\NGG\Util\Router::get_instance();
     }
-    function get_routed_app()
+    /**
+     * @return C_Routing_App
+     */
+    public function get_routed_app()
     {
         return $this->object->get_router()->get_routed_app();
     }
-    /**
-     * Returns the value of a parameters
-     * @param string $key
-     * @param string|null $prefix (optional)
-     * @return string
-     */
-    function param($key, $prefix = NULL, $default = NULL)
-    {
-        return $this->object->get_routed_app()->get_parameter($key, $prefix, $default);
-    }
-    function set_param($key, $value, $id = NULL, $use_prefix = FALSE)
-    {
-        return $this->object->get_routed_app()->set_parameter($key, $value, $id, $use_prefix);
-    }
-    function set_param_for($url, $key, $value, $id = NULL, $use_prefix = FALSE)
-    {
-        return $this->object->get_routed_app()->set_parameter($key, $value, $id, $use_prefix, $url);
-    }
-    function remove_param($key, $id = NULL)
-    {
-        return $this->object->get_routed_app()->remove_parameter($key, $id);
-    }
-    function remove_param_for($url, $key, $id = NULL)
+    public function remove_param_for($url, $key, $id = null)
     {
         $app = $this->object->get_routed_app();
         $retval = $app->remove_parameter($key, $id, $url);
         return $retval;
     }
     /**
-     * Gets the routed url, generated by the Routing App
-     * @param bool $with_qs (optional) With QueryString
-     * @return string
-     */
-    function get_routed_url($with_qs = FALSE)
-    {
-        return $this->object->get_routed_app()->get_app_url(FALSE, $with_qs);
-    }
-    /**
      * Gets the absolute path of a static resource
-     * @param string $path
-     * @param string|false $module (optional)
+     *
+     * @param string       $path
+     * @param string|false $module (optional).
      * @return string
      */
-    function get_static_abspath($path, $module = FALSE)
+    public function get_static_abspath($path, $module = false)
     {
-        return M_Static_Assets::get_static_abspath($path, $module);
+        return \Imagely\NGG\Display\StaticPopeAssets::get_abspath($path, $module);
     }
     /**
-     * @param string $path
-     * @param string|false $module (optional)
+     * @param string       $path
+     * @param string|false $module (optional).
      * @return string
      */
-    function get_static_url($path, $module = FALSE)
+    public function get_static_url($path, $module = false)
     {
-        return M_Static_Assets::get_static_url($path, $module);
+        return \Imagely\NGG\Display\StaticPopeAssets::get_url($path, $module);
     }
     /**
      * Renders a template and outputs the response headers
+     *
      * @param string $name
-     * @param array $vars (optional)
-     * @param bool $return (optional)
+     * @param array  $vars (optional).
+     * @param bool   $return (optional).
      * @return string
      */
-    function render_view($name, $vars = array(), $return = FALSE)
+    public function render_view($name, $vars = array(), $return = false)
     {
         $this->object->render();
         return $this->object->render_partial($name, $vars, $return);
     }
     /**
-     * Outputs the response headers
+     * @param string $template Path to the POPE module#filename.
+     * @param array  $params Array of parameters to be extract()ed to the template file.
+     * @param bool   $return When true results will be returned instead of printed.
+     * @param null   $context Application context.
+     * @param string $new_template_path Path to the new non-POPE file located under the plugin root's '/templates' directory.
+     * @return mixed
      */
-    function render()
+    public function render_partial($template, $params = array(), $return = false, $context = null, $new_template_path = '')
+    {
+        /** @var C_MVC_View $view */
+        $view = $this->object->create_view($template, $params, $context, $new_template_path);
+        return $view->render($return);
+    }
+}
+/**
+ * Adds methods for MVC Controller
+ *
+ * @property C_MVC_Controller $object
+ */
+class Mixin_MVC_Controller_Instance_Methods extends Mixin
+{
+    // Provide a default view.
+    public function index_action($return = false)
+    {
+        return $this->render_view('photocrati-mvc#index', [], $return);
+    }
+    /**
+     * Returns the value of a parameters
+     *
+     * @param string      $key
+     * @param string|null $prefix (optional).
+     * @return string
+     */
+    public function param($key, $prefix = null, $default = null)
+    {
+        return $this->object->get_routed_app()->get_parameter($key, $prefix, $default);
+    }
+    public function set_param($key, $value, $id = null, $use_prefix = false)
+    {
+        return $this->object->get_routed_app()->set_parameter($key, $value, $id, $use_prefix);
+    }
+    public function set_param_for($url, $key, $value, $id = null, $use_prefix = false)
+    {
+        return $this->object->get_routed_app()->set_parameter($key, $value, $id, $use_prefix, $url);
+    }
+    public function remove_param($key, $id = null)
+    {
+        return $this->object->get_routed_app()->remove_parameter($key, $id);
+    }
+    /**
+     * Gets the routed url, generated by the Routing App
+     *
+     * @param bool $with_qs (optional) With QueryString.
+     * @return string
+     */
+    public function get_routed_url($with_qs = false)
+    {
+        return $this->object->get_routed_app()->get_app_url(false, $with_qs);
+    }
+    /**
+     * Outputs the response headers
+     *
+     * TODO: Determine if this can be moved into C_MVC_Controller
+     */
+    public function render()
     {
         if (!headers_sent() && !defined('DOING_AJAX') && !defined('REST_REQUEST')) {
             header('Content-Type: ' . $this->object->_content_type . '; charset=' . get_option('blog_charset'), true);
         }
     }
     /**
-     * Renders a view
+     * @param string $template Path to the POPE module#filename.
+     * @param array  $params Array of parameters to be extract()ed to the template file.
+     * @param null   $context Application context.
+     * @param string $new_template_path Path to the new non-POPE file located under the plugin root's '/templates' directory.
+     * @return mixed
      */
-    function render_partial($template, $params = array(), $return = FALSE, $context = NULL)
-    {
-        $view = $this->object->create_view($template, $params, $context);
-        return $view->render($return);
-    }
-    function create_view($template, $params = array(), $context = NULL)
+    public function create_view($template, $params = array(), $context = null, $new_template_path = '')
     {
         if (!$context) {
             $context = $this->object->context;
         }
-        $factory = C_Component_Factory::get_instance();
-        $view = $factory->create('mvc_view', $template, $params, NULL, $context);
-        return $view;
+        return C_Component_Factory::get_instance()->create('mvc_view', $template, $params, null, $context, $new_template_path);
     }
 }
 /**
  * Class C_MVC_View
+ *
  * @mixin Mixin_Mvc_View_Instance_Methods
- * @implements I_MVC_View
+ * @property C_MVC_View $object
  */
 class C_MVC_View extends C_Component
 {
-    var $_template = '';
-    var $_engine = '';
-    var $_params = array();
-    var $_queue = array();
-    function __construct($template, $params = array(), $engine = 'php', $context = FALSE)
+    public $_template = '';
+    public $_engine = '';
+    public $_params = array();
+    public $_queue = array();
+    public $_new_template = '';
+    public function __construct($template, $params = array(), $engine = 'php', $context = false, $new_template_path = '')
     {
         $this->_template = $template;
         $this->_params = (array) $params;
         $this->_engine = $engine;
-        $context = $context ? array_unique([$context, $template]) : $template;
+        $this->_new_template = $new_template_path;
+        $context = $context ? array_unique([$context, $template], SORT_REGULAR) : $template;
         parent::__construct($context);
     }
-    function define($context = FALSE)
+    public function define($context = false)
     {
         parent::define($context);
         $this->implement('I_MVC_View');
         $this->add_mixin('Mixin_Mvc_View_Instance_Methods');
     }
-}
-class Mixin_Mvc_View_Instance_Methods extends Mixin
-{
     /**
      * Returns the variables to be used in the template
+     *
      * @return array
      */
-    function get_template_vars()
+    public function get_template_vars()
     {
-        $retval = array();
+        $retval = [];
         foreach ($this->object->_params as $key => $value) {
             if (strpos($key, '_template') === 0) {
                 $value = $this->object->get_template_abspath($value);
@@ -380,51 +310,27 @@ class Mixin_Mvc_View_Instance_Methods extends Mixin
         return $retval;
     }
     /**
-     * @param string $value (optional)
+     * @param string $value (optional).
      * @return string
      */
-    function get_template_abspath($value = NULL)
+    public function get_template_abspath($value = null)
     {
         if (!$value) {
             $value = $this->object->_template;
         }
-        if (strpos($value, DIRECTORY_SEPARATOR) !== FALSE && @file_exists($value)) {
-            // key is already abspath
+        $new_template_path = !empty($this->object->_new_template) ? $this->object->_new_template : '';
+        if (strpos($value, DIRECTORY_SEPARATOR) !== false && @file_exists($value)) {
+            // key is already abspath.
         } else {
-            $value = $this->object->find_template_abspath($value);
+            $value = $this->object->find_template_abspath($value, false, $new_template_path);
         }
         return $value;
     }
-    /**
-     * Renders the view (template)
-     * @param bool $return (optional)
-     * @return string|NULL
-     */
-    function render($return = FALSE)
-    {
-        $element = $this->object->render_object();
-        $content = $this->object->rasterize_object($element);
-        if (!$return) {
-            echo $content;
-        }
-        return $content;
-    }
-    function render_object()
-    {
-        // We use underscores to prefix local variables to avoid conflicts wth
-        // template vars
-        $__element = $this->start_element($this->object->_template, 'template', $this->object);
-        $template_vars = $this->object->get_template_vars();
-        extract($template_vars);
-        include $this->object->get_template_abspath();
-        $this->end_element();
-        return $__element;
-    }
-    function rasterize_object($element)
+    public function rasterize_object($element)
     {
         return $element->rasterize();
     }
-    function start_element($id, $type = null, $context = null)
+    public function start_element($id, $type = null, $context = null)
     {
         if ($type == null) {
             $type = 'element';
@@ -433,7 +339,7 @@ class Mixin_Mvc_View_Instance_Methods extends Mixin
         $element = new C_MVC_View_Element($id, $type);
         if ($context != null) {
             if (!is_array($context)) {
-                $context = array('object' => $context);
+                $context = ['object' => $context];
             }
             foreach ($context as $context_name => $context_value) {
                 $element->set_context($context_name, $context_value);
@@ -450,7 +356,7 @@ class Mixin_Mvc_View_Instance_Methods extends Mixin
         ob_start();
         return $element;
     }
-    function end_element()
+    public function end_element()
     {
         $content = ob_get_clean();
         $element = array_pop($this->object->_queue);
@@ -461,17 +367,18 @@ class Mixin_Mvc_View_Instance_Methods extends Mixin
     }
     /**
      * Renders a sub-template for the view
-     * @param string $__template
-     * @param array $__params
-     * @param bool $__return Unused
+     *
+     * @param string $__template.
+     * @param array  $__params.
+     * @param bool   $__return Unused.
      * @return NULL
      */
-    function include_template($__template, $__params = null, $__return = FALSE)
+    public function include_template($__template, $__params = null, $__return = false)
     {
         // We use underscores to prefix local variables to avoid conflicts wth
-        // template vars
+        // template vars.
         if ($__params == null) {
-            $__params = array();
+            $__params = [];
         }
         $__params['template_origin'] = $this->object->_template;
         $__target = $this->object->get_template_abspath($__template);
@@ -496,27 +403,31 @@ class Mixin_Mvc_View_Instance_Methods extends Mixin
                 $this->end_element();
             }
         }
-        return NULL;
+        return null;
     }
     /**
      * Gets the absolute path of an MVC template file
      *
-     * @param string $path
-     * @param string|false $module (optional)
+     * @param string       $path
+     * @param string|false $module (optional).
+     * @param string       $new_template_path Non-POPE path coming from 'templates' in the plugin root.
      * @return string
      */
-    function find_template_abspath($path, $module = FALSE)
+    public function find_template_abspath($path, $module = false, $new_template_path = '')
     {
-        $fs = C_Fs::get_instance();
-        $settings = C_NextGen_Settings::get_instance();
+        $fs = \Imagely\NGG\Util\Filesystem::get_instance();
+        $settings = \Imagely\NGG\Settings\Settings::get_instance();
         // We also accept module_name#path, which needs parsing.
         if (!$module) {
             list($path, $module) = $fs->parse_formatted_path($path);
         }
-        // Append the suffix
+        // Append the suffix.
         $path = $path . '.php';
-        // First check if the template is in the override dir
-        if (!($retval = $this->object->get_template_override_abspath($module, $path))) {
+        // First check if the template is in the override dir.
+        $retval = $this->object->get_template_override_abspath($module, $path);
+        if (!$retval && $new_template_path) {
+            $retval = path_join(NGG_PLUGIN_DIR, 'templates' . DIRECTORY_SEPARATOR . $new_template_path . '.php');
+        } else {
             $retval = $fs->join_paths($this->object->get_registry()->get_module_dir($module), $settings->mvc_template_dirname, $path);
         }
         if (!@file_exists($retval)) {
@@ -524,7 +435,11 @@ class Mixin_Mvc_View_Instance_Methods extends Mixin
         }
         return $retval;
     }
-    function get_template_override_dir($module_id = NULL)
+    /**
+     * @param null|string $module_id
+     * @return string
+     */
+    public function get_template_override_dir($module_id = null)
     {
         $root = trailingslashit(path_join(WP_CONTENT_DIR, 'ngg'));
         if (!@file_exists($root) && is_writable(trailingslashit(WP_CONTENT_DIR))) {
@@ -547,40 +462,81 @@ class Mixin_Mvc_View_Instance_Methods extends Mixin
         }
         return $modules;
     }
-    function get_template_override_abspath($module, $filename)
+    /**
+     * @param $module
+     * @param $filename
+     * @return string|null
+     */
+    public function get_template_override_abspath($module, $filename)
     {
-        $fs = C_Fs::get_instance();
-        $retval = NULL;
+        $fs = \Imagely\NGG\Util\Filesystem::get_instance();
+        $retval = null;
         $abspath = $fs->join_paths($this->object->get_template_override_dir($module), $filename);
         if (@file_exists($abspath)) {
             $retval = $abspath;
         }
         return $retval;
     }
+}
+class Mixin_Mvc_View_Instance_Methods extends Mixin
+{
+    /**
+     * Renders the view (template)
+     *
+     * @param bool $return (optional).
+     * @return string|NULL
+     */
+    public function render($return = false)
+    {
+        $element = $this->object->render_object();
+        $content = $this->object->rasterize_object($element);
+        if (!$return) {
+            echo $content;
+        }
+        return $content;
+    }
+    public function render_object()
+    {
+        // We use underscores to prefix local variables to avoid conflicts wth
+        // template vars.
+        $__element = $this->start_element($this->object->_template, 'template', $this->object);
+        $template_vars = $this->object->get_template_vars();
+        extract($template_vars);
+        include $this->object->get_template_abspath();
+        $this->end_element();
+        if (($displayed_gallery = $this->object->get_param('displayed_gallery')) && $this->object->get_param('display_type_rendering')) {
+            $triggers = \Imagely\NGG\DisplayedGallery\TriggerManager::get_instance();
+            $triggers->render($__element, $displayed_gallery);
+        }
+        return $__element;
+    }
     /**
      * Adds a template parameter
+     *
      * @param $key
      * @param $value
      */
-    function set_param($key, $value)
+    public function set_param($key, $value)
     {
         $this->object->_params[$key] = $value;
     }
     /**
      * Removes a template parameter
+     *
      * @param $key
      */
-    function remove_param($key)
+    public function remove_param($key)
     {
         unset($this->object->_params[$key]);
     }
     /**
      * Gets the value of a template parameter
+     *
      * @param $key
      * @param null $default
      * @return mixed
      */
-    function get_param($key, $default = NULL)
+    public function get_param($key, $default = null)
     {
         if (isset($this->object->_params[$key])) {
             return $this->object->_params[$key];
@@ -595,39 +551,39 @@ class C_MVC_View_Element
     var $_type;
     var $_list;
     var $_context;
-    function __construct($id, $type = null)
+    public function __construct($id, $type = null)
     {
         $this->_id = $id;
         $this->_type = $type;
-        $this->_list = array();
-        $this->_context = array();
+        $this->_list = [];
+        $this->_context = [];
     }
-    function get_id()
+    public function get_id()
     {
         return $this->_id;
     }
-    function append($child)
+    public function append($child)
     {
         $this->_list[] = $child;
     }
-    function insert($child, $position = 0)
+    public function insert($child, $position = 0)
     {
         array_splice($this->_list, $position, 0, $child);
     }
-    function delete($child)
+    public function delete($child)
     {
         $index = array_search($child, $this->_list);
         if ($index !== false) {
             array_splice($this->_list, $index, 1);
         }
     }
-    function find($id, $recurse = false)
+    public function find($id, $recurse = false)
     {
-        $list = array();
+        $list = [];
         $this->_find($list, $id, $recurse);
         return $list;
     }
-    function _find(array &$list, $id, $recurse = false)
+    public function _find(array &$list, $id, $recurse = false)
     {
         foreach ($this->_list as $index => $element) {
             if ($element instanceof C_MVC_View_Element) {
@@ -640,26 +596,26 @@ class C_MVC_View_Element
             }
         }
     }
-    function get_context($name)
+    public function get_context($name)
     {
         if (isset($this->_context[$name])) {
             return $this->_context[$name];
         }
         return null;
     }
-    function set_context($name, $value)
+    public function set_context($name, $value)
     {
         $this->_context[$name] = $value;
     }
-    function get_object()
+    public function get_object()
     {
         return $this->get_context('object');
     }
-    // XXX not implemented
-    function parse()
+    // XXX not implemented.
+    public function parse()
     {
     }
-    function rasterize()
+    public function rasterize()
     {
         $ret = null;
         foreach ($this->_list as $index => $element) {

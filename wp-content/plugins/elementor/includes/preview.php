@@ -2,6 +2,7 @@
 namespace Elementor;
 
 use Elementor\Core\Base\App;
+use Elementor\Core\Settings\Manager as SettingsManager;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -16,6 +17,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0.0
  */
 class Preview extends App {
+
+	/**
+	 * The priority of the preview enqueued styles.
+	 */
+	const ENQUEUED_STYLES_PRIORITY = 20;
 
 	/**
 	 * Is Preview.
@@ -78,7 +84,7 @@ class Preview extends App {
 				$e = error_get_last();
 				if ( $e ) {
 					echo '<div id="elementor-preview-debug-error"><pre>';
-					echo $e['message'];
+					Utils::print_unescaped_internal_string( $e['message'] );
 					echo '</pre></div>';
 				}
 			} );
@@ -102,7 +108,7 @@ class Preview extends App {
 		add_action( 'wp_enqueue_scripts', function() {
 			$this->enqueue_styles();
 			$this->enqueue_scripts();
-		} );
+		}, self::ENQUEUED_STYLES_PRIORITY );
 
 		add_filter( 'the_content', [ $this, 'builder_wrapper' ], 999999 );
 
@@ -207,8 +213,6 @@ class Preview extends App {
 
 			$attributes = $document->get_container_attributes();
 
-			$attributes['class'] .= ' elementor-' . $this->post_id;
-
 			$content = '<div ' . Utils::render_html_attributes( $attributes ) . '></div>';
 		}
 
@@ -230,6 +234,8 @@ class Preview extends App {
 		wp_add_inline_script( 'jquery-migrate', 'jQuery.holdReady( true );' );
 
 		Plugin::$instance->frontend->enqueue_styles();
+
+		Plugin::$instance->elements_manager->enqueue_elements_styles();
 
 		Plugin::$instance->widgets_manager->enqueue_widgets_styles();
 
@@ -253,7 +259,17 @@ class Preview extends App {
 			ELEMENTOR_VERSION
 		);
 
+		wp_enqueue_style(
+			'e-theme-ui-light',
+			$this->get_css_assets_url( 'theme-light' ),
+			[],
+			ELEMENTOR_VERSION
+		);
+
 		wp_enqueue_style( 'editor-preview' );
+
+		// Handle the 'wp audio' in editor preview.
+		wp_enqueue_style( 'wp-mediaelement' );
 
 		/**
 		 * Preview enqueue styles.
@@ -289,6 +305,9 @@ class Preview extends App {
 			ELEMENTOR_VERSION,
 			true
 		);
+
+		// Handle the 'wp audio' in editor preview.
+		wp_enqueue_script( 'wp-mediaelement' );
 
 		/**
 		 * Preview enqueue scripts.

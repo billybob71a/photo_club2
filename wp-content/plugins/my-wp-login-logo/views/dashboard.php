@@ -9,6 +9,8 @@
 
 	wp_register_style( 'DC_MyWP_login_logo_Styles', DC_MyWP_LoginLogo_URL.'css/styles.css' );
 	wp_enqueue_style( 'DC_MyWP_login_logo_Styles' );
+	wp_enqueue_script('jquery');
+	wp_enqueue_media();
 	
 	global $current_user;
     get_currentuserinfo();
@@ -51,76 +53,161 @@
 		$custom_logo_fadetime = esc_textarea(get_option('wp_custom_login_logo_fadetime','2500'));
 		$custom_logo_message = esc_textarea(get_option('wp_custom_login_logo_message',''));
 ?>
-<div class="wrap columns-2 dd-wrap">
-	<h2><img src="<?php echo DC_MyWP_LoginLogo_URL.'images/plugin_header_logo.png'; ?>" alt="My Wordpress Login Logo" /></h2>
-	<?php
+
+
+<div style="margin: 10px 20px 0 2px;">	
+<div class="metabox-holder columns-2">
+<div class="postbox-container">	
+<div id="top-sortables" class="meta-box-sortables ui-sortable">
+
+
+<table cellpadding="2" cellspacing="1" width="100%" class="fixed" border="0">
+	<tbody>
+		<tr>
+			<td valign="top"><h3>My Wordpress Login Logo</h3></td>
+		</tr>
+	</tbody>
+</table>
+<hr>
+
+<?php
 	if($updated) {
 		echo "<div class=\"updated\"><p><strong>Login Page Updated.</strong></p></div>";
 	}
 	if($invalid_number) {
 		echo "<div class=\"error\"><p><strong> Error: Provide a valid height and width </strong></p></div>";
 	}	
-	?>	
-	<div class="metabox-holder has-right-sidebar" id="poststuff">
-		
-		<div class="inner-sidebar" id="side-info-column">
-		<?php include_once( DC_MyWP_LoginLogo_PATH . '/views/subscribe.php' ); ?>
-		<?php include_once( DC_MyWP_LoginLogo_PATH . '/views/plugin-info.php' ); ?>	
-		</div>	
-						
-		<div id="post-body">
-		<div id="post-body-content">
-		
-				<div class="stuffbox">
-				<h3>Your Current Login Page Logo</h3>
-				<div class="inside">
+?>	
+
+<table cellpadding="2" cellspacing="1" width="100%" class="fixed" border="0">
+<tbody><tr>
+	<td valign="top">
+
+		<div class="postbox">
+			<button class="handlediv button-link" aria-expanded="true" type="button">
+				<span class="screen-reader-text">Toggle panel: Current Login Page Logo</span>
+				<span class="toggle-indicator" aria-hidden="true"></span>
+			</button>
+			<h2 class="hndle ui-sortable-handle">
+				<span>Current Login Page Logo</span>
+			</h2>
+			<div class="inside">
 				<p class="description"><img src="<?php echo $custom_logo_url; ?>" alt="" /></p> 
-				</div>
-				</div>
-		
-				<div class="stuffbox">
-				<h3>Customize Login Page </h3>
-				<div class="inside">
-				<form name="DC_MyWP_login_logo_form" method="post" action="">
-				<?php wp_nonce_field('update_MyWP_login_logo'); ?>
-				<input type="hidden" name="update_MyWP_login_logo" value="update">
-				<h2>Customize Logo</h2> 
-				<p><b>Logo Image URL : </b><input class="regular-text code" type="text" name="wp_custom_login_logo_url" value="<?php echo $custom_logo_url; ?>" size="70"><br/>
-				<span class="description">Example: <code>http://yoursite.com/wp-content/uploads/2013/01/logo.png</code></span></p>
-				<p><b>Logo Width : </b><input type="text" name="wp_custom_login_logo_width" value="<?php echo $custom_logo_width; ?>" size="5">px</p>
-				<p><b>Logo Height : </b><input type="text" name="wp_custom_login_logo_height" value="<?php echo $custom_logo_height; ?>" size="5">px</p>
-				<p><b>Logo Link : </b><input class="regular-text code" type="text" name="wp_custom_login_url" value="<?php echo $custom_login_url; ?>" size="70"><br/>
-				<span class="description">This is the url opened when clicked on the logo in your login page.</p>
-				<p><b>Logo Title : </b><input class="regular-text code" type="text" name="wp_custom_login_title" value="<?php echo $custom_login_title; ?>" size="40"><br/>
-				<span class="description">Title or description shown on hovering mouse over the logo.</p>
-				<input type="submit" class="button-primary" name="Submit" value="Update" />
-				<br/>
-				<h2>Customize Login Form</h2>
-				<p><input id="DisableFadeIn" type="checkbox" name="wp_custom_login_logo_fadein" value="false" <?php if($custom_logo_fadein) echo "checked"; ?>><span id="DisableFadeInText"> Enable FadeIn Effect</span><br/>
-				<span class="description"> Provides a fading effect to the login form</span></p>
-				<p id="fadetime" <?php if(!$custom_logo_fadein) { echo 'style="display:none;"'; } ?>><b>Set fade in time : </b><input type="text" name="wp_custom_login_logo_fadetime" value="<?php echo $custom_logo_fadetime; ?>" size="5">seconds</p>
-						<script type="text/javascript">// <![CDATA[
-						jQuery('#DisableFadeIn').change(function(){
-						  if(jQuery(this).is(':checked')){
-							jQuery('#fadetime').show();
-						  } else {
-							jQuery('#fadetime').hide();
-						  }
-						});
-						// ]]></script>
-						
-						
-				<p><b>Custom Message : </b><br/><textarea class="large-text code" name="wp_custom_login_logo_message"><?php echo $custom_logo_message; ?></textarea><br/>
-				<span class="description">Shows the given message below the login form. Leave this empty if you don't want to show any custom message.</p>				
-				
-				<input type="submit" class="button-primary" name="Submit" value="Update" />
-				</form>
-				</div>
-				</div>
-				
-				<?php include_once( DC_MyWP_LoginLogo_PATH . '/views/faq.php' ); ?>
-			
-		</div>
+			</div>
 		</div>
 
+		<div class="postbox">
+			<button class="handlediv button-link" aria-expanded="true" type="button">
+				<span class="screen-reader-text">Toggle panel: Customize Login Page</span>
+				<span class="toggle-indicator" aria-hidden="true"></span>
+			</button>
+			<h2 class="hndle ui-sortable-handle">
+				<span>Customize Login Page</span>
+			</h2>
+
+			<div class="inside">
+				<form name="DC_MyWP_login_logo_form" method="post" action="">
+					<?php wp_nonce_field('update_MyWP_login_logo'); ?>
+					<input type="hidden" name="update_MyWP_login_logo" value="update">
+					<h3>Customize Logo</h3> 
+
+					<table class="form-table"><tbody>
+					<tr>
+						<th scope="row"><label for="logoimage">Logo Image</label></th>
+						<td><input class="regular-text" type="text" id="wp_custom_login_logo_url" name="wp_custom_login_logo_url" value="<?php echo $custom_logo_url; ?>" size="70"> <input type="button" name="upload-btn" id="upload-btn" class="button-secondary" value="Upload Image"></td>
+							<script type="text/javascript">
+							jQuery(document).ready(function($){
+								$('#upload-btn').click(function(e) {
+									e.preventDefault();
+									var image = wp.media({ 
+										title: 'Upload Image',
+										multiple: false
+									}).open()
+									.on('select', function(e){
+										var uploaded_image = image.state().get('selection').first();
+										var image_url = uploaded_image.toJSON().url;
+										$('#wp_custom_login_logo_url').val(image_url);
+									});
+								});
+							});
+							</script>
+					</tr>
+					<tr>
+						<th scope="row"><label for="logowidth">Logo Width</label></th>
+						<td><input type="text" name="wp_custom_login_logo_width" value="<?php echo $custom_logo_width; ?>" size="5"> px</td>
+					</tr>
+					<tr>
+						<th scope="row"><label for="logowidth">Logo Height</label></th>
+						<td><input type="text" name="wp_custom_login_logo_height" value="<?php echo $custom_logo_height; ?>" size="5"> px</td>
+					</tr>
+					<tr>
+						<th scope="row"><label for="logolinkurl">Logo Link URL</label></th>
+						<td><input class="regular-text code" type="text" name="wp_custom_login_url" value="<?php echo $custom_login_url; ?>" size="70">
+						<p class="description">This is the url opened when clicked on the logo in your login page.</p></td>
+					</tr>
+					<tr>
+						<th scope="row"><label for="logotitle">Logo Page Title</label></th>
+						<td><input class="regular-text code" type="text" name="wp_custom_login_title" value="<?php echo $custom_login_title; ?>" size="40">
+						<p class="description">Title or description shown on hovering mouse over the logo.</p></td>
+					</tr>
+					<tr>
+					<th scope="row"><label for="submit"></label></th>
+					<td><p class="submit"><input type="submit" class="button-primary" name="Submit" value="Update" /></p></td>
+					</tr>
+					</tbody></table>
+
+					<br/>
+					<h3>Advanced Customization</h3>
+					<table class="form-table"><tbody>
+					<tr>
+						<th scope="row"><label for="fadeineffect">FadeIn Effect</label></th>
+						<td><input id="DisableFadeIn" type="checkbox" name="wp_custom_login_logo_fadein" value="false" <?php if($custom_logo_fadein) echo "checked"; ?>>Enable FadeIn Effect<p class="description"> Provides a fading effect to the login form</p></td>
+					</tr>
+
+					<tr <?php if(!$custom_logo_fadein) { echo 'style="display:none;"'; } ?>>
+						<th scope="row"><label for="fadetime">FadeIn Time</label></th>
+						<td><input id="DisableFadeIn" type="text" name="wp_custom_login_logo_fadetime" value="<?php echo $custom_logo_fadetime; ?>" size="5"> seconds<p class="description">Set fade in time.</p></td>
+					</tr>
+							<script type="text/javascript">// <![CDATA[
+							jQuery('#DisableFadeIn').change(function(){
+							if(jQuery(this).is(':checked')){
+								jQuery('#fadetime').show();
+							} else {
+								jQuery('#fadetime').hide();
+							}
+							});
+							// ]]></script>
+					
+					<tr>
+						<th scope="row"><label for="fadetime">Custom Message</label></th>
+						<td><textarea class="large-text code" name="wp_custom_login_logo_message"><?php echo $custom_logo_message; ?></textarea><p class="description">Shows the given message below the login form. Leave this empty if you don't want to show any custom message.</p></td>
+					</tr>
+
+					<tr>
+					<th scope="row"><label for="submit"></label></th>
+					<td><p class="submit"><input type="submit" class="button-primary" name="Submit" value="Update" /></p></td>
+					</tr>
+					</tbody></table>
+
+				</form>
+			</div>
+		</div>			
+
+	
+		</td>
+		<td width="300" valign="top">
+			<div class="inner-sidebar" id="side-info-column">
+			<?php include_once( DC_MyWP_LoginLogo_PATH . '/views/plugin-info.php' ); ?>	
+			</div>	
+
+			<div class="inner-sidebar" id="side-info-column">
+			<?php include_once( DC_MyWP_LoginLogo_PATH . '/views/faq.php' ); ?>
+			</div>
+		</td>
+</tr></tbody>
+</table>
+			
+</div>
+</div>
+</div>
 </div>

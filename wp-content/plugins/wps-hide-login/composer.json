@@ -8,7 +8,7 @@
     "wp-login.php",
     "custom login url"
   ],
-  "homepage":"https://github.com/Tabrisrp/wps-hide-login",
+  "homepage":"https://wordpress.org/plugins/wps-hide-login/",
   "authors":[
     {
       "name":"WPServeur",
@@ -20,18 +20,7 @@
   "type":"wordpress-plugin",
   "minimum-stability":"stable",
   "license":"GPL-3.0+",
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/NicolasKulka/WP-Review-Me"
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/NicolasKulka/WP-Dismissible-Notices-Handler"
-    }
-  ],
   "require":{
-    "php":">=5.6.0",
-    "NicolasKulka/wp-review-me":"2.5"
+    "php":">=5.6.0"
   }
 }
