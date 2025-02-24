@@ -23,4 +23,10 @@ wp-content/uploads/[:digit:]
 /php_errors.log.bak
 /php_xdebug.php
 /wp-config.php.bak
-/wp-content/uploads/
+wp-content/uploads/*
+wp-content/plugins/elementor/*
+wp-content/themes/twentytwentyfive/*
+wp-content/debug.log
+wp-content/ai1wm-backups/*
+
+
