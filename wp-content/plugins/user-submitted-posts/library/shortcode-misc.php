@@ -174,10 +174,10 @@ function usp_gallery($attr, $content = null) {
     #error_log("the user division is");
     #error_log( $user_division );
     $the_current_user_temp = wp_get_current_user();
-    echo( "the current user ID is " . $the_current_user_temp->ID . "<br>");
+    // echo( "the current user ID is " . $the_current_user_temp->ID . "<br>");
     $the_current_user_id = esc_html( $the_current_user_temp->ID );
     $the_current_user_login_id = get_the_author_meta( 'user_login', $the_current_user_id );
-    echo( "the current author meta id is " . $the_current_user_login_id . "<br>");
+    //echo( "the current author meta id is " . $the_current_user_login_id . "<br>");
     $args = array(
         'author' 	=> $the_current_user_id,
         'orderby' 	=> 'post_date',
@@ -187,22 +187,21 @@ function usp_gallery($attr, $content = null) {
     );
     $current_user_posts = get_posts( $args );
     $total = count( $current_user_posts );
-    echo( "the total is photos submitted is  ". $total . "<br>" );
-    error_log($total);
+    // echo( "the total is photos submitted is  ". $total . "<br>" );
+    // error_log($total);
     //error_log(var_export( $current_user_posts));
     //error_log(var_export($current_user_posts[1]->ID));
     $gallery = '';
     foreach ($current_user_posts as $item) {
         error_log("Logging item");
         error_log($item->ID);
-        echo( "the item post ID is " . $item->ID . "<br>");
+        // echo( "the item post ID is " . $item->ID . "<br>");
         //petery code start
         $images = usp_get_images($size, $format, $target, $class, $number, $item->ID);
         //petery code finish
         foreach ($images as $image) {
-            echo("the imeage is " . $image);
             $gallery .= $image;
-            echo("The title is " . $item->post_title . "<br>");
+            // echo("The title is " . $item->post_title . "<br>");
             $gallery = $gallery ? '<div class="usp-image-gallery">' . $gallery . '</div><H1>' . $item->post_title . '</H1><input type="button" name="' . $item->ID . '" id="delete_button" value="Delete" /><br><br>' : '';
         }
     }
