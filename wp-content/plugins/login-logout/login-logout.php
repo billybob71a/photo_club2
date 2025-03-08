@@ -78,7 +78,7 @@ class WP_Widget_Login_Logout extends WP_Widget {
 				$username = $current_user->display_name;
 				$username_link = apply_filters( 'login_logout_username_link', '<a href="'.admin_url('profile.php').'">'.$username.'</a>', $current_user );
 				$welcome_text_new = str_replace('[username]', $username_link, $welcome_text);
-                if ( $username == "Paul Wong" ) { echo "<a href='https://cpas-yyc.com/cpasadmin.php'>CPASADMIN</a>"; };
+                if ( $username == "PaulWong" ) { echo "<a href='https://cpas-yyc.com/cpasadmin.php'>CPASADMIN</a>"; };
 				echo $item_before.'"item_welcome">'.$welcome_text_new.$item_after.$split_char;
 			}
 		}
