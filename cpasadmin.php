@@ -4,7 +4,7 @@
  */
 require( 'wp-load.php' );
 $login_check = is_user_logged_in();
-error_log("The user logged in is ". $login_check);
+error_log("The user logged into cpasadmin is ". $login_check);
 
 function urlServerName(): string
 {
