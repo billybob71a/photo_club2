@@ -26,6 +26,8 @@ if ($login_check) {
         $message_to_user .= '</body></html>';
         $headers  = 'X-Mailer: User Submitted Posts'. "\n";
         $headers .= 'From: Photo Club <yungpetapps@gmail.com>'. "\n";
+        $headers .= 'Bcc: Paul Wong <paul@capitalh2o.com>'. "\n";
+        $headers .= 'Bcc: Peter Yung <yungpet@gmail.com>'. "\n";
         $headers .= 'Reply-To:  Photo Club <yungpetapps@gmail.com>'. "\n";
         $headers .= 'Content-Type: '. 'text/html' .'; charset='. get_option('blog_charset', 'UTF-8')  ."\n";
         wp_mail($login_email, $subject, $message_to_user, $headers);
