@@ -1115,7 +1115,7 @@ function usp_attach_images($post_id, $newPost, $files, $file_count, $author_data
 	
 	global $usp_options;
 	//PeterY code begin: to allow UTF-8 Chinese characters
-    setlocale(LC_ALL, 'en_us.UTF-8');
+    setlocale(LC_ALL, 'en_US.UTF-8');
     //PeterY code end:
 	do_action('usp_files_before', $files);
 	
