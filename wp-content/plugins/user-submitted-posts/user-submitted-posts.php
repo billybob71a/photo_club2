@@ -1112,11 +1112,11 @@ function usp_unique_filename($file) {
 
 
 function usp_attach_images($post_id, $newPost, $files, $file_count, $author_data) {
-	
-	global $usp_options;
-	//PeterY code begin: to allow UTF-8 Chinese characters
+    //PeterY code begin: to allow UTF-8 Chinese characters
     setlocale(LC_ALL, 'en_US.UTF-8');
     //PeterY code end:
+	global $usp_options;
+
 	do_action('usp_files_before', $files);
 	
 	$attach_ids = array();
