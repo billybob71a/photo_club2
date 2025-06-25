@@ -42,10 +42,10 @@
 
 					} 
 					?>
-					
-					<li class="header-search">
+					//Peter Y code commented out search form
+					<!--<li class="header-search">
 						<?php get_search_form(); ?>
-					</li>
+					</li> -->
 					
 				</ul>
 				
