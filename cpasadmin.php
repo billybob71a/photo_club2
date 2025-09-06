@@ -440,6 +440,7 @@ if (($login_check) && isset($_POST['randomize'])) {
             $original_location_file = str_replace('&amp;', '&', $original_location_file);
             $original_location_file = str_replace('%5B', '[', $original_location_file);
             $original_location_file = str_replace('%5D', ']', $original_location_file);
+            $original_location_file = str_replace('%3F', '?', $original_location_file);
             preg_match_all('/([^\.]+)$/', $array_source_location[2], $image_split_extension);
             preg_match_all('/(.*\.)/', $array_source_location[2], $image_split_name);
             $image_split_name[1][0] = rtrim($image_split_name[1][0], '.');
@@ -450,12 +451,14 @@ if (($login_check) && isset($_POST['randomize'])) {
                 $new_location_file = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/uploads/' . $sub_folder_current . '/photo_random/' . $item . '/' . $counter . '_' . $array_source_location[0] . '.' . $image_split_extension[1][0];
                 $new_location_file = str_replace('&amp;', '&', $new_location_file);
                 $new_location_file = str_replace('%20', ' ', $new_location_file);
+                $new_location_file = str_replace('%3F', '?', $new_location_file);
                 $new_location_file = html_entity_decode($new_location_file);
                 //echo ("the old file is " . $original_location_file) . "<br>";
                 //echo("the new file is " . $new_location_file . "<br>");
                 copy($original_location_file, $new_location_file);
                 $array_source_location[0] = str_replace('&amp;', '&', $array_source_location[0]);
                 $array_source_location[0] = str_replace('%20', ' ', $array_source_location[0]);
+                $array_source_location[0] = str_replace('%3F', '?', $array_source_location[0]);
                 fwrite($myfile, $counter . "__" . $array_source_location[0] . "__" . $array_source_location[3] . "__" . $array_source_location[4] . "________" . $counter . '_' . $array_source_location[0] . '.' . $image_split_extension[1][0] . "\r\n");
                 //the lines of code used to display the thumbnails starts here
                 $image_extension_lc = strtolower($image_split_extension[1][0]);
