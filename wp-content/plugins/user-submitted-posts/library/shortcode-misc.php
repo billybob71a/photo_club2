@@ -200,6 +200,7 @@ function usp_gallery($attr, $content = null) {
         $images = usp_get_images($size, $format, $target, $class, $number, $item->ID);
         //petery code finish
         foreach ($images as $image) {
+            // echo("The image is ". $image );
             $gallery .= $image;
             // echo("The title is " . $item->post_title . "<br>");
             $gallery = $gallery ? '<div class="usp-image-gallery">' . $gallery . '</div><H1>' . $item->post_title . '</H1><input type="button" name="' . $item->ID . '" id="delete_button" value="Delete" /><br><br>' : '';
