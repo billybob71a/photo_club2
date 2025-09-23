@@ -158,8 +158,10 @@ add_action( 'wp_enqueue_scripts', 'my_theme_enqueue_styles' );
         //}
         //Function ends here
         //PeterY code ends here
-        add_filter( 'wp_mail_from', 'wpb_sender_email' );
-        add_filter( 'wp_mail_from_name', 'wpb_sender_name');
+        //comment out two add_filter line below
+        // add_filter( 'wp_mail_from', 'wpb_sender_email' );
+        //add_filter( 'wp_mail_from_name', 'wpb_sender_name');
+        //end of comment out
         //PeterY code starts here
         //add_action( 'profile_personal_options', 'add_contact_fields');
         //add_action('show_user_profile', 'extra_profile_fields', 10 );

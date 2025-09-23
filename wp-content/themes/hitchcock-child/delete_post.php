@@ -16,6 +16,20 @@ if ($login_check) {
         $querystr = "SELECT DISTINCT post_title FROM wp_posts WHERE ID = '$post_id'";
         $post_title_array =  $wpdb->get_results($querystr, ARRAY_A);
         $post_title = $post_title_array[0]['post_title'];
+        $attachments = get_children( array(
+            'post_parent'   =>  $post_id,
+            'post_type'     =>  'attachment',
+            'post_per_page' => -1
+        ));
+        error_log('I am going to do a var_dump');
+        ob_start();
+        var_dump($attachments);
+        $output = ob_get_clean();
+        error_log($output);
+        foreach ($attachments as $attachment) {
+            error_log(" I will delete " . $attachment->ID);
+            wp_delete_attachment( $attachment->ID, true);
+        }
 		wp_delete_post( $_POST["delete_var"]);
         $blog_name    = get_bloginfo('name');
         $subject = "You have deleted $post_title";
