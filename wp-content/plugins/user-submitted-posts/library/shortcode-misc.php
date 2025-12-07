@@ -186,12 +186,18 @@ function usp_gallery($attr, $content = null) {
         'posts_per_page'	=> 5
     );
     $current_user_posts = get_posts( $args );
+    ob_start();
+    var_dump($current_user_posts);
+    $output = ob_get_clean();
+    error_log($output);
     $total = count( $current_user_posts );
     // echo( "the total is photos submitted is  ". $total . "<br>" );
     // error_log($total);
     //error_log(var_export( $current_user_posts));
     //error_log(var_export($current_user_posts[1]->ID));
     $gallery = '';
+    $pattern = '#^https?://[^/]+/wp-content#';
+    $wp_content_var = WP_CONTENT_DIR;
     foreach ($current_user_posts as $item) {
         error_log("Logging item");
         error_log($item->ID);
@@ -199,11 +205,58 @@ function usp_gallery($attr, $content = null) {
         //petery code start
         $images = usp_get_images($size, $format, $target, $class, $number, $item->ID);
         //petery code finish
+        //here is regex pattern to recognize any domain with the wp-content path
+
         foreach ($images as $image) {
             // echo("The image is ". $image );
+            //the following match will produce anything after 'wp-content' in this case it should be the year and month
+            preg_match('#/wp-content/([^"]+)#', $image, $matches);
+
+            if (isset($matches[1])) {
+                /*the following attaches the absolute path of the 'wp-content' from the constant variable to the
+                year/month/image name
+                */
+                $imagelocation =  $wp_content_var . '/' . $matches[1];
+                //Regex: remove the "-digitsxdigits" for the file extension
+                //the (?=\.\w+$) is a lookahead to ensure that the digit pattern such as -460x345.jpg is before the .jpg
+                $imagelocation = preg_replace('/-\d+x\d+(?=\.\w+$)/', '', $imagelocation);
+                //get the filename only without showing entire path
+                //[^/]+ matches one or more characters that are not a slash
+                //$ anaches the match at the end of string
+                if (preg_match('#([^/]+)$#', $imagelocation, $matches)) {
+                    $originalFileName = $matches[1];
+                    // echo('The original file name is '. $matches[1] .'<br>');
+                }
+                // echo("The image location is ". $imagelocation);
+                $filesize_var = filesize($imagelocation);
+                $filesize_var_MB = $filesize_var / 1048576;
+                // echo("File size is :". $filesize_var);
+                // the filesize output should be complete here
+            }
+            // here I am replacing the URL path with contents from constant WP_CONTENT_DIR
+
             $gallery .= $image;
             // echo("The title is " . $item->post_title . "<br>");
-            $gallery = $gallery ? '<div class="usp-image-gallery">' . $gallery . '</div><H1>' . $item->post_title . '</H1><input type="button" name="' . $item->ID . '" id="delete_button" value="Delete" /><br><br>' : '';
+            $gallery = $gallery ? '<div class="usp-image-gallery">'
+                . $gallery
+                . '</div>'
+                . 'The original file name is <br>'
+                . $originalFileName
+                . '<br>'
+                . 'The original size is <br>'
+                . $filesize_var_MB
+                . ' MB <br>'
+                . '<H1>'
+                . $item->post_title
+                . '</H1><input type="button" name="'
+                . $item->ID
+                . '" id="delete_button" value="Delete" /><br><br>' : '';
+
+            //code not used anymore
+            //if (file_exists($image)) {
+            //    $sizeInBytes = filesize($filename);
+            //    echo("File size is :". $sizeInBytes);
+            // }
         }
     }
     error_log($the_current_user_login_id);
