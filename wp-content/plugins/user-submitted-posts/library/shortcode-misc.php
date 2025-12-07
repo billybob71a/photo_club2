@@ -208,7 +208,7 @@ function usp_gallery($attr, $content = null) {
         //here is regex pattern to recognize any domain with the wp-content path
 
         foreach ($images as $image) {
-            // echo("The image is ". $image );
+            echo("The image is ". $image );
             //the following match will produce anything after 'wp-content' in this case it should be the year and month
             preg_match('#/wp-content/([^"]+)#', $image, $matches);
 
