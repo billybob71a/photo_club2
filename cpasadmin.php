@@ -5,7 +5,8 @@
 require( 'wp-load.php' );
 $login_check = is_user_logged_in();
 error_log("The user logged into cpasadmin is ". $login_check);
-
+$pattern = '#^https?://[^/]+/wp-content#';
+$wp_content_var = WP_CONTENT_DIR;
 function urlServerName(): string
 {
     #$url = $_SERVER['SERVER_NAME'];
@@ -26,7 +27,19 @@ function urlServerName(): string
     return $urlServerName;
     }
 function display_photos_all($keys_of_division_unique, $sub_folder_current) {
+    $bytesPerMB = 1024 * 1024;
+    $list_file_contents_array = [];
     $server_name = urlServerName();
+    $pattern = '/^\d+__(\w+)__LEVEL_0__([A-Za-z ]+)________([\w.-]+\.jpe?g)$/u';
+    $list_file = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/uploads/' . $sub_folder_current . '/photo_random/LEVEL_0/LEVEL_0_list.txt';
+    $list_file_dir = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/uploads/' . $sub_folder_current . '/photo_random/LEVEL_0/';
+    $list_file_contents = file($list_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    if ($list_file_contents  !== false ) {
+        foreach ($list_file_contents as $line) {
+            preg_match($pattern, $line, $matches );
+            $list_file_contents_array[$matches[1]] = $matches[3];
+        }
+    }
     if (sizeof($keys_of_division_unique) == 0) {
         echo("no photos submitted for ." .$sub_folder_current);
         return;
@@ -80,13 +93,31 @@ function display_photos_all($keys_of_division_unique, $sub_folder_current) {
                         $large_photo_with_extension = $large_photo.$file_extension_temp;
                     }
 
+                    $trimFileName = trim($line_split[1]);
+                    $fileMatch = $list_file_contents_array[$trimFileName];
+                    $fileAndLocation = $list_file_dir . $line_split[1];
+                    $fileSizeVar = filesize($list_file_dir . $fileMatch);
+                    $fileSizeMB = $fileSizeVar / $bytesPerMB;
                     if ($modulus_counter != 0) {
                         echo("<td class='widecell'>");
-                        echo("<div class='cellwidener'> <a href=" . $large_photo_with_extension ." rel='prettyPhoto[Gallery1]'> <img src=" . $file_name[0][0].$file_extension[0][0]."><br>" . $line_split[1] . "</a></div>");
+
+                        echo("<div class='cellwidener'> <a href=" . $large_photo_with_extension .
+                            " rel='prettyPhoto[Gallery1]'> <img src=" .
+                            $file_name[0][0].$file_extension[0][0]."><br>" .
+                            $line_split[1] .
+                            "</a><br>File size: " .
+                            $fileSizeMB .
+                            " MB</div>");
                         echo("</td>");
                     } else {
                         echo("<td class='widecell'>");
-                        echo("<div class='cellwidener'> <a href=" . $large_photo_with_extension ." rel='prettyPhoto[Gallery1]'> <img src=" . $file_name[0][0].$file_extension[0][0]."><br>" . $line_split[1] . "</a></div>");
+                        echo("<div class='cellwidener'> <a href=" . $large_photo_with_extension .
+                            " rel='prettyPhoto[Gallery1]'> <img src=" .
+                            $file_name[0][0].$file_extension[0][0]."><br>" .
+                            $line_split[1] .
+                            "</a><br>File Size: " .
+                            $fileSizeMB .
+                            " MB</div>");
                         echo("</td>");
                         echo("</tr>");
                         echo("<tr>");
