@@ -36,7 +36,7 @@ function display_photos_all($keys_of_division_unique, $sub_folder_current) {
     $list_file_dir = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/uploads/' . $sub_folder_current . '/photo_random/LEVEL_0/';
     $list_file_contents = file($list_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     $search = "'";    // Find the single quote
-    $replace = "\\'"; // Replace it with a backslash followed by a single quote
+    $replace = "apostrophe"; // Replace it with a backslash followed by a single quote
     //PeterY will put it back later once bug is fixed --start
     if ($list_file_contents  !== false ) {
         foreach ($list_file_contents as $line) {
@@ -99,12 +99,12 @@ function display_photos_all($keys_of_division_unique, $sub_folder_current) {
                         $large_photo_with_extension = $large_photo.$file_extension_temp;
                     }
 //PeterY will put it back later start
-//                    $trimFileName = trim($line_split[1]);
-//                    //$trimFileName = str_replace($search, $replace, $trimFileName);
-//                    $fileMatch = $list_file_contents_array[$trimFileName];
+                    $trimFileName = trim($line_split[1]);
+                    $trimFileName = str_replace($search, $replace, $trimFileName);
+                    $fileMatch = $list_file_contents_array[$trimFileName];
 //                    // $fileAndLocation = $list_file_dir . $line_split[1];
-//                    $fileSizeVar = filesize($list_file_dir . $fileMatch);
-//                    $fileSizeMB = $fileSizeVar / $bytesPerMB;
+                    $fileSizeVar = filesize($list_file_dir . $fileMatch);
+                    $fileSizeMB = $fileSizeVar / $bytesPerMB;
                     //PeterY will put it back later end
                     if ($modulus_counter != 0) {
                         echo("<td class='widecell'>");
@@ -114,7 +114,7 @@ function display_photos_all($keys_of_division_unique, $sub_folder_current) {
                             $file_name[0][0].$file_extension[0][0]."><br>" .
                             $line_split[1] .
                             "</a><br>File size: " .
-                            // $fileSizeMB .
+                            $fileSizeMB .
                             " MB</div>");
                         echo("</td>");
                     } else {
@@ -124,7 +124,7 @@ function display_photos_all($keys_of_division_unique, $sub_folder_current) {
                             $file_name[0][0].$file_extension[0][0]."><br>" .
                             $line_split[1] .
                             "</a><br>File Size: " .
-                            // $fileSizeMB .
+                            $fileSizeMB .
                             " MB</div>");
                         echo("</td>");
                         echo("</tr>");
