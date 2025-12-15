@@ -38,12 +38,13 @@ function display_photos_all($keys_of_division_unique, $sub_folder_current) {
     $search = "'";    // Find the single quote
     $replace = "\\'"; // Replace it with a backslash followed by a single quote
     //PeterY will put it back later once bug is fixed --start
-//    if ($list_file_contents  !== false ) {
-//        foreach ($list_file_contents as $line) {
-//            preg_match($pattern, $line, $matches );
-//            $list_file_contents_array[$matches[1]] = $matches[3];
-//        }
-//    }
+    if ($list_file_contents  !== false ) {
+        foreach ($list_file_contents as $line) {
+            preg_match($pattern, $line, $matches );
+            $matches[1] = str_replace($search, $replace, $matches[1]);
+            $list_file_contents_array[$matches[1]] = $matches[3];
+        }
+    }
     //PeterY will put it back later once bug is fixed --end
     if (sizeof($keys_of_division_unique) == 0) {
         echo("no photos submitted for ." .$sub_folder_current);
