@@ -31,7 +31,7 @@ function display_photos_all($keys_of_division_unique, $sub_folder_current) {
     $list_file_contents_array = [];
     $server_name = urlServerName();
     // $pattern = '/^\d+__(\w+)__LEVEL_0__([A-Za-z ]+)________([\w.-]+\.jpe?g)$/u';
-    $pattern = '/^\d+__([\w\s\'.]+)__LEVEL_0__([A-Za-z ]+)________([\w\s\'._-]+\.jpe?g)$/ui';
+    $pattern = '/^\d+__([\w\s\'.-]+)__LEVEL_0__([A-Za-z ]+)________([\w\s\'._-]+\.jpe?g)$/ui';
     $list_file = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/uploads/' . $sub_folder_current . '/photo_random/LEVEL_0/LEVEL_0_list.txt';
     $list_file_dir = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/uploads/' . $sub_folder_current . '/photo_random/LEVEL_0/';
     $list_file_contents = file($list_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
