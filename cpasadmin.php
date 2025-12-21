@@ -106,6 +106,7 @@ function display_photos_all($keys_of_division_unique, $sub_folder_current) {
                     $fileSizeVar = filesize($list_file_dir . $fileMatch);
                     $fileSizeMB = $fileSizeVar / $bytesPerMB;
                     //PeterY will put it back later end
+                    //Phpstorm suggested to put 'echo' statement outside of 'if' and 'else'
                     echo("<td class='widecell'>");
                     if ($modulus_counter != 0) {
 
