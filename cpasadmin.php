@@ -102,7 +102,7 @@ function display_photos_all($keys_of_division_unique, $sub_folder_current) {
                     $trimFileName = trim($line_split[1]);
                     $trimFileName = str_replace($search, $replace, $trimFileName);
                     $fileMatch = $list_file_contents_array[$trimFileName];
-//                    // $fileAndLocation = $list_file_dir . $line_split[1];
+                    // $fileAndLocation = $list_file_dir . $line_split[1];
                     $fileSizeVar = filesize($list_file_dir . $fileMatch);
                     $fileSizeMB = $fileSizeVar / $bytesPerMB;
                     //PeterY will put it back later end
