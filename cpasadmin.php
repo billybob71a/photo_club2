@@ -42,8 +42,8 @@ function display_photos_all($keys_of_division_unique, $sub_folder_current) {
         foreach ($list_file_contents as $line) {
             preg_match($pattern, $line, $matches );
             $matches[1] = str_replace($search, $replace, $matches[1]);
-            if ($matches = []) {
-                echo(" match not found matches[1] = " . var_dump($matches[1]) . " and line is " . $line);
+            if ($matches == []) {
+                echo(" match not found matches[1] = " . var_dump($matches) . " and line is " . $line);
             }
             $list_file_contents_array[$matches[1]] = $matches[3];
         }
