@@ -1605,6 +1605,17 @@ function usp_send_mail_alert($post_id, $title, $content, $author, $email, $url, 
 				wp_mail($address_to, $subject, $message, $headers);
 				
 			}
+            //adding in lost code that was found in previous git commit
+            //this code will send an email to the photo submitter
+            //$address_to_user_email = $user_email[0]["user_email"];
+            $address_to_user_email = $usp_options["usp_email_address"];
+            $message_to_user = '<html><head></head><body>';
+            $message_to_user = '<p>Dear '.$post_author.'</p>';
+            $message_to_user .= '<p>You have submitted a photo called '.$post_title.'</p>';
+            $message_to_user .= "Thank you for your participation in the photo contest.".'<br><br>';
+            $message_to_user .= "Calgary Photographic Art Society";
+            $message_to_user .= '</body></html>';
+            wp_mail($address_to_user_email, "photo submission $post_title", $message_to_user, $headers);
 			
 		}
 		
