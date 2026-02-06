@@ -37,13 +37,25 @@ function display_photos_all($keys_of_division_unique, $sub_folder_current) {
     $list_file_contents = file($list_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     $search = "'";    // Find the single quote
     $replace = "apostrophe"; // Replace it with a backslash followed by a single quote
-    //PeterY will put it back later once bug is fixed --start
+    //initializing json object
+    $jsonUserFileMap= [];
+    /* the json object structure will be
+    {
+        "<file name>" = "<user name>",
+        "<file name>" = "<user name>"
+    */
     if ($list_file_contents  !== false ) {
         foreach ($list_file_contents as $line) {
             preg_match($pattern, $line, $matches );
             $matches[1] = str_replace($search, $replace, $matches[1]);
+            // echo("The matches are " . $matches[2] . "    " . $matches[1]);
+            // echo("<br><br>");
             $list_file_contents_array[$matches[1]] = $matches[3];
+            //var_dump($list_file_contents_array);
+            $jsonUserFileMap[$matches[1]] = $matches[2];
         }
+        $json_output = json_encode($jsonUserFileMap, JSON_PRETTY_PRINT);
+        // echo ($json_output);
     }
     //PeterY will put it back later once bug is fixed --end
     if (sizeof($keys_of_division_unique) == 0) {
@@ -51,6 +63,7 @@ function display_photos_all($keys_of_division_unique, $sub_folder_current) {
         return;
     }
     echo("<table>");
+
     foreach ($keys_of_division_unique as $item) {
         //echo("I am going to start readying the thumbnail files");
         $list_file_thumbnail = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/uploads/' . $sub_folder_current . '/photo_random/' . $item . '/' . $item . '_list_thumbnail.txt';
@@ -87,7 +100,7 @@ function display_photos_all($keys_of_division_unique, $sub_folder_current) {
                     //echo("After lower is ". $file_extension[0][0]);
                     preg_match_all('/(.*\.)/', $line_split[0], $file_name);
                     //echo("Hey dude");
-                    // var_dump($file_name);
+                    //var_dump($file_name);
                     $modulus_counter = $counter % 3;
                     //echo("modulus counter is ".$modulus_counter);
                     $small_photo =  $file_name[0][0];
@@ -98,16 +111,21 @@ function display_photos_all($keys_of_division_unique, $sub_folder_current) {
                     else {
                         $large_photo_with_extension = $large_photo.$file_extension_temp;
                     }
-//PeterY will put it back later start
+                    //PeterY will put it back later start
                     $trimFileName = trim($line_split[1]);
                     $trimFileName = str_replace($search, $replace, $trimFileName);
                     $fileMatch = $list_file_contents_array[$trimFileName];
                     // $fileAndLocation = $list_file_dir . $line_split[1];
                     $fileSizeVar = filesize($list_file_dir . $fileMatch);
                     $fileSizeMB = $fileSizeVar / $bytesPerMB;
-                    //PeterY will put it back later end
-                    //Phpstorm suggested to put 'echo' statement outside of 'if' and 'else'
-                    //adding another remark
+                    /* line_split[1] is the photo name and it will be used as the key in json to retrieve
+                    the photographer name
+                    the trim is necessary in this case */
+                    $photo_name = trim($line_split[1]);
+;                   if (isset($jsonUserFileMap[$photo_name])) {
+                        $photographer = $jsonUserFileMap[$photo_name];
+                        //echo("I found the photographer " . $photographer);
+                    }
                     echo("<td class='widecell'>");
                     if ($modulus_counter != 0) {
                         echo("<div class='cellwidener'> <a href=" . $large_photo_with_extension .
@@ -116,7 +134,9 @@ function display_photos_all($keys_of_division_unique, $sub_folder_current) {
                             $line_split[1] .
                             "</a><br>File size: " .
                             $fileSizeMB .
-                            " MB</div>");
+                            " MB<br>" .
+                            "Photographer: " . $photographer . "</div><br>" .
+                            "<br>");
                         echo("</td>");
                     } else {
                         echo("<div class='cellwidener'> <a href=" . $large_photo_with_extension .
@@ -125,7 +145,9 @@ function display_photos_all($keys_of_division_unique, $sub_folder_current) {
                             $line_split[1] .
                             "</a><br>File Size: " .
                             $fileSizeMB .
-                            " MB</div>");
+                            " MB<br>" .
+                            "Photographer: " . $photographer . "</div><br>" .
+                            "<br>");
                         echo("</td>");
                         echo("</tr>");
                         echo("<tr>");
@@ -349,7 +371,7 @@ if (($login_check) && isset($_POST['randomize'])) {
 			error_log("the number of posts for this user is ". count( $current_user_posts ));
 			foreach ( $current_user_posts as $post_item ) {
 				$images = get_attached_media('image', $post_item->ID );
-				//error_log("here are the images ". $temp);
+				// error_log("here are the images ". $temp);
 
                 // in the $division_competition two dimensional array
 
