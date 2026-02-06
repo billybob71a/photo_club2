@@ -119,8 +119,7 @@ function display_photos_all($keys_of_division_unique, $sub_folder_current) {
                     $fileSizeVar = filesize($list_file_dir . $fileMatch);
                     $fileSizeMB = $fileSizeVar / $bytesPerMB;
                     /* line_split[1] is the photo name and it will be used as the key in json to retrieve
-                    the photographer name
-                    the trim is necessary in this case */
+                    the photographer name the trim is necessary in this case */
                     $photo_name = trim($line_split[1]);
 ;                   if (isset($jsonUserFileMap[$photo_name])) {
                         $photographer = $jsonUserFileMap[$photo_name];
