@@ -1608,7 +1608,12 @@ function usp_send_mail_alert($post_id, $title, $content, $author, $email, $url, 
             //adding in lost code that was found in previous git commit
             //this code will send an email to the photo submitter
             //$address_to_user_email = $user_email[0]["user_email"];
-            $address_to_user_email = $usp_options["usp_email_address"];
+            $user = get_user_by('login', $author);
+            if ( $user ) {
+                $user_email = $user->user_email;
+            }
+            //$address_to_user_email = $usp_options["usp_email_address"];
+            $address_to_user_email = $user_email;
             $message_to_user = '<html><head></head><body>';
             $message_to_user = '<p>Dear '.$post_author.'</p>';
             $message_to_user .= '<p>You have submitted a photo called '.$post_title.'</p>';
@@ -1622,8 +1627,6 @@ function usp_send_mail_alert($post_id, $title, $content, $author, $email, $url, 
 	}
 	
 }
-
-
 
 // Thanks to Delete Post plugin @ https://wordpress.org/plugins/delete-post/
 
