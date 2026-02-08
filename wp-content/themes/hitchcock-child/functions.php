@@ -291,4 +291,21 @@ function wpse_19692_registration_redirect() {
 }
 
 add_filter( 'registration_redirect', 'wpse_19692_registration_redirect' );
+
+//this function is redirect function which I got from Gemini
+function custom_login_redirect( $redirect_to, $request, $user ) {
+    // Check if there is a valid user object
+    if ( isset( $user->roles ) && is_array( $user->roles ) ) {
+        // Check for specific roles
+        if ( in_array( 'administrator', $user->roles ) ) {
+            // Admins go to the standard dashboard
+            return admin_url();
+        } else {
+            // Everyone else goes to a custom "Welcome" page
+            return home_url( '/upload-photos-2/' );
+        }
+    }
+    return $redirect_to;
+}
+add_filter( 'login_redirect', 'custom_login_redirect', 10, 3 );
 ?>

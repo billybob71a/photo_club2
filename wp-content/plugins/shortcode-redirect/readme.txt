@@ -1,10 +1,12 @@
 === Shortcode Redirect ===
 Contributors: cartpauj
 Donate link: http://www.memberpress.com/?aff=20
-Tags: page redirect, re direct, redirect, post redirect, permanant, temporary, 307, 301, shortcode, cartpauj
-Requires at least: 2.7
-Tested up to: 4.9
-Stable tag: 1.0.02
+Tags: redirect, rewrite, page, post, url
+Requires at least: 6.0
+Tested up to: 6.8
+Stable tag: 1.0.03
+License: GPLv3
+License URI: https://www.gnu.org/licenses/gpl-3.0.txt
 
 A super easy way to automatically redirect a user to another page when viewing a post/page on your site.
 
@@ -39,6 +41,8 @@ Shortcode redirect should work with older versions of WordPress as well but was 
 n/a
 
 == Changelog ==
+= 1.0.03 =
+* Fix XSS vulnerability (patchstack report efd671f0-81c0-4ca8-bbdb-11e6b63d3fe6)
 = 1.0.02 =
 * Fixed a low risk security hole
 = 1.0.01 =
