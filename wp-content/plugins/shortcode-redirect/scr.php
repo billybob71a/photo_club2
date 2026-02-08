@@ -4,7 +4,7 @@ Plugin Name: ShortCode Redirect
 Plugin URI: http://cartpauj.icomnow.com/projects/shortcode-redirect-plugin/
 Description: This plugin allows you to add a shortcode to a page. When this shortcode is executed it re-directs the user to a pre-defined URL. You can also set how many seconds to wait before redirecting the user.
 Author: Cartpauj
-Version: 1.0.02
+Version: 1.0.03
 Author URI: http://cartpauj.icomnow.com
 
 GNU General Public License, Free Software Foundation <http://creativecommons.org/licenses/GPL/2.0/>
@@ -27,8 +27,8 @@ add_shortcode('redirect', 'scr_do_redirect');
 function scr_do_redirect($atts)
 {
 	ob_start();
-	$myURL = (isset($atts['url']) && !empty($atts['url']))?esc_url($atts['url']):"";
-	$mySEC = (isset($atts['sec']) && !empty($atts['sec']))?esc_attr($atts['sec']):"0";
+	$myURL = (isset($atts['url']) && !empty($atts['url'])) ? esc_url($atts['url']) : "";
+	$mySEC = (isset($atts['sec']) && !empty($atts['sec']) && is_numeric($atts['sec'])) ? intval($atts['sec']) : 0;
 	if(!empty($myURL))
   {
 ?>
