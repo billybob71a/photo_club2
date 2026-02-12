@@ -308,4 +308,24 @@ function custom_login_redirect( $redirect_to, $request, $user ) {
     return $redirect_to;
 }
 add_filter( 'login_redirect', 'custom_login_redirect', 10, 3 );
+//the following will add a role called subscriber_support
+//it will be removed later
+//*** code starts here for adding role***
+function create_custom_subscriber_role() {
+     //1. Get the existing Subscriber role object
+    $subscriber = get_role( 'subscriber' );
+
+     //2. Add your new role with a custom ID and Display Name
+     //We pass the subscriber's capabilities array to the new role
+    add_role(
+        'subscriber_support',        // The unique ID (Role Slug)
+        'Subscriber Support',        // The name shown in the Dashboard
+        $subscriber->capabilities
+    );
+}
+
+// Hook it into 'init' so it runs when WordPress loads
+add_action( 'init', 'create_custom_subscriber_role' );
+//*** code ends here for adding role
+
 ?>
