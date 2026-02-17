@@ -2561,9 +2561,6 @@ img#wpstats {
         transform: rotate(45deg);
         transition: border-width 150ms ease-in-out;
     }
-    .bright-green {
-        color: greenyellow !important;
-    }
 }
 
 
