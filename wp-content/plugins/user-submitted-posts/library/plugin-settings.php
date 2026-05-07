@@ -35,9 +35,9 @@ function usp_plugin_action_links($links, $file) {
 	if ($file === USP_FILE) {
 		
 		$pro_href  = 'https://plugin-planet.com/usp-pro/';
-		$pro_title = esc_attr__('Get USP Pro for unlimited forms!', 'usp');
-		$pro_text  = esc_html__('Go Pro', 'usp');
-		$pro_style = 'font-weight:bold;';
+		$pro_title = esc_attr__('Get USP Pro for unlimited forms', 'usp');
+		$pro_text  = esc_html__('Go&nbsp;Pro', 'usp');
+		$pro_style  = 'padding:2px 4px;font-weight:bold;border:1px solid #00CCCC;border-radius:2px;background-color:#fff;';
 		
 		$pro = '<a target="_blank" rel="noopener noreferrer" href="'. $pro_href .'" title="'. $pro_title .'" style="'. $pro_style .'">'. $pro_text .'</a>';
 		
@@ -56,11 +56,11 @@ function add_usp_links($links, $file) {
 	
 	if ($file === USP_FILE) {
 		
-		$home_href  = 'https://perishablepress.com/user-submitted-posts/';
-		$home_title = esc_attr__('Plugin Homepage', 'usp');
-		$home_text  = esc_html__('Homepage', 'usp');
+		$home_href  = 'https://plugin-planet.com/usp-pro/';
+		$home_title = esc_attr__('Get USP Pro for unlimited forms', 'usp');
+		$home_text  = esc_html__('Go&nbsp;Pro', 'usp');
 		
-		$links[] = '<a target="_blank" rel="noopener noreferrer" href="'. $home_href .'" title="'. $home_title .'">'. $home_text .'</a>';
+		$links[] = '<strong><a target="_blank" rel="noopener noreferrer" href="'. $home_href .'" title="'. $home_title .'">'. $home_text .'</a></strong>';
 		
 		$rate_href  = 'https://wordpress.org/support/plugin/user-submitted-posts/reviews/?rate=5#new-post';
 		$rate_title = esc_attr__('Give USP a 5-star rating at WordPress.org', 'usp');
@@ -459,6 +459,36 @@ function usp_form_field_options_recaptcha() {
 	
 	$name  = 'usp_recaptcha';
 	$label = esc_html__('Google reCaptcha', 'usp');
+	
+	$option = isset($usp_options[$name]) ? $usp_options[$name] : '';
+	
+	$selected_show = ($option === 'show') ? 'selected="selected"' : '';
+	$selected_hide = ($option === 'hide') ? 'selected="selected"' : '';
+	
+	$output  = '<tr>';
+	$output .= '<th scope="row"><label class="description" for="usp_options['. esc_attr($name) .']">'. esc_html($label) .'</label></th>';
+	$output .= '<td>';
+	$output .= '<select name="usp_options['. esc_attr($name) .']" id="usp_options['. esc_attr($name) .']">';
+	
+	$output .= '<option '. $selected_show .' value="show">'. esc_html__('Enable and require', 'usp') .'</option>';
+	$output .= '<option '. $selected_hide .' value="hide">'. esc_html__('Disable this field', 'usp')  .'</option>';
+	
+	$output .= '</select>';
+	$output .= '</td>';
+	$output .= '</tr>';
+	
+	return $output;
+	
+}
+
+
+
+function usp_form_field_options_turnstile() {
+	
+	global $usp_options;
+	
+	$name  = 'usp_turnstile';
+	$label = esc_html__('Cloudflare Turnstile', 'usp');
 	
 	$option = isset($usp_options[$name]) ? $usp_options[$name] : '';
 	
@@ -939,7 +969,10 @@ function usp_add_defaults() {
 			'custom_checkbox_name'  => 'usp_custom_checkbox',
 			'custom_checkbox_text'  => 'I agree the to the terms.',
 			'custom_checkbox_err'   => 'Custom checkbox required',
-			'custom_checkbox_req'   => true
+			'custom_checkbox_req'   => true,
+			'turnstile_site_key'    => '',
+			'turnstile_secret_key'  => '',
+			'usp_turnstile'         => 'hide'
 		);
 		
 		update_option('usp_options', $arr);
@@ -953,6 +986,7 @@ function usp_add_defaults() {
 function usp_delete_plugin_options() {
 	
 	delete_option('usp_options');
+	delete_option('user-submitted-posts-dismiss-notice');
 	
 }
 
@@ -1041,6 +1075,9 @@ function usp_validate_options($input) {
 	if (isset($input['recaptcha_public']))     $input['recaptcha_public']     = wp_filter_nohtml_kses($input['recaptcha_public']);     else $input['recaptcha_public']     = null;
 	if (isset($input['recaptcha_private']))    $input['recaptcha_private']    = wp_filter_nohtml_kses($input['recaptcha_private']);    else $input['recaptcha_private']    = null;
 	if (isset($input['usp_recaptcha']))        $input['usp_recaptcha']        = wp_filter_nohtml_kses($input['usp_recaptcha']);        else $input['usp_recaptcha']        = null;
+	if (isset($input['usp_turnstile']))        $input['usp_turnstile']        = wp_filter_nohtml_kses($input['usp_turnstile']);        else $input['usp_turnstile']        = null;
+	if (isset($input['turnstile_site_key']))   $input['turnstile_site_key']   = wp_filter_nohtml_kses($input['turnstile_site_key']);   else $input['turnstile_site_key']   = null;
+	if (isset($input['turnstile_secret_key'])) $input['turnstile_secret_key'] = wp_filter_nohtml_kses($input['turnstile_secret_key']); else $input['turnstile_secret_key'] = null;
 	if (isset($input['custom_field']))         $input['custom_field']         = wp_filter_nohtml_kses($input['custom_field']);         else $input['custom_field']         = null;
 	if (isset($input['custom_name']))          $input['custom_name']          = wp_filter_nohtml_kses($input['custom_name']);          else $input['custom_name']          = null;
 	if (isset($input['custom_label']))         $input['custom_label']         = wp_filter_nohtml_kses($input['custom_label']);         else $input['custom_label']         = null;
@@ -1133,7 +1170,17 @@ function usp_validate_options($input) {
 	if (isset($input['auto_url_markup']))      $input['auto_url_markup']      = wp_kses_post($input['auto_url_markup'],      $allowedposttags); else $input['auto_url_markup']      = null;
 	if (isset($input['auto_custom_markup']))   $input['auto_custom_markup']   = wp_kses_post($input['auto_custom_markup'],   $allowedposttags); else $input['auto_custom_markup']   = null;
 	if (isset($input['auto_custom_markup_2'])) $input['auto_custom_markup_2'] = wp_kses_post($input['auto_custom_markup_2'], $allowedposttags); else $input['auto_custom_markup_2'] = null;
-	if (isset($input['custom_checkbox_text'])) $input['custom_checkbox_text'] = wp_kses_post($input['custom_checkbox_text'], $allowedposttags); else $input['custom_checkbox_text'] = null;
+	
+	if (isset($input['custom_checkbox_text'])) {
+		
+		$input['custom_checkbox_text'] = wp_kses_post($input['custom_checkbox_text'], $allowedposttags); 
+		$input['custom_checkbox_text'] = str_replace('script', '', $input['custom_checkbox_text']);
+		
+	} else {
+		
+		$input['custom_checkbox_text'] = null;
+		
+	}
 	
 	$allowedposttags = $default_allowedposttags;
 	
@@ -1211,14 +1258,14 @@ function usp_admin_notice() {
 			
 			?>
 			
-			<div class="notice notice-success notice-margin">
+			<div class="notice notice-success notice-lh">
 				<p>
-					<strong><?php esc_html_e('Fall Sale!', 'usp'); ?></strong> 
-					<?php esc_html_e('Take 25% OFF any of our', 'usp'); ?> 
+					<strong><?php esc_html_e('🌼 Spring Sale!', 'usp'); ?></strong> 
+					<?php esc_html_e('Take 30% OFF any of our', 'usp'); ?> 
 					<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/"><?php esc_html_e('Pro WordPress plugins', 'usp'); ?></a> 
 					<?php esc_html_e('and', 'usp'); ?> 
 					<a target="_blank" rel="noopener noreferrer" href="https://books.perishablepress.com/"><?php esc_html_e('books', 'usp'); ?></a>. 
-					<?php esc_html_e('Apply code', 'usp'); ?> <code>FALL2024</code> <?php esc_html_e('at checkout. Sale ends 12/21/24.', 'usp'); ?> 
+					<?php esc_html_e('Apply code', 'usp'); ?> <code>SPRING30</code> <?php esc_html_e('at checkout. Sale ends 6/28/2026.', 'usp'); ?> 
 					<?php echo usp_dismiss_notice_link(); ?>
 				</p>
 			</div>
@@ -1298,7 +1345,7 @@ function usp_dismiss_notice_link() {
 
 function usp_check_date_expired() {
 	
-	$expires = apply_filters('usp_check_date_expired', '2024-12-21');
+	$expires = apply_filters('usp_check_date_expired', '2026-06-28');
 	
 	return (new DateTime() > new DateTime($expires)) ? true : false;
 	

@@ -2,8 +2,8 @@
 Contributors: afsalrahim
 Tags: wordpress login logo, custom logo, login page logo, logo changer, change login page logo
 Requires at least: 3.0.1
-Tested up to: 5.7
-Stable tag: 2.4.1
+Tested up to: 6.9.1
+Stable tag: 2.5.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://www.buymeacoffee.com/afsal
@@ -14,7 +14,6 @@ My WordPress Login Logo lets you to add a custom logo in your wordpress login pa
 **My WordPress Login Logo** lets you to add a custom logo in your wordpress login page instead of the usual wordpress logo and customize your login page.
 
 It also allows you to specify the height and width of the logo. Apart from that you can also customize the login form by adding a custom message below login form and also provide some cool fade in effects for the login form. By adding your custom logo in your login page, you can make your website more professional and also impress the guest bloggers and other users who view these pages.
-
 
 == Installation ==
 This section describes how to install the plugin and get it working.
@@ -34,7 +33,7 @@ This section describes how to install the plugin and get it working.
 = How to change the logo size? =
 Simply input your desired logo height and width in the given fields to change the displayed logo size.
 
-= What is the recommened logo size? =
+= What is the recommended logo size? =
 Less than or equal to 320px width and 70px height is the recommended logo size for your WordPress Login Page.
 
 == Screenshots ==
@@ -42,6 +41,16 @@ Less than or equal to 320px width and 70px height is the recommended logo size f
 2. WordPress Login Page
 
 == Changelog ==
+
+= 2.5.2 =
+* Tested with WordPress 6.9.1
+* Compatibility update
+
+= 2.5.1 =
+* Security improvements, compatibility updates for WordPress 6.7.1 and minor UI fixes.
+
+= 2.5.0 =
+* Security improvements and compatibility updates for WordPress 6.7.1.
 
 = 2.4.1 =
 * Fix readme and wp tested version
@@ -81,5 +90,5 @@ Less than or equal to 320px width and 70px height is the recommended logo size f
 
 == Upgrade Notice ==
 
-= 2.4.0 =
-* Important Release, upgrade immediately. Compatible with 5.7
+= 2.5.1 =
+* Important Release, upgrade immediately. Compatible with 6.7.1

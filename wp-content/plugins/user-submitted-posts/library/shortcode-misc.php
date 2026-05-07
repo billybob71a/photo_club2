@@ -166,18 +166,12 @@ function usp_gallery($attr, $content = null) {
 		
 	), $attr));
 
-    // PeterY code starts here
-    #error_log("the permalink is ". get_the_permalink());
-    #$user_profile_data = get_userdata( 50 );
-    #error_log(gettype( $user_profile_data ));
-    #$user_division = $user_profile_data->__get( 'division_drop_down'  );
-    #error_log("the user division is");
-    #error_log( $user_division );
+    //PeterY code starts
+    error_log('I am in the usp gallery');
     $the_current_user_temp = wp_get_current_user();
-    // echo( "the current user ID is " . $the_current_user_temp->ID . "<br>");
     $the_current_user_id = esc_html( $the_current_user_temp->ID );
     $the_current_user_login_id = get_the_author_meta( 'user_login', $the_current_user_id );
-    //echo( "the current author meta id is " . $the_current_user_login_id . "<br>");
+    error_log('the current user is this one ' . $the_current_user_id);
     $args = array(
         'author' 	=> $the_current_user_id,
         'orderby' 	=> 'post_date',
@@ -187,14 +181,8 @@ function usp_gallery($attr, $content = null) {
     );
     $current_user_posts = get_posts( $args );
     ob_start();
-    var_dump($current_user_posts);
     $output = ob_get_clean();
     error_log($output);
-    $total = count( $current_user_posts );
-    // echo( "the total is photos submitted is  ". $total . "<br>" );
-    // error_log($total);
-    //error_log(var_export( $current_user_posts));
-    //error_log(var_export($current_user_posts[1]->ID));
     $gallery = '';
     $pattern = '#^https?://[^/]+/wp-content#';
     $wp_content_var = WP_CONTENT_DIR;
@@ -206,7 +194,6 @@ function usp_gallery($attr, $content = null) {
         $images = usp_get_images($size, $format, $target, $class, $number, $item->ID);
         //petery code finish
         //here is regex pattern to recognize any domain with the wp-content path
-
         foreach ($images as $image) {
             // echo("The image is ". $image );
             //the following match will produce anything after 'wp-content' in this case it should be the year and month
@@ -245,29 +232,45 @@ function usp_gallery($attr, $content = null) {
                 . '<br>'
                 . 'The original size is <br>'
                 . $filesize_var_MB
-                . ' MB <br>'
-                . '<H1>'
-                . $item->post_title
-                . '</H1><input type="button" name="'
+                . ' MB<br>'
+                . 'Title:   ' . $item->post_title
+                . '<br>'
+                . '<input type="button" name="'
                 . $item->ID
-                . '" id="delete_button" value="Delete" /><br><br>' : '';
+                . '" id="delete_button" value="Delete" /><br><br><br><br><br>' : '';
 
-            //code not used anymore
-            //if (file_exists($image)) {
-            //    $sizeInBytes = filesize($filename);
-            //    echo("File size is :". $sizeInBytes);
-            // }
         }
     }
     error_log($the_current_user_login_id);
     //PeterY code ends here
-    //$images = usp_get_images('thumbnail');
 
-    //foreach ($images as $image) $gallery .= $image;
+	//PeterY commented out
+	//$images = usp_get_images($size, $format, $target, $class, $number, $id);
 
-    //$gallery = $gallery ? '<div class="usp-image-gallery">'. $gallery .'</div>' : '';
+    //PeterY debugging starts
+    //PeterY commented out
+    /*
+    if (empty($images)) {
+        error_log('the images array is empty');
+    }
+    else {
+        error_log('the images array is not empty');
+    }
+    //PeterY debuggin ends
 	
+	$gallery = '';
+	
+	foreach ($images as $image) $gallery .= $image;
+	
+	$gallery = $gallery ? '<div class="usp-image-gallery">'. $gallery .'</div>' : '';
+    */
+
+    if (empty($gallery)) {
+        $gallery = "<b>You did not upload any images yet</b>";
+    }
+
 	return $gallery;
+
 	
 }
 add_shortcode('usp_gallery', 'usp_gallery');

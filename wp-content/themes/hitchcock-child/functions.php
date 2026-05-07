@@ -308,6 +308,12 @@ function custom_login_redirect( $redirect_to, $request, $user ) {
     return $redirect_to;
 }
 add_filter( 'login_redirect', 'custom_login_redirect', 10, 3 );
+add_action('usp_submit_success', 'redirect_upload_page');
+
+function redirect_upload_page() {
+    header("Location: /upload-photos-2/");
+    exit();
+}
 //the following will add a role called subscriber_support
 //it will be removed later
 //*** code starts here for adding role***
