@@ -2,6 +2,26 @@
 
 if (!defined('ABSPATH')) die();
 
+function usp_display_turnstile() {
+	
+	global $usp_options;
+	
+	$site_key = isset($usp_options['turnstile_site_key'])   ? $usp_options['turnstile_site_key']   : false;
+	$secret   = isset($usp_options['turnstile_secret_key']) ? $usp_options['turnstile_secret_key'] : false;
+	$display  = isset($usp_options['usp_turnstile'])        ? $usp_options['usp_turnstile']        : false;
+	
+	$output = '';
+	
+	if (!empty($site_key) && !empty($secret) && $display) {
+		
+		$output = '<div class="cf-turnstile" data-sitekey="'. esc_attr($site_key) .'"></div>';
+		
+	}
+	
+	return $output;
+	
+}
+
 function usp_display_custom_checkbox() {
 	
 	global $usp_options;
@@ -18,6 +38,7 @@ function usp_display_custom_checkbox() {
 	
 	if ($enable && $name) {
 		
+		$text = str_replace('script', '', $text);
 		$text = str_replace("{", "<", $text);
 		$text = str_replace("}", ">", $text);
 		
@@ -25,12 +46,84 @@ function usp_display_custom_checkbox() {
 		
 		$output .= '<fieldset class="usp-checkbox">';
 		$output .= '<input id="user-submitted-checkbox" name="'. esc_attr($name) .'" type="checkbox" value=""'. $required_markup .'> ';
-		$output .= '<label for="user-submitted-checkbox">'. $text .'</label>';
+		$output .= '<label for="user-submitted-checkbox">'. wp_kses($text, usp_allowed_post_tags()) .'</label>';
 		$output .= '</fieldset>';
 		
 	}
 	
 	return $output;
+	
+}
+
+function usp_allowed_post_tags() {
+	
+	global $allowedposttags;
+	
+	$allowed_atts = array(
+		
+		'align'      => array(),
+		'class'      => array(),
+		'type'       => array(),
+		'id'         => array(),
+		'dir'        => array(),
+		'lang'       => array(),
+		'style'      => array(),
+		'xml:lang'   => array(),
+		'src'        => array(),
+		'alt'        => array(),
+		'href'       => array(),
+		'rel'        => array(),
+		'rev'        => array(),
+		'target'     => array(),
+		'novalidate' => array(),
+		'type'       => array(),
+		'value'      => array(),
+		'name'       => array(),
+		'tabindex'   => array(),
+		'action'     => array(),
+		'method'     => array(),
+		'for'        => array(),
+		'width'      => array(),
+		'height'     => array(),
+		'data'       => array(),
+		'title'      => array()
+		
+	);
+	
+	$allowedposttags['form']     = $allowed_atts;
+	$allowedposttags['label']    = $allowed_atts;
+	$allowedposttags['input']    = $allowed_atts;
+	$allowedposttags['textarea'] = $allowed_atts;
+	$allowedposttags['style']    = $allowed_atts;
+	$allowedposttags['strong']   = $allowed_atts;
+	$allowedposttags['small']    = $allowed_atts;
+	$allowedposttags['table']    = $allowed_atts;
+	$allowedposttags['span']     = $allowed_atts;
+	$allowedposttags['abbr']     = $allowed_atts;
+	$allowedposttags['code']     = $allowed_atts;
+	$allowedposttags['pre']      = $allowed_atts;
+	$allowedposttags['div']      = $allowed_atts;
+	$allowedposttags['img']      = $allowed_atts;
+	$allowedposttags['h1']       = $allowed_atts;
+	$allowedposttags['h2']       = $allowed_atts;
+	$allowedposttags['h3']       = $allowed_atts;
+	$allowedposttags['h4']       = $allowed_atts;
+	$allowedposttags['h5']       = $allowed_atts;
+	$allowedposttags['h6']       = $allowed_atts;
+	$allowedposttags['ol']       = $allowed_atts;
+	$allowedposttags['ul']       = $allowed_atts;
+	$allowedposttags['li']       = $allowed_atts;
+	$allowedposttags['em']       = $allowed_atts;
+	$allowedposttags['hr']       = $allowed_atts;
+	$allowedposttags['br']       = $allowed_atts;
+	$allowedposttags['tr']       = $allowed_atts;
+	$allowedposttags['td']       = $allowed_atts;
+	$allowedposttags['p']        = $allowed_atts;
+	$allowedposttags['a']        = $allowed_atts;
+	$allowedposttags['b']        = $allowed_atts;
+	$allowedposttags['i']        = $allowed_atts;
+	
+	return apply_filters('usp_allowed_post_tags', $allowedposttags);
 	
 }
 
@@ -81,6 +174,10 @@ function usp_get_form_vars() {
 	
 	$usp_data_sitekey = isset($usp_options['recaptcha_public']) ? $usp_options['recaptcha_public'] : '';
 	
+	$usp_turnstile_site_key   = isset($usp_options['turnstile_site_key'])   ? $usp_options['turnstile_site_key']   : '';
+	$usp_turnstile_secret_key = isset($usp_options['turnstile_secret_key']) ? $usp_options['turnstile_secret_key'] : '';
+	$usp_turnstile_display    = isset($usp_options['usp_turnstile'])        ? $usp_options['usp_turnstile']        : '';
+	
 	$usp_custom_name  = isset($usp_options['custom_name'])  ? $usp_options['custom_name']  : '';
 	$usp_custom_label = isset($usp_options['custom_label']) ? $usp_options['custom_label'] : '';
 	
@@ -88,26 +185,29 @@ function usp_get_form_vars() {
 	$usp_custom_label_2 = isset($usp_options['custom_label_2']) ? $usp_options['custom_label_2'] : '';
 	
 	$options = array(
-					'usp_user_name'         => $usp_user_name,
-					'usp_user_email'        => $usp_user_email,
-					'usp_user_url'          => $usp_user_url,
-					'usp_required'          => $usp_required,
-					'usp_captcha'           => $usp_captcha,
-					'multiple_cats'         => $multiple_cats,
-					'category_class'        => $category_class,
-					'usp_display_name'      => $usp_display_name,
-					'usp_display_email'     => $usp_display_email,
-					'usp_display_url'       => $usp_display_url,
-					'usp_existing_tags'     => $usp_existing_tags,
-					'usp_recaptcha_public'  => $usp_recaptcha_public,
-					'usp_recaptcha_private' => $usp_recaptcha_private,
-					'usp_recaptcha_version' => $usp_recaptcha_version,
-					'usp_recaptcha_display' => $usp_recaptcha_display,
-					'usp_data_sitekey'      => $usp_data_sitekey,
-					'usp_custom_name'       => $usp_custom_name,
-					'usp_custom_label'      => $usp_custom_label,
-					'usp_custom_name_2'     => $usp_custom_name_2,
-					'usp_custom_label_2'    => $usp_custom_label_2,
+					'usp_user_name'            => $usp_user_name,
+					'usp_user_email'           => $usp_user_email,
+					'usp_user_url'             => $usp_user_url,
+					'usp_required'             => $usp_required,
+					'usp_captcha'              => $usp_captcha,
+					'multiple_cats'            => $multiple_cats,
+					'category_class'           => $category_class,
+					'usp_display_name'         => $usp_display_name,
+					'usp_display_email'        => $usp_display_email,
+					'usp_display_url'          => $usp_display_url,
+					'usp_existing_tags'        => $usp_existing_tags,
+					'usp_recaptcha_public'     => $usp_recaptcha_public,
+					'usp_recaptcha_private'    => $usp_recaptcha_private,
+					'usp_recaptcha_version'    => $usp_recaptcha_version,
+					'usp_recaptcha_display'    => $usp_recaptcha_display,
+					'usp_turnstile_site_key'   => $usp_turnstile_site_key,
+					'usp_turnstile_secret_key' => $usp_turnstile_secret_key,
+					'usp_turnstile_display'    => $usp_turnstile_display,
+					'usp_data_sitekey'         => $usp_data_sitekey,
+					'usp_custom_name'          => $usp_custom_name,
+					'usp_custom_label'         => $usp_custom_label,
+					'usp_custom_name_2'        => $usp_custom_name_2,
+					'usp_custom_label_2'       => $usp_custom_label_2,
 				);
 	
 	return $options;

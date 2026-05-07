@@ -8,17 +8,15 @@
 	Author URI: https://plugin-planet.com/
 	Donate link: https://monzillamedia.com/donate.html
 	Contributors: specialk
-	Requires at least: 4.6
-	Tested up to: 6.7
-	Stable tag: 20241026
-	Version:    20241026
+	Requires at least: 4.7
+	Tested up to: 7.0
+	Stable tag: 20260422
+	Version:    20260422
 	Requires PHP: 5.6.20
 	Text Domain: usp
 	Domain Path: /languages
 	License: GPL v2 or later
-*/
-
-/*
+	
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 
@@ -32,14 +30,14 @@
 	You should have received a copy of the GNU General Public License
 	with this program. If not, visit: https://www.gnu.org/licenses/
 	
-	Copyright 2024 Monzilla Media. All rights reserved.
+	Copyright 2011-2026 Monzilla Media. All rights reserved.
 */
 
 if (!defined('ABSPATH')) die();
 
-if (!defined('USP_WP_VERSION')) define('USP_WP_VERSION', '4.6');
-if (!defined('USP_VERSION'))    define('USP_VERSION', '20241026');
-if (!defined('USP_PLUGIN'))     define('USP_PLUGIN', esc_html__('User Submitted Posts', 'usp'));
+if (!defined('USP_WP_VERSION')) define('USP_WP_VERSION', '4.7');
+if (!defined('USP_VERSION'))    define('USP_VERSION', '20260422');
+if (!defined('USP_PLUGIN'))     define('USP_PLUGIN', 'User Submitted Posts');
 if (!defined('USP_FILE'))       define('USP_FILE', plugin_basename(__FILE__));
 if (!defined('USP_PATH'))       define('USP_PATH', plugin_dir_path(__FILE__));
 if (!defined('USP_URL'))        define('USP_URL',  plugin_dir_url (__FILE__));
@@ -66,6 +64,8 @@ if (isset($usp_options['default_options']) && $usp_options['default_options'] ==
 }
 
 //
+
+
 
 function usp_i18n_init() {
 	
@@ -120,8 +120,8 @@ function usp_require_wp_version() {
 				
 				$msg  = '<strong>'. USP_PLUGIN .'</strong> ';
 				$msg .= esc_html__('requires WordPress ', 'usp') . USP_WP_VERSION;
-				$msg .= esc_html__(' or higher, and has been deactivated! ', 'usp');
-				$msg .= esc_html__('Please return to the', 'usp') .' <a href="'. admin_url() .'">';
+				$msg .= esc_html__(' or higher, and has been deactivated. ', 'usp');
+				$msg .= esc_html__('Please return to the', 'usp') .' <a href="'. admin_url('plugins.php') .'">';
 				$msg .= esc_html__('WordPress Admin Area', 'usp') .'</a> ';
 				$msg .= esc_html__('to upgrade WordPress and try again.', 'usp');
 				
@@ -294,23 +294,37 @@ function usp_get_comment_status() {
 
 function usp_get_submitted_category() {
 	
+	global $usp_options;
+	
+	$allowed_cats = isset($usp_options['categories']) ? array_map('intval', $usp_options['categories']) : array();
+	
 	$category = isset($_POST['user-submitted-category']) ? $_POST['user-submitted-category'] : '';
 	
 	if (is_array($category)) {
 		
 		$cats = array();
 		
-		foreach ($category as $cat) $cats[] = sanitize_text_field($cat);
+		foreach ($category as $cat) $cats[] = intval($cat);
+		
+		$cats = array_intersect($cats, $allowed_cats);
 		
 	} else {
 		
 		if (strpos($category, ',') !== false) {
 			
-			$cats = array_map('trim', explode(',', $category));
+			$cats = array_map('intval', array_map('trim', explode(',', $category)));
+			
+			$cats = array_intersect($cats, $allowed_cats);
 			
 		} else {
 			
-			$cats = sanitize_text_field($category);
+			$cats = intval($category);
+			
+			if (!in_array($cats, $allowed_cats)) {
+				
+				$cats = isset($allowed_cats[0]) ? $allowed_cats[0] : '';
+				
+			}
 			
 		}
 		
@@ -471,21 +485,10 @@ function usp_checkForPublicSubmission() {
 		
 		if ($post_id) {
 			
-			if (!empty($_POST['redirect-override'])) {
-				
-				$redirect = $_POST['redirect-override'];
-				
-				$redirect = remove_query_arg(array('usp-error'), $redirect);
-				$redirect = add_query_arg(array('usp_redirect' => '1', 'success' => 1, 'post_id' => $post_id), $redirect);
-				
-			} else {
-				
-				$redirect = $_SERVER['REQUEST_URI'];
-				
-				$redirect = remove_query_arg(array('usp-error'), $redirect);
-				$redirect = add_query_arg(array('success' => 1, 'post_id' => $post_id), $redirect);
-				
-			}
+			$redirect = $_SERVER['REQUEST_URI'];
+			
+			$redirect = remove_query_arg(array('usp-error'), $redirect);
+			$redirect = add_query_arg(array('success' => 1, 'post_id' => $post_id), $redirect);
 			
 			do_action('usp_submit_success', $redirect);
 			
@@ -526,6 +529,21 @@ function usp_check_recaptcha_keys() {
 
 
 
+function usp_check_turnstile_keys() {
+	
+	global $usp_options;
+	
+	$site_key   = isset($usp_options['turnstile_site_key'])   ? $usp_options['turnstile_site_key']   : '';
+	$secret_key = isset($usp_options['turnstile_secret_key']) ? $usp_options['turnstile_secret_key'] : '';
+	
+	if (empty($site_key) || empty($secret_key)) return false;
+	
+	return true;
+	
+}
+
+
+
 function usp_verify_recaptcha() {
 	
 	global $usp_options;
@@ -553,6 +571,41 @@ function usp_verify_recaptcha() {
 		return false;
 		
 	}
+	
+}
+
+
+
+function usp_verify_turnstile() {
+	
+	global $usp_options;
+	
+	$site_key   = isset($usp_options['turnstile_site_key'])   ? $usp_options['turnstile_site_key']   : '';
+	$secret_key = isset($usp_options['turnstile_secret_key']) ? $usp_options['turnstile_secret_key'] : '';
+	
+	if (!usp_check_turnstile_keys()) return false;
+	
+	$turnstile = isset($_POST['cf-turnstile-response']) ? $_POST['cf-turnstile-response'] : null;
+	
+	$headers = array(
+		'body' => array(
+			'secret' => $secret_key,
+			'response' => $turnstile,
+			'remoteip' => usp_get_ip_address()
+		)
+	);
+	
+	$verify = wp_remote_post('https://challenges.cloudflare.com/turnstile/v0/siteverify', $headers);
+	
+	$verify = wp_remote_retrieve_body($verify);
+	
+	$verify = json_decode($verify, true);
+	
+	$response = (isset($verify['success']) && $verify['success'] == 1) ? true : false;
+	
+	do_action('cfturnstile_after_check', $response, $verify);
+	
+	return $response;
 	
 }
 
@@ -675,7 +728,7 @@ function usp_display_form() {
 	return apply_filters('usp_form_shortcode', ob_get_clean());
 	
 }
-add_shortcode ('user-submitted-posts', 'usp_display_form');
+add_shortcode('user-submitted-posts', 'usp_display_form');
 
 
 
@@ -1112,11 +1165,9 @@ function usp_unique_filename($file) {
 
 
 function usp_attach_images($post_id, $newPost, $files, $file_count, $author_data) {
-    //PeterY code begin: to allow UTF-8 Chinese characters
-    setlocale(LC_ALL, 'en_US.UTF-8');
-    //PeterY code end:
+	
 	global $usp_options;
-
+	
 	do_action('usp_files_before', $files);
 	
 	$attach_ids = array();
@@ -1317,6 +1368,12 @@ function usp_createPublicSubmission($title, $files, $ip, $author, $url, $email, 
 		
 	}
 	
+	if (usp_check_turnstile_keys()) {
+		
+		if (isset($usp_options['usp_turnstile']) && ($usp_options['usp_turnstile'] == 'show') && !usp_verify_turnstile()) $newPost['error'][] = 'required-recaptcha';
+		
+	}
+	
 	if (isset($usp_options['usp_captcha']) && ($usp_options['usp_captcha'] == 'show') && !usp_spamQuestion($captcha)) $newPost['error'][] = 'required-captcha';
 	
 	if (isset($usp_options['usp_email']) && ($usp_options['usp_email'] == 'show')) {
@@ -1365,6 +1422,7 @@ function usp_createPublicSubmission($title, $files, $ip, $author, $url, $email, 
 	$postData['post_status'] = apply_filters('usp_post_status', 'pending');
 	
 	do_action('usp_insert_before', $postData);
+	$postData = apply_filters('usp_insert_post_vars', $postData);
 	$newPost['id'] = wp_insert_post($postData);
 	do_action('usp_insert_after', $newPost);
 	
@@ -1427,11 +1485,11 @@ function usp_createPublicSubmission($title, $files, $ip, $author, $url, $email, 
 
 function usp_include_deps() {
 	
-	if (!function_exists('media_handle_upload')) {
+	if (!function_exists('media_handle_upload') || !function_exists('wp_crop_image')) {
 		
-		require_once (ABSPATH .'/wp-admin/includes/media.php');
-		require_once (ABSPATH .'/wp-admin/includes/file.php');
-		require_once (ABSPATH .'/wp-admin/includes/image.php');
+		require_once(ABSPATH .'/wp-admin/includes/media.php');
+		require_once(ABSPATH .'/wp-admin/includes/file.php');
+		require_once(ABSPATH .'/wp-admin/includes/image.php');
 		
 	}
 	
@@ -1507,6 +1565,22 @@ function usp_validateEmail($email) {
 	
 }
 
+function usp_post_cats($post_id) {
+	
+	$cats = '';
+	
+	foreach((get_the_category($post_id)) as $category) { 
+		
+		$cats .= $category->cat_name .', ';
+		
+	}
+	
+	$cats = trim($cats, ', ');
+	
+	return $cats;
+	
+}
+
 function usp_send_mail_alert($post_id, $title, $content, $author, $email, $url, $custom, $custom_2, $post_date) {
 	
 	global $usp_options;
@@ -1516,6 +1590,7 @@ function usp_send_mail_alert($post_id, $title, $content, $author, $email, $url, 
 		$blog_url     = get_bloginfo('url');        // %%blog_url%%
 		$blog_name    = get_bloginfo('name');       // %%blog_name%%
 		$post_url     = get_permalink($post_id);    // %%post_url%%
+		$post_cats    = usp_post_cats($post_id);    // %%post_cats%%
 		$admin_url    = admin_url();                // %%admin_url%%
 		$post_title   = $title;                     // %%post_title%%
 		$post_content = $content;                   // %%post_content%%
@@ -1528,20 +1603,21 @@ function usp_send_mail_alert($post_id, $title, $content, $author, $email, $url, 
 		
 		$patterns = array();
 		
-		$patterns[0]  = "/%%blog_url%%/";
-		$patterns[1]  = "/%%blog_name%%/";
-		$patterns[2]  = "/%%post_url%%/";
-		$patterns[3]  = "/%%admin_url%%/";
-		$patterns[4]  = "/%%post_title%%/";
-		$patterns[5]  = "/%%post_content%%/";
-		$patterns[6]  = "/%%post_author%%/";
-		$patterns[7]  = "/%%user_email%%/";
-		$patterns[8]  = "/%%user_url%%/";
-		$patterns[9]  = "/%%edit_link%%/";
-		$patterns[10] = "/%%custom_field%%/";
-		$patterns[11] = "/%%custom_field_2%%/";
-		$patterns[12] = "/%%delete_link%%/";
-		$patterns[13] = "/%%post_date%%/";
+		$patterns[0]  = "%%blog_url%%";
+		$patterns[1]  = "%%blog_name%%";
+		$patterns[2]  = "%%post_url%%";
+		$patterns[3]  = "%%admin_url%%";
+		$patterns[4]  = "%%post_title%%";
+		$patterns[5]  = "%%post_content%%";
+		$patterns[6]  = "%%post_author%%";
+		$patterns[7]  = "%%user_email%%";
+		$patterns[8]  = "%%user_url%%";
+		$patterns[9]  = "%%edit_link%%";
+		$patterns[10] = "%%custom_field%%";
+		$patterns[11] = "%%custom_field_2%%";
+		$patterns[12] = "%%delete_link%%";
+		$patterns[13] = "%%post_date%%";
+		$patterns[14] = "%%post_cats%%";
 		
 		$replacements = array();
 		
@@ -1559,17 +1635,26 @@ function usp_send_mail_alert($post_id, $title, $content, $author, $email, $url, 
 		$replacements[11] = $custom_2;
 		$replacements[12] = $delete_link;
 		$replacements[13] = $post_date;
+		$replacements[14] = $post_cats;
 		
 		//
 		
 		$subject_default = $blog_name .': New user-submitted post!';
 		$subject = (isset($usp_options['email_alert_subject']) && !empty($usp_options['email_alert_subject'])) ? $usp_options['email_alert_subject'] : $subject_default;
-		$subject = preg_replace($patterns, $replacements, $subject);
+		for($i = 0; $i < count($patterns); $i++) {
+			$pattern = isset($patterns[$i]) ? $patterns[$i] : '';
+			$replace = isset($replacements[$i]) ? $replacements[$i] : '';
+			$subject = str_replace($pattern, $replace, $subject);
+		}
 		$subject = apply_filters('usp_mail_subject', $subject);
 		
 		$message_default = 'Hello, there is a new user-submitted post:'. "\r\n\n" . 'Title: '. $post_title . "\r\n\n" .'Visit Admin Area: '. $admin_url;
 		$message = (isset($usp_options['email_alert_message']) && !empty($usp_options['email_alert_message'])) ? $usp_options['email_alert_message'] : $message_default;
-		$message = preg_replace($patterns, $replacements, $message);
+		for($i = 0; $i < count($patterns); $i++) {
+			$pattern = isset($patterns[$i]) ? $patterns[$i] : '';
+			$replace = isset($replacements[$i]) ? $replacements[$i] : '';
+			$message = str_replace($pattern, $replace, $message);
+		}
 		$message = apply_filters('usp_mail_message', $message);
 		
 		$html = isset($usp_options['usp_email_html']) ? $usp_options['usp_email_html'] : false;
@@ -1605,28 +1690,14 @@ function usp_send_mail_alert($post_id, $title, $content, $author, $email, $url, 
 				wp_mail($address_to, $subject, $message, $headers);
 				
 			}
-            //adding in lost code that was found in previous git commit
-            //this code will send an email to the photo submitter
-            //$address_to_user_email = $user_email[0]["user_email"];
-            $user = get_user_by('login', $author);
-            if ( $user ) {
-                $user_email = $user->user_email;
-            }
-            //$address_to_user_email = $usp_options["usp_email_address"];
-            $address_to_user_email = $user_email;
-            $message_to_user = '<html><head></head><body>';
-            $message_to_user = '<p>Dear '.$post_author.'</p>';
-            $message_to_user .= '<p>You have submitted a photo called '.$post_title.'</p>';
-            $message_to_user .= "Thank you for your participation in the photo contest.".'<br><br>';
-            $message_to_user .= "Calgary Photographic Art Society";
-            $message_to_user .= '</body></html>';
-            wp_mail($address_to_user_email, "photo submission $post_title", $message_to_user, $headers);
 			
 		}
 		
 	}
 	
 }
+
+
 
 // Thanks to Delete Post plugin @ https://wordpress.org/plugins/delete-post/
 
@@ -1875,3 +1946,22 @@ function usp_clear_cookies() {
 	
 }
 add_action('wp_logout', 'usp_clear_cookies');
+
+
+
+function usp_add_new_options() {
+	
+	global $usp_options;
+	
+	$turnstile = isset($usp_options['usp_turnstile']) ? true : false;
+	
+	if (empty($turnstile)) {
+		
+		$usp_options['usp_turnstile'] = 'hide';
+		
+		$update_option = update_option('usp_options', $usp_options);
+		
+	}
+	
+}
+add_action('admin_init', 'usp_add_new_options');

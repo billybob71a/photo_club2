@@ -159,6 +159,10 @@ if (!function_exists('usp_get_images')) :
 function usp_get_images($size = false, $format = false, $target = false, $class = false, $number = false, $post_id = false) {
 	
 	global $post;
+
+    //PeterY code
+    error_log("Yo man! PeterY is modifying this code now");
+    //PeterY code ends here
 	
 	$post_id = ($post_id && is_numeric($post_id)) ? $post_id : $post->ID;
 	
@@ -171,27 +175,45 @@ function usp_get_images($size = false, $format = false, $target = false, $class 
 	$format  = ($format === 'image' || $format === 'image_link') ? $format : 'image';
 	
 	$size    = ($size === 'thumbnail' || $size === 'medium' || $size === 'large' || $size === 'full') ? $size : 'thumbnail';
-	
+	//PeterY code check this array with the original array, I might have changed something here on 20260429
 	$args = array(
-			'post_status'    => 'publish', 
-			'post_type'      => 'attachment', 
-			'post_parent'    => $post_id, 
-			'post_status'    => 'inherit', 
+			'post_type'      => 'attachment',
+			'post_status' => 'inherit',
+			'post_parent'    => $post_id,
 			'posts_per_page' => $number,
 			'fields'         => 'ids'
 	);
-	
-	$args = apply_filters('usp_image_attachments_args', $args);
+    //PeterY code end check this
+    //PeterY debug start print $post_id
+
+    error_log('PeterY the post_parent is ' . $post_id);
+    error_log('PeterY debug the posts_per_page is ' . $number);
+    //Peter debug ends
+	//PeterY comment out below
+	// $args = apply_filters('usp_image_attachments_args', $args);
 	
 	$image_ids = get_posts($args);
 	
 	$urls = array(); 
 	
 	$i = 1;
+
+
+    //PeterY code
+    error_log('PeterY the id is '. $image_ids);
+    //PeterY code ends here
 	
 	foreach ($image_ids as $id) {
+
+        //PeterY code starts
+        error_log("PeterY in for loop " . $id);
+        //PeterY code ends
 		
 		$url = wp_get_attachment_image_src($id, $size);
+
+        //PeterY code starts
+        error_log("PeterY in for loop " . $id);
+        //PeterY code ends
 		
 		$original = wp_get_attachment_image_src($id, 'full');
 		
@@ -218,7 +240,22 @@ function usp_get_images($size = false, $format = false, $target = false, $class 
 		}
 		
 	}
-	
+    // PeterY code
+    error_log("Hey Dude! PeterY is modifying this code");
+
+    if ( is_array($urls) || is_object($urls) ) {
+        foreach ($urls as $url) {
+            // Wrapping $url in brackets [] makes empty strings [ ] very obvious
+            error_log('PeterY - individual url: [' . $url . ']');
+        }
+    } else {
+        error_log("PeterY Alert: \$urls is not an array! Value: " . var_export($urls, true));
+    }
+
+    // Use print_r to see the whole structure at once
+    error_log("PeterY - Full array dump: " . print_r($urls, true));
+    // PeterY code ends here
+
 	return $urls;
 	
 }
