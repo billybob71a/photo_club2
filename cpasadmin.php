@@ -564,6 +564,9 @@ else if ($login_check) {
     echo("the previous folder is ".$sub_folder_previous);
     $keys_of_division = array_keys($var_division);
     $result = scandir("./wp-content/uploads/".$sub_folder_current."/photo_random");
+    //error to fix the $result variable and change to an array as suggested by Gemini AI
+    $result = is_array($result) ? $result : [];
+    //end of Gemini AI suggestion
     //var_dump($var_division);
     //echo(var_dump($keys_of_division));
     $result_intersect = array_intersect($result, $keys_of_division);
