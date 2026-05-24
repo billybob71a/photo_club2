@@ -186,12 +186,22 @@ function usp_gallery($attr, $content = null) {
     $gallery = '';
     $pattern = '#^https?://[^/]+/wp-content#';
     $wp_content_var = WP_CONTENT_DIR;
+    $count = 0;
     foreach ($current_user_posts as $item) {
         error_log("Logging item");
         error_log($item->ID);
         // echo( "the item post ID is " . $item->ID . "<br>");
         //petery code start
         $images = usp_get_images($size, $format, $target, $class, $number, $item->ID);
+        // Pretty notice text before the loop
+        if (!empty($images) and $count == 0) {
+        echo '<div style="background-color: #f0f7ff; border-left: 4px solid #0073aa; padding: 12px 16px; margin: 15px 0; border-radius: 4px; font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Oxygen-Sans, Ubuntu, Cantarell, \'Helvetica Neue\', sans-serif; font-size: 14px; color: #1d2327; display: flex; align-items: center; gap: 8px; font-weight: 500;">';
+        echo '  <span style="font-size: 16px;">ℹ️</span>';
+        echo '  <span>To add more photos, scroll down to submission form at the bottom of this page</span>';
+        echo '</div>';
+        echo '<br>';
+        $count = 1;
+        }
         //petery code finish
         //here is regex pattern to recognize any domain with the wp-content path
         foreach ($images as $image) {
