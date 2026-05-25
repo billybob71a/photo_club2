@@ -237,13 +237,13 @@ function usp_gallery($attr, $content = null) {
             $gallery = $gallery ? '<div class="usp-image-gallery">'
                 . $gallery
                 . '</div>'
-                . 'The original file name is <br>'
-                . $originalFileName
+                . '<span class="usp-title-label">The original file name: </span>'
+                . '<span class="usp-title-text">' . esc_html($originalFileName) . '</span>'
                 . '<br>'
-                . 'The original size is <br>'
-                . $filesize_var_MB
-                . ' MB<br>'
-                . 'Title:   ' . $item->post_title
+                . '<span class="usp-title-label">The original size: </span>'
+                . '<span class="usp-title-text">' . esc_html($filesize_var_MB) . ' MB<br>' . '</span>'
+                . '<span class="usp-title-label">Title:</span> '
+                . '<span class="usp-title-text">' . esc_html($item->post_title) . '</span>'
                 . '<br>'
                 . '<input type="button" name="'
                 . $item->ID
