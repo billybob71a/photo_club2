@@ -177,7 +177,7 @@ add_action( 'wp_enqueue_scripts', 'my_theme_enqueue_styles' );
         add_action('register_form', 'add_hidden_field_to_registration_form');
         function add_hidden_field_to_registration_form() {
             ?>
-            <input type="hidden" name="division_drop_down_ff" value="Level_0">
+            <input type="hidden" name="division_drop_down_ff" value="LEVEL_0">
             <?php
         }
         add_action('user_register', 'save_hidden_field_value');
