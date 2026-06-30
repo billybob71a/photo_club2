@@ -31,6 +31,7 @@ $('a[href="#competition_placeholder"]').append('&nbsp;&nbsp;<i class="fas fa-car
 $('a[href="#about_us_placeholder"]').append('&nbsp; &nbsp;<i class="fas fa-caret-down fa-xs"></i>');
 $('a[href="#activities_placeholder"]').append('&nbsp; &nbsp;<i class="fas fa-caret-down fa-xs"></i>');
 $('a[href="#Members_corner"]').append('&nbsp; &nbsp;<i class="fas fa-caret-down fa-xs"></i>');
+$('a[href="#2026_competitions"]').append('&nbsp; &nbsp;<i class="fas fa-caret-down fa-xs"></i>');
 $('a[href="#2025_competitions"]').append('&nbsp; &nbsp;<i class="fas fa-caret-down fa-xs"></i>');
 $('a[href="#2024_competitions"]').append('&nbsp; &nbsp;<i class="fas fa-caret-down fa-xs"></i>');
 $('a[href="#2023_competitions"]').append('&nbsp; &nbsp;<i class="fas fa-caret-down fa-xs"></i>');
@@ -52,6 +53,7 @@ $('a[href="#competition_placeholder"]').click(function(){$(this).next().slideTog
 $('a[href="#about_us_placeholder"]').click(function(){$(this).next().slideToggle();});
 $('a[href="#activities_placeholder"]').click(function(){$(this).next().slideToggle();});
 $('a[href="#Members_corner"]').click(function(){$(this).next().slideToggle();});
+$('a[href="#2026_competitions"]').click(function(){$(this).next().slideToggle();});
 $('a[href="#2025_competitions"]').click(function(){$(this).next().slideToggle();});
 $('a[href="#2024_competitions"]').click(function(){$(this).next().slideToggle();});
 $('a[href="#2023_competitions"]').click(function(){$(this).next().slideToggle();});
