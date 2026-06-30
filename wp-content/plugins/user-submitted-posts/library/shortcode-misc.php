@@ -167,11 +167,13 @@ function usp_gallery($attr, $content = null) {
 	), $attr));
 
     //PeterY code starts
+    echo ini_get('error_log');
     error_log('I am in the usp gallery');
     $the_current_user_temp = wp_get_current_user();
     $the_current_user_id = esc_html( $the_current_user_temp->ID );
+    error_log("The author id is  " . $the_current_user_id);
+    error_log("The login id is " . $the_current_user_temp->display_name);
     $the_current_user_login_id = get_the_author_meta( 'user_login', $the_current_user_id );
-    error_log('the current user is this one ' . $the_current_user_id);
     $args = array(
         'author' 	=> $the_current_user_id,
         'orderby' 	=> 'post_date',
@@ -195,12 +197,12 @@ function usp_gallery($attr, $content = null) {
         $images = usp_get_images($size, $format, $target, $class, $number, $item->ID);
         // Pretty notice text before the loop
         if (!empty($images) and $count == 0) {
-        echo '<div style="background-color: #f0f7ff; border-left: 4px solid #0073aa; padding: 12px 16px; margin: 15px 0; border-radius: 4px; font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Oxygen-Sans, Ubuntu, Cantarell, \'Helvetica Neue\', sans-serif; font-size: 14px; color: #1d2327; display: flex; align-items: center; gap: 8px; font-weight: 500;">';
-        echo '  <span style="font-size: 16px;">ℹ️</span>';
-        echo '  <span>To add more photos, scroll down to submission form at the bottom of this page</span>';
-        echo '</div>';
-        echo '<br>';
-        $count = 1;
+            echo '<div style="background-color: #f0f7ff; border-left: 4px solid #0073aa; padding: 12px 16px; margin: 15px 0; border-radius: 4px; font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Oxygen-Sans, Ubuntu, Cantarell, \'Helvetica Neue\', sans-serif; font-size: 14px; color: #1d2327; display: flex; align-items: center; gap: 8px; font-weight: 500;">';
+            echo '  <span style="font-size: 16px;">ℹ️</span>';
+            echo '  <span>To add more photos, scroll down to submission form at the bottom of this page</span>';
+            echo '</div>';
+            echo '<br>';
+            $count = 1;
         }
         //petery code finish
         //here is regex pattern to recognize any domain with the wp-content path
@@ -248,25 +250,23 @@ function usp_gallery($attr, $content = null) {
                 . '<input type="button" name="'
                 . $item->ID
                 . '" id="delete_button" value="Delete" /><br><br><br><br><br>' : '';
-
         }
     }
     error_log($the_current_user_login_id);
     //PeterY code ends here
 
-	//PeterY commented out
-	//$images = usp_get_images($size, $format, $target, $class, $number, $id);
 
-    //PeterY debugging starts
     //PeterY commented out
     /*
-    if (empty($images)) {
+    $images = usp_get_images($size, $format, $target, $class, $number, $id);
+    //PeterY debugging starts
+     if (empty($images)) {
         error_log('the images array is empty');
     }
     else {
         error_log('the images array is not empty');
     }
-    //PeterY debuggin ends
+    //PeterY debugging ends
 	
 	$gallery = '';
 	
@@ -275,12 +275,11 @@ function usp_gallery($attr, $content = null) {
 	$gallery = $gallery ? '<div class="usp-image-gallery">'. $gallery .'</div>' : '';
     */
 
-    if (empty($gallery)) {
-        $gallery = "<b>You did not upload any images yet</b>";
+    if (empty ($gallery)) {
+        $gallery =  "<b>You did not upload any images yet</b>";
     }
-
+    //PeterY code ends
 	return $gallery;
-
 	
 }
 add_shortcode('usp_gallery', 'usp_gallery');
