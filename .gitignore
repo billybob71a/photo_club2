@@ -48,6 +48,10 @@ wp-content/plugins/remove-dashboard-access-for-non-admins/
 wp-content/plugins/shortcode-redirect/
 wp-content/plugins/user-role-editor/
 wp-content/plugins/wp-after-registration-redirect-user-advanced/
+wp-content/plugins/user-submitted-posts/library/core-functions.php
+wp-content/plugins/user-submitted-posts/library/plugin-settings.php
+wp-content/plugins/user-submitted-posts/library/shortcode-login.php
+wp-content/plugins/user-submitted-posts/library/template-tags.php
 wp-links-opml.php
 wp-login.php
 wp-mail.php
