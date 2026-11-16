@@ -443,7 +443,7 @@ if (($login_check) && isset($_POST['randomize'])) {
                         if ( !is_dir($destination_directory)) {
                             //mkdir($all_matches[0][2].'/'.$all_matches[0][3].'/'.$sub_folder_current.'/photo_random/'.$user_division);
                             mkdir($destination_directory, 0777, true);
-                            error_log("Directory ".$user_division." created");
+                            error_log("Directory ".$user_role." created");
                         }
 
                         $dest_location = $destination_directory.$image_renamed;
