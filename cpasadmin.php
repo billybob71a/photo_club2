@@ -557,6 +557,7 @@ if (($login_check) && isset($_POST['randomize'])) {
                 $file_thumbnail_wildcard = $array_source_location[1] . "/" .  $file_thumbnail . "-" . "460x*" . "." . strtolower($image_split_extension[1][0]);
 
                 $file_thumbnail_results  = glob($file_thumbnail_wildcard);
+                //echo("the file thumbnail result is {$file_thumbnail_results[0]}<br>");
                 if (sizeof($file_thumbnail_results) == 0)
                 {
                     $file_thumbnail_wildcard = $array_source_location[1] . "/" .  $file_thumbnail . "-" . "*x460" . "." . strtolower($image_split_extension[1][0]);
@@ -564,7 +565,9 @@ if (($login_check) && isset($_POST['randomize'])) {
                 }
 
                 //fwrite($myfilethumbnail, 'https://' . $_SERVER['SERVER_NAME'] . '/' . $array_source_location[1] . '/' . $image_split_name[1][0] . "-460x460." . $image_split_extension[1][0] . '||' . $array_source_location[0] . "\r\n");
-                $file_thumbnail_results[0] = str_replace(' ', '%20', $file_thumbnail_results[0]);
+                if ( ! empty($file_thumbnail_results[0]) ) {
+                    $file_thumbnail_results[0] = str_replace(' ', '%20', $file_thumbnail_results[0]);
+                }
                 $server_name = urlServerName();
                 fwrite($myfilethumbnail, $server_name . '/' . $file_thumbnail_results[0] . '||' . $array_source_location[0] . "\r\n");
                 //the lines of code used to display thumbnails ends here
