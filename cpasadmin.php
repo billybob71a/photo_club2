@@ -26,16 +26,16 @@ function urlServerName(): string
     $urlServerName = $http . $_SERVER['SERVER_NAME'];
     return $urlServerName;
     }
-function display_photos_all($keys_of_division_unique, $sub_folder_current) {
+function display_photos_all($keys_of_role_unique, $sub_folder_current) {
     $bytesPerMB = 1024 * 1024;
     $list_file_contents_array = [];
     $server_name = urlServerName();
     // $pattern = '/^\d+__(\w+)__LEVEL_0__([A-Za-z ]+)________([\w.-]+\.jpe?g)$/u';
     //$pattern = '/^\d+__([\w\s\'.-]+)__LEVEL_0__([A-Za-z ]+)________([\w\s\'._-]+\.jpe?g)$/ui';
     //here is Gemini suggestion of using non-greedy catch-all instead of listing every possible character
-    $pattern = '/^\d+__(.*?)__LEVEL_0__(.*?)________(.*?\.[jJ][pP][eE]?[gG])$/ui';
-    $list_file = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/uploads/' . $sub_folder_current . '/photo_random/LEVEL_0/LEVEL_0_list.txt';
-    $list_file_dir = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/uploads/' . $sub_folder_current . '/photo_random/LEVEL_0/';
+    $pattern = '/^\d+__(.*?)__subscriber__(.*?)________(.*?\.[jJ][pP][eE]?[gG])$/ui';
+    $list_file = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/uploads/' . $sub_folder_current . '/photo_random/subscriber/subscriber_list.txt';
+    $list_file_dir = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/uploads/' . $sub_folder_current . '/photo_random/subscriber';
     $list_file_contents = file($list_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     $search = "'";    // Find the single quote
     $replace = "apostrophe"; // Replace it with a backslash followed by a single quote
@@ -60,13 +60,13 @@ function display_photos_all($keys_of_division_unique, $sub_folder_current) {
         // echo ($json_output);
     }
     //PeterY will put it back later once bug is fixed --end
-    if (sizeof($keys_of_division_unique) == 0) {
+    if (sizeof($keys_of_role_unique) == 0) {
         echo("no photos submitted for ." .$sub_folder_current);
         return;
     }
     echo("<table>");
 
-    foreach ($keys_of_division_unique as $item) {
+    foreach ($keys_of_role_unique as $item) {
         //echo("I am going to start readying the thumbnail files");
         $list_file_thumbnail = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/uploads/' . $sub_folder_current . '/photo_random/' . $item . '/' . $item . '_list_thumbnail.txt';
         //echo("I am going to search this folder for the listing " . $list_file_thumbnail . "<br>");
@@ -88,6 +88,7 @@ function display_photos_all($keys_of_division_unique, $sub_folder_current) {
                 {
                     break;
                 }
+                //PeterY debug code below
                 //echo("I got the line as " . $result . "<br>");
                 $line_split = explode('||', $result);
                 preg_match_all('/([^\.]+)$/', $line_split[0], $file_extension);
@@ -113,12 +114,15 @@ function display_photos_all($keys_of_division_unique, $sub_folder_current) {
                     else {
                         $large_photo_with_extension = $large_photo.$file_extension_temp;
                     }
-                    //PeterY will put it back later start
                     $trimFileName = trim($line_split[1]);
+                    // echo("The trimFileName is {$trimFileName}<br>");
+                    // echo("the file directory is {$list_file_dir}<br>");
+                    //the following searches for apostrophe if it finds one then change it backslash apostraphe
                     $trimFileName = str_replace($search, $replace, $trimFileName);
+                    var_dump($list_file_contents_array);
                     $fileMatch = $list_file_contents_array[$trimFileName];
                     // $fileAndLocation = $list_file_dir . $line_split[1];
-                    $fileSizeVar = filesize($list_file_dir . $fileMatch);
+                    $fileSizeVar = filesize($list_file_dir . '/' . $fileMatch);
                     $fileSizeMB = $fileSizeVar / $bytesPerMB;
                     /* line_split[1] is the photo name and it will be used as the key in json to retrieve
                     the photographer name the trim is necessary in this case */
@@ -280,21 +284,27 @@ function html_prettyphoto() {
 			<h1>prettyPhoto</h1>");
 }
 
-
-
-class GetDivisionAndFolders {
+//this class is for retrieving current and previous folder
+class GetRoleAndFolders {
 
     private $currentfolder;
     private $previousfolder;
-    private $division;
+    private $role;
 
+    //this construct is a special PHP magic constructor method
+    //it runs automatically when a new instance of the class is created
+    //these properties need to match the private properties a.k.a. private member variables
+    //but since they are overwritten by getters , they are not neede
+    /*
     function __construct()
     {
         $this->currentfolder;
         $this->previousfolder;
-        $this->division;
+        $this->role;
     }
+    */
 
+    //this is the getter f
     function getCurrentFolder()
     {
         $folder_year_month_array = get_current_date_array();
@@ -309,18 +319,20 @@ class GetDivisionAndFolders {
         $this->previousfolder = $previousfolder;
         return $this->previousfolder;
     }
-    function getDivision()
+    function getRole()
     {
         global $wpdb;
-        $querystr = "SELECT DISTINCT meta_value FROM wp_usermeta WHERE meta_key = 'division_drop_down'";
-        $division_competition =  $wpdb->get_results($querystr, ARRAY_A);
+        //petery comment out the following and change to meta_kay='role
+        //$querystr = "SELECT DISTINCT meta_value FROM wp_usermeta WHERE meta_key = 'division_drop_down'";
+        $querystr = "SELECT DISTINCT meta_value FROM wp_usermeta WHERE meta_key = 'role'";
+        $role_competition =  $wpdb->get_results($querystr, ARRAY_A);
         $counter = 0;
-        foreach ($division_competition as $division_item => $fields) {
-            $var_division[$fields['meta_value']] = array();
+        foreach ($role_competition as $role_item => $fields) {
+            $var_role[$fields['meta_value']] = array();
             $counter = $counter++;
         }
-        $this->division = $var_division;
-        return $this->division;
+        $this->role= $var_role;
+        return $this->role;
     }
 }
 
@@ -334,13 +346,19 @@ if (($login_check) && isset($_POST['randomize'])) {
     $sub_folder_previous = $folder_year_month_array[0]."\/".$folder_year_month_array[1];
     $sub_folder_current = str_replace('\/', '/',$sub_folder_current);
     $sub_folder_previous = str_replace('\/', '/',$sub_folder_previous);
+    //PeterY debug code
+    echo("the subfolder of previous is $sub_folder_previous <br>");
+    echo("the subfolder of current is $sub_folder_current <br>");
+    //access global database access object
     global $wpdb;
-    $querystr = "SELECT DISTINCT meta_value FROM wp_usermeta WHERE meta_key = 'division_drop_down'";
-    $division_competition =  $wpdb->get_results($querystr, ARRAY_A);
+    //petery code comment out this line and change to WHERE role=subscriber
+    //$querystr = "SELECT DISTINCT meta_value FROM wp_usermeta WHERE meta_key = 'division_drop_down'";
+    $querystr = "SELECT DISTINCT meta_value FROM wp_usermeta WHERE meta_key = 'role'";
+    $role_competition =  $wpdb->get_results($querystr, ARRAY_A);
     $counter = 0;
 
-    foreach ($division_competition as $division_item => $fields) {
-        $var_division[$fields['meta_value']] = array();
+    foreach ($role_competition as $role_item => $fields) {
+        $var_role[$fields['meta_value']] = array();
         $counter = $counter++;
     }
 
@@ -362,7 +380,11 @@ if (($login_check) && isset($_POST['randomize'])) {
 	foreach ( $user_array as $user ) {
 		error_log("the user id from the array is ". $user->ID );
 		if ($user->ID != '1') {
-            $user_division = get_user_meta($user->ID, "division_drop_down", true);
+            //PeterY change this to role
+            $user_role = get_user_meta($user->ID, "role", true);
+            //PeterY debug code below
+            //echo("the user name is {$user->display_name}<br>");
+            //echo("the user role is $user_role <br>");
 			$user_info = get_userdata( $user->ID );
 			$args2 = array( 'posts_per_page' => -1,
 							'author' => $user->ID,
@@ -371,12 +393,13 @@ if (($login_check) && isset($_POST['randomize'])) {
 			$current_user_posts = get_posts( $args2 );
 			error_log("the number of posts for this user is ". count( $current_user_posts ));
 			foreach ( $current_user_posts as $post_item ) {
+                //PeterY debug code below
+                //echo("the post_item->ID is $post_item->ID <br><br>");
 				$images = get_attached_media('image', $post_item->ID );
-				// error_log("here are the images ". $temp);
 
                 // in the $division_competition two dimensional array
 
-                $division_index = array_search($user_division, array_column($division_competition,'meta_value'));
+                $roleIndex = array_search($user_role, array_column($role_competition,'meta_value'));
 				foreach ( $images as $image_item ) {
                     $pattern = '/[^\/]+/';
                     // the next preg_match match everything but / from the location found of the folder
@@ -391,14 +414,20 @@ if (($login_check) && isset($_POST['randomize'])) {
                             [4] = "2019"
                             [5] = "04"
                     */
-                    $source_location = $all_matches[0][2].'/'.$all_matches[0][3].'/'.$all_matches[0][4].'/'.$all_matches[0][5];
+
+                    //I will get the the source for every post that a user had since the beginning
+                    $source_location = $all_matches[0][2] . '/' . $all_matches[0][3] . '/' . $all_matches[0][4] . '/' . $all_matches[0][5];
+                    //Petery debug line below
+                    //echo("I got some matches here match2  = {$all_matches[0][2]} and this match3= {$all_matches[0][3]} and match4 = {$all_matches[0][4]} and match5 = {$all_matches[0][5]}");
+
                     $sub_folder_current = str_replace('\/', '/',$sub_folder_current);
                     $sub_folder_previous = str_replace('\/', '/',$sub_folder_previous);
+                    //I may get a lot of images, however the line below will only run if the location is current month and previous month
                     if ( (strpos($source_location, $sub_folder_current)!== False) || (strpos($source_location, $sub_folder_previous) !== False))
                     {
-
-                        $presenter_list  = $post_item->post_title.'||'.$source_location.'||'. $all_matches[0][6] .'||'. $user_division .'||'. $user_info->first_name .' '. $user_info->last_name.'||'.$all_matches[0][6];
-                        array_push($var_division[$user_division], $presenter_list);
+                        // echo("<br><br> I found a match for either current month or previous month {$source_location} <br><br>");
+                        $presenter_list  = $post_item->post_title.'||'.$source_location.'||'. $all_matches[0][6] .'||'. $user_role .'||'. $user_info->first_name .' '. $user_info->last_name.'||'.$all_matches[0][6];
+                        array_push($var_role[$user_role], $presenter_list);
                         $new_name = $post_item->post_title;
                         //echo('<li>'.$new_name.'</li>');
                         preg_match_all('/[^.]+/',$all_matches[0][6],$image_split);
@@ -409,12 +438,12 @@ if (($login_check) && isset($_POST['randomize'])) {
                         //$dest_location will be the location of the destination photo of the "photo_random/<division>/<post title name>.jpg"
                         // if the location does not exist it will be created
                         $directory_base = $_SERVER['DOCUMENT_ROOT'].'/'.$all_matches[0][2].'/'.$all_matches[0][3];
-                        $destination_directory = $_SERVER['DOCUMENT_ROOT'].'/'.$all_matches[0][2].'/'.$all_matches[0][3].'/'.$sub_folder_current.'/photo_random/'.$user_division.'/';
+                        $destination_directory = $_SERVER['DOCUMENT_ROOT'].'/'.$all_matches[0][2].'/'.$all_matches[0][3].'/'.$sub_folder_current.'/photo_random/'.$user_role.'/';
                         $destination_directory = str_replace('\/', '/', $destination_directory);
                         if ( !is_dir($destination_directory)) {
                             //mkdir($all_matches[0][2].'/'.$all_matches[0][3].'/'.$sub_folder_current.'/photo_random/'.$user_division);
                             mkdir($destination_directory, 0777, true);
-                            error_log("Directory ".$user_division." created");
+                            error_log("Directory ".$user_role." created");
                         }
 
                         $dest_location = $destination_directory.$image_renamed;
@@ -437,12 +466,12 @@ if (($login_check) && isset($_POST['randomize'])) {
 		$localtime_assoc['minutes'].
 		$localtime_assoc['seconds']);
 
-    $keys_of_division = array_keys($var_division);
-    //echo("Petery the keys of division are ".var_dump($keys_of_division));
+    $keys_of_role = array_keys($var_role);
+    //echo("Petery the keys of division are ".var_dump($keys_of_role));
     /*the following loop is used to clear the division folders
     in order that we may put a new list file and image file(s)
     */
-    foreach ($keys_of_division as $item)
+    foreach ($keys_of_role as $item)
     {
         $delete_any_files_here = $_SERVER['DOCUMENT_ROOT'].'/wp-content/uploads/'.$sub_folder_current.'/photo_random/'.$item.'/*';
         $delete_any_files_here = str_replace('\/', '/', $delete_any_files_here);
@@ -455,8 +484,8 @@ if (($login_check) && isset($_POST['randomize'])) {
             }
         }
     }
-    $keys_of_division_total = array();
-    foreach ($var_division as $var_division_item => $fields)
+    $keys_of_role_total = array();
+    foreach ($var_role as $var_role_item => $fields)
     {
         //randomize the photos in the presentation_list
         shuffle($fields);
@@ -464,23 +493,25 @@ if (($login_check) && isset($_POST['randomize'])) {
             //echo("Hey " . var_dump($fields));
             $my_array_regex = preg_split("(\|\|)", $fields[0]);
             //echo("Yo " . $my_array_regex[3]);
-            array_push($keys_of_division_total, $my_array_regex[3]);
+            array_push($keys_of_role_total, $my_array_regex[3]);
             //echo("Yo end");
         }
     }
 
 	echo '<ul>';
 	$index = 0;
-	$keys_of_division_unique = array_unique($keys_of_division_total);
-	// echo("the keys are unique ".var_dump($keys_of_division_unique));
+	$keys_of_role_unique = array_unique($keys_of_role_total);
+	// echo("the keys are unique ".var_dump($keys_of_role_unique));
 
 	// go through the divisions and copy it the destination
-	foreach ($keys_of_division_unique as $item) {
+	foreach ($keys_of_role_unique as $item) {
         $list_file = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/uploads/' . $sub_folder_current . '/photo_random/' . $item . '/' . $item . '_list.txt';
+        //PeterY debug code below
+        //echo("the item is {$item} <br><br>");
         $list_file_thumbnail = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/uploads/' . $sub_folder_current . '/photo_random/' . $item . '/' . $item . '_list_thumbnail.txt';
         $myfile = fopen($list_file, "w");
         $myfilethumbnail = fopen($list_file_thumbnail, "w");
-        // echo("the file is " . $list_file . "<br>");
+        //echo("the file is " . $list_file . "<br>");
         $counter = 0;
         $zipfile = new ZipArchive();
         $destination_zip = $_SERVER['DOCUMENT_ROOT'] . '/download/' . $item . '.zip';
@@ -490,10 +521,10 @@ if (($login_check) && isset($_POST['randomize'])) {
             unlink($destination_zip);
         }
         $zipfile->open($destination_zip, ZipArchive::CREATE);
-        shuffle($var_division[$item]);
+        shuffle($var_role[$item]);
         //echo("the var dump for division");
-        //var_dump($var_division[$item]);
-        foreach ($var_division[$item] as $list_entries) {
+        //var_dump($var_role[$item]);
+        foreach ($var_role[$item] as $list_entries) {
             $counter++;
             // echo("in division " . $item . " I have " . $list_entries . "<br>");
             $array_source_location = explode("||", $list_entries);
@@ -546,7 +577,7 @@ if (($login_check) && isset($_POST['randomize'])) {
         $zipfile->addFile($list_file, basename($list_file));
         $zipfile->close();
     }
-    display_photos_all($keys_of_division_unique, $sub_folder_current);
+    display_photos_all($keys_of_role_unique, $sub_folder_current);
 }
 
 
@@ -554,22 +585,22 @@ if (($login_check) && isset($_POST['randomize'])) {
 else if ($login_check) {
     error_reporting(E_ALL);
     html_prettyphoto();
-    $folders_and_division = new GetDivisionAndFolders();
+    $folders_and_division = new GetRoleAndFolders();
     $sub_folder_current = $folders_and_division->getCurrentFolder();
     $sub_folder_previous = $folders_and_division->getPreviousFolder();
-    $var_division = $folders_and_division->getDivision();
+    $var_role = $folders_and_division->getRole();
     $sub_folder_current = str_replace('\/', '/',$sub_folder_current);
     $sub_folder_previous = str_replace('\/', '/',$sub_folder_previous);
     echo("the current folder is ".$sub_folder_current);
     echo("the previous folder is ".$sub_folder_previous);
-    $keys_of_division = array_keys($var_division);
+    $keys_of_role = array_keys($var_role);
     $result = scandir("./wp-content/uploads/".$sub_folder_current."/photo_random");
     //error to fix the $result variable and change to an array as suggested by Gemini AI
     $result = is_array($result) ? $result : [];
     //end of Gemini AI suggestion
-    //var_dump($var_division);
-    //echo(var_dump($keys_of_division));
-    $result_intersect = array_intersect($result, $keys_of_division);
+    //var_dump($var_role);
+    //echo(var_dump($keys_of_role));
+    $result_intersect = array_intersect($result, $keys_of_role);
     unset($result_intersect[0]);
     $folders_division = array_values($result_intersect);
     //echo(var_dump($folders_division));
