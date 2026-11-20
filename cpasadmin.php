@@ -119,7 +119,8 @@ function display_photos_all($keys_of_role_unique, $sub_folder_current) {
                     // echo("the file directory is {$list_file_dir}<br>");
                     //the following searches for apostrophe if it finds one then change it backslash apostraphe
                     $trimFileName = str_replace($search, $replace, $trimFileName);
-                    var_dump($list_file_contents_array);
+                    //PeterY debug statement below
+                    //var_dump($list_file_contents_array);
                     $fileMatch = $list_file_contents_array[$trimFileName];
                     // $fileAndLocation = $list_file_dir . $line_split[1];
                     $fileSizeVar = filesize($list_file_dir . '/' . $fileMatch);
@@ -537,7 +538,8 @@ if (($login_check) && isset($_POST['randomize'])) {
             preg_match_all('/(.*\.)/', $array_source_location[2], $image_split_name);
             $image_split_name[1][0] = rtrim($image_split_name[1][0], '.');
 
-            echo("image_split_name var_dump is " . print_r($image_split_name, true) . "<br><br>");
+            //Petery debug statement below
+            //echo("image_split_name var_dump is " . print_r($image_split_name, true) . "<br><br>");
 
             if ($array_source_location[0] != "")
             {
@@ -545,10 +547,12 @@ if (($login_check) && isset($_POST['randomize'])) {
                 $new_location_file = str_replace('&amp;', '&', $new_location_file);
                 $new_location_file = str_replace('%20', ' ', $new_location_file);
                 $new_location_file = html_entity_decode($new_location_file);
-                echo ("the old file is " . $original_location_file . "<br>");
-                echo("the new file is " . $new_location_file . "<br>");
+                //PeterY debug statement below
+                //echo ("the old file is " . $original_location_file . "<br>");
+                //echo("the new file is " . $new_location_file . "<br>");
                 copy($original_location_file, $new_location_file);
-                echo("the array_source_location[0] is {$array_source_location[0]}<br><br>");
+                //PeterY debug statement below
+                //echo("the array_source_location[0] is {$array_source_location[0]}<br><br>");
                 $array_source_location[0] = str_replace('&amp;', '&', $array_source_location[0]);
                 $array_source_location[0] = str_replace('%20', ' ', $array_source_location[0]);
                 fwrite($myfile, $counter . "__" . $array_source_location[0] . "__" . $array_source_location[3] . "__" . $array_source_location[4] . "________" . $counter . '_' . $array_source_location[0] . '.' . $image_split_extension[1][0] . "\r\n");
@@ -559,7 +563,8 @@ if (($login_check) && isset($_POST['randomize'])) {
                 $file_thumbnail_wildcard = $array_source_location[1] . "/" .  $file_thumbnail . "-" . "460x*" . "." . strtolower($image_split_extension[1][0]);
 
                 $file_thumbnail_results  = glob($file_thumbnail_wildcard);
-                echo("the file thumbnail result is " . print_r($file_thumbnail_results, true) . "<br><br>");
+                //PeterY debug statement below
+                //echo("the file thumbnail result is " . print_r($file_thumbnail_results, true) . "<br><br>");
                 if (sizeof($file_thumbnail_results) == 0)
                 {
                     $file_thumbnail_wildcard = $array_source_location[1] . "/" .  $file_thumbnail . "-" . "*x460" . "." . strtolower($image_split_extension[1][0]);
