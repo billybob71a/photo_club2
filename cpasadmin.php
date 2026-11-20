@@ -241,7 +241,7 @@ function html_prettyphoto() {
 			* { margin: 0; padding: 0; }
 			
 			body {
-				background: grey;
+				background-color: #998686;
 				font: 62.5%/1.2 Arial, Verdana, Sans-Serif;
 				padding: 0 20px;
 			}
@@ -281,7 +281,7 @@ function html_prettyphoto() {
         });
     </script>
     <?php
-    echo("</head><body><div id=\"main\" style='background-color: grey;'>
+    echo("</head><body><div id=\"main\" style='background-color: #998686;'>
 			<h1>prettyPhoto</h1>");
 }
 
