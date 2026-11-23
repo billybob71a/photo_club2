@@ -1687,7 +1687,7 @@ function usp_send_mail_alert($post_id, $title, $content, $author, $email, $url, 
 				$headers .= 'Reply-To: '. $blog_name .' <'. $address_from .'>'. "\n";
 				$headers .= 'Content-Type: '. $format .'; charset='. get_option('blog_charset', 'UTF-8') . "\n";
 				
-				wp_mail($address_to, $subject, $message, $headers);
+				//wp_mail($address_to, $subject, $message, $headers);
 				
 			}
             //adding in lost code that was found in previous git commit
